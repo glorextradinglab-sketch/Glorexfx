@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>لوحة التحكم — GLOREX</title>
+<meta name="theme-color" content="#0a0a0a"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold:#D4A017;--gold-l:#F0C030;--gold-d:#A07810;
+  --bg:#080808;--surface:#0d0d0d;--card:#111111;
+  --border:rgba(255,255,255,0.08);
+  --txt:#fff;--txt2:#ccc;--txt3:#999;--txt4:#666;
+  --ease:cubic-bezier(.4,0,.2,1);--base:.3s;
+}
+body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
+a{color:inherit;text-decoration:none}
+
+/* ── Loading screen ── */
+.boot{
+  position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+  background:var(--bg);z-index:9999;flex-direction:column;gap:1rem
+}
+.boot.hide{opacity:0;pointer-events:none;transition:opacity .4s}
+.boot-logo{
+  width:60px;height:60px;border-radius:15px;
+  background:linear-gradient(135deg,var(--gold),var(--gold-d));
+  display:flex;align-items:center;justify-content:center;
+  color:#000;font-family:'Space Grotesk';font-weight:700;font-size:1.8rem;
+  animation:logo-pulse 1.4s ease-in-out infinite;
+  box-shadow:0 8px 30px rgba(212,160,23,.4)
+}
+@keyframes logo-pulse{50%{transform:scale(1.08);box-shadow:0 8px 50px rgba(212,160,23,.7)}}
+.boot-txt{color:var(--txt3);font-size:.9rem}
+
+/* ── Mesh BG ── */
+.bg-mesh{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 900px 700px at 80% 0%,rgba(212,160,23,.12),transparent 60%),
+    radial-gradient(ellipse 600px 800px at 0% 100%,rgba(160,120,16,.1),transparent 60%)
+}
+
+/* ── Top Bar ── */
+.topbar{
+  position:sticky;top:0;z-index:100;
+  background:rgba(8,8,8,.85);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:.95rem 2rem;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem
+}
+.brand{display:flex;align-items:center;gap:.6rem}
+.brand-logo{
+  width:36px;height:36px;border-radius:9px;
+  background:linear-gradient(135deg,var(--gold),var(--gold-d));
+  display:flex;align-items:center;justify-content:center;
+  color:#000;font-weight:700;font-family:'Space Grotesk'
+}
+.brand-name{font-family:'Space Grotesk';font-weight:700;font-size:1.25rem;letter-spacing:-.02em}
+
+.user-menu{display:flex;align-items:center;gap:.7rem;position:relative}
+.user-avatar{
+  width:38px;height:38px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),var(--gold-d));
+  display:flex;align-items:center;justify-content:center;
+  color:#000;font-weight:700;cursor:pointer;
+  transition:transform var(--base) var(--ease);user-select:none
+}
+.user-avatar:hover{transform:scale(1.05)}
+.user-name{font-size:.92rem;color:var(--txt2)}
+.user-dropdown{
+  position:absolute;top:calc(100% + 8px);left:0;
+  background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:.5rem;min-width:200px;
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
+  opacity:0;visibility:hidden;transform:translateY(-8px);
+  transition:all var(--base) var(--ease);z-index:200
+}
+.user-dropdown.open{opacity:1;visibility:visible;transform:translateY(0)}
+.dd-item{
+  display:flex;align-items:center;gap:.7rem;
+  padding:.65rem .8rem;border-radius:8px;color:var(--txt2);
+  font-size:.92rem;cursor:pointer;background:none;border:none;width:100%;text-align:right;font-family:inherit
+}
+.dd-item:hover{background:rgba(255,255,255,.04);color:var(--txt)}
+.dd-item i{width:16px;color:var(--txt4)}
+.dd-item.logout{color:#ef4444}
+.dd-item.logout i{color:#ef4444}
+.dd-sep{height:1px;background:var(--border);margin:.4rem 0}
+
+/* ── Main ── */
+.main{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:2.5rem 2rem}
+
+/* Welcome */
+.welcome{margin-bottom:2.5rem}
+.welcome-h1{
+  font-family:'Space Grotesk','IBM Plex Sans Arabic';
+  font-size:clamp(1.8rem,3.5vw,2.5rem);font-weight:700;letter-spacing:-.025em;
+  margin-bottom:.5rem
+}
+.welcome-h1 em{
+  font-style:normal;
+  background:linear-gradient(135deg,var(--gold-l),var(--gold),var(--gold-d));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text
+}
+.welcome-sub{color:var(--txt3);font-size:1rem}
+
+/* Stats Row */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2.5rem}
+.stat{
+  padding:1.4rem;border-radius:14px;
+  background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+  border:1px solid var(--border);
+  transition:all var(--base) var(--ease);position:relative;overflow:hidden
+}
+.stat:hover{border-color:rgba(212,160,23,.25);transform:translateY(-2px)}
+.stat-icon{
+  width:42px;height:42px;border-radius:11px;
+  background:rgba(212,160,23,.1);border:1px solid rgba(212,160,23,.2);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--gold);font-size:1.15rem;margin-bottom:1rem
+}
+.stat-val{font-family:'Space Grotesk';font-size:1.9rem;font-weight:700;letter-spacing:-.02em;margin-bottom:.2rem}
+.stat-lbl{color:var(--txt3);font-size:.85rem}
+
+/* Grid */
+.grid{display:grid;grid-template-columns:1.7fr 1fr;gap:1.5rem}
+
+/* Cards */
+.card{
+  padding:1.6rem;border-radius:16px;
+  background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+  border:1px solid var(--border);
+  backdrop-filter:blur(10px)
+}
+.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.3rem}
+.card-h{font-size:1.1rem;font-weight:600}
+.card-link{color:var(--gold);font-size:.85rem;font-weight:500}
+
+/* Lessons */
+.lesson{
+  display:flex;align-items:center;gap:1rem;padding:.95rem;margin-bottom:.6rem;
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  cursor:pointer;transition:all var(--base) var(--ease)
+}
+.lesson:hover{border-color:rgba(212,160,23,.3);background:var(--card);transform:translateX(-4px)}
+.lesson-num{
+  width:40px;height:40px;flex-shrink:0;border-radius:50%;
+  background:rgba(212,160,23,.1);border:1px solid rgba(212,160,23,.3);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--gold);font-weight:600;font-family:'Space Grotesk'
+}
+.lesson.done .lesson-num{background:rgba(34,197,94,.15);border-color:rgba(34,197,94,.35);color:#22c55e}
+.lesson.done .lesson-num i{font-size:.9rem}
+.lesson-info{flex:1;min-width:0}
+.lesson-title{font-size:.95rem;font-weight:600;margin-bottom:.2rem}
+.lesson-meta{color:var(--txt4);font-size:.8rem}
+.lesson-cta{color:var(--gold);font-size:1rem}
+
+/* Progress bar */
+.progress{margin-bottom:1.4rem}
+.progress-head{display:flex;justify-content:space-between;margin-bottom:.5rem;font-size:.85rem}
+.progress-pct{color:var(--gold);font-weight:600}
+.progress-bar{height:8px;background:var(--surface);border-radius:4px;overflow:hidden}
+.progress-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--gold-d),var(--gold),var(--gold-l));
+  border-radius:4px;transition:width 1s var(--ease);
+  box-shadow:0 0 12px rgba(212,160,23,.5)
+}
+
+/* Quick actions */
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-top:1rem}
+.action{
+  padding:1rem;border-radius:12px;
+  background:var(--surface);border:1px solid var(--border);
+  display:flex;flex-direction:column;align-items:flex-start;gap:.4rem;
+  cursor:pointer;transition:all var(--base) var(--ease);color:inherit
+}
+.action:hover{border-color:rgba(212,160,23,.3);background:var(--card);transform:translateY(-2px)}
+.action i{color:var(--gold);font-size:1.1rem}
+.action-t{font-weight:600;font-size:.92rem}
+.action-d{color:var(--txt4);font-size:.78rem}
+
+/* Community card */
+.community-card{
+  padding:1.6rem;border-radius:16px;
+  background:linear-gradient(135deg,rgba(88,101,242,.15),rgba(212,160,23,.1));
+  border:1px solid rgba(88,101,242,.3);
+  position:relative;overflow:hidden
+}
+.community-icon{
+  width:54px;height:54px;border-radius:14px;
+  background:#5865F2;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:1.5rem;margin-bottom:1rem
+}
+.community-h{font-size:1.05rem;font-weight:600;margin-bottom:.4rem}
+.community-d{color:var(--txt3);font-size:.88rem;line-height:1.6;margin-bottom:1rem}
+.community-btn{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.65rem 1.2rem;border-radius:10px;
+  background:#5865F2;color:#fff;font-weight:600;font-size:.88rem;
+  transition:all var(--base) var(--ease)
+}
+.community-btn:hover{background:#4752C4;transform:translateY(-1px)}
+
+@media(max-width:880px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .grid{grid-template-columns:1fr}
+  .topbar{padding:.8rem 1rem}
+  .main{padding:2rem 1rem}
+  .user-name{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- Loading -->
+<div class="boot" id="boot">
+  <div class="boot-logo">G</div>
+  <div class="boot-txt">جاري التحميل...</div>
+</div>
+
+<div class="bg-mesh"></div>
+
+<!-- Top Bar -->
+<header class="topbar">
+  <a href="glorex_landing.html" class="brand">
+    <div class="brand-logo">G</div>
+    <div class="brand-name">GLOREX</div>
+  </a>
+
+  <div class="user-menu" id="userMenu">
+    <span class="user-name" id="userName">جاري التحميل...</span>
+    <div class="user-avatar" id="userAvatar">G</div>
+    <div class="user-dropdown" id="userDropdown">
+      <button class="dd-item"><i class="fas fa-user"></i> الملف الشخصي</button>
+      <button class="dd-item"><i class="fas fa-cog"></i> الإعدادات</button>
+      <button class="dd-item"><i class="fas fa-credit-card"></i> الفاتورة</button>
+      <div class="dd-sep"></div>
+      <button class="dd-item logout" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- Welcome -->
+  <section class="welcome">
+    <h1 class="welcome-h1">مرحباً، <em id="welcomeName">صديقي</em> 👋</h1>
+    <p class="welcome-sub">جاهز لتداول اليوم؟ تحقق من خطتك وادخل السوق بثقة.</p>
+  </section>
+
+  <!-- Stats -->
+  <section class="stats">
+    <div class="stat">
+      <div class="stat-icon"><i class="fas fa-graduation-cap"></i></div>
+      <div class="stat-val">3<span style="color:var(--txt4)">/9</span></div>
+      <div class="stat-lbl">دروس مكتملة</div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+      <div class="stat-val">12</div>
+      <div class="stat-lbl">صفقات هذا الشهر</div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon"><i class="fas fa-bullseye"></i></div>
+      <div class="stat-val">68%</div>
+      <div class="stat-lbl">نسبة النجاح</div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon"><i class="fas fa-fire"></i></div>
+      <div class="stat-val">7</div>
+      <div class="stat-lbl">يوم متتالي</div>
+    </div>
+  </section>
+
+  <!-- Main Grid -->
+  <div class="grid">
+    <!-- LEFT: Lessons -->
+    <section class="card">
+      <div class="card-head">
+        <h2 class="card-h">الدروس القادمة</h2>
+        <a href="#" class="card-link">عرض الكل ←</a>
+      </div>
+
+      <div class="progress">
+        <div class="progress-head">
+          <span>تقدمك في المسار</span>
+          <span class="progress-pct">33%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:33%"></div></div>
+      </div>
+
+      <div class="lesson done">
+        <div class="lesson-num"><i class="fas fa-check"></i></div>
+        <div class="lesson-info">
+          <div class="lesson-title">مقدمة في Supply & Demand</div>
+          <div class="lesson-meta">22 دقيقة • مكتمل</div>
+        </div>
+      </div>
+      <div class="lesson done">
+        <div class="lesson-num"><i class="fas fa-check"></i></div>
+        <div class="lesson-info">
+          <div class="lesson-title">كيف ترسم مناطق الـ Demand</div>
+          <div class="lesson-meta">31 دقيقة • مكتمل</div>
+        </div>
+      </div>
+      <div class="lesson done">
+        <div class="lesson-num"><i class="fas fa-check"></i></div>
+        <div class="lesson-info">
+          <div class="lesson-title">Fair Value Gap — الأساسيات</div>
+          <div class="lesson-meta">28 دقيقة • مكتمل</div>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-num">4</div>
+        <div class="lesson-info">
+          <div class="lesson-title">دمج SD مع FVG على NQ</div>
+          <div class="lesson-meta">42 دقيقة • التالي</div>
+        </div>
+        <i class="fas fa-play-circle lesson-cta"></i>
+      </div>
+      <div class="lesson">
+        <div class="lesson-num">5</div>
+        <div class="lesson-info">
+          <div class="lesson-title">إدارة المخاطر — قواعد ذهبية</div>
+          <div class="lesson-meta">35 دقيقة</div>
+        </div>
+        <i class="fas fa-lock lesson-cta" style="color:var(--txt4)"></i>
+      </div>
+    </section>
+
+    <!-- RIGHT: Sidebar -->
+    <aside>
+      <!-- Quick Actions -->
+      <section class="card" style="margin-bottom:1.5rem">
+        <div class="card-head">
+          <h2 class="card-h">إجراءات سريعة</h2>
+        </div>
+        <div class="actions">
+          <a class="action" href="#">
+            <i class="fas fa-book-open"></i>
+            <div class="action-t">Trade Journal</div>
+            <div class="action-d">سجل صفقاتك</div>
+          </a>
+          <a class="action" href="#">
+            <i class="fas fa-tasks"></i>
+            <div class="action-t">Checklist</div>
+            <div class="action-d">قبل كل صفقة</div>
+          </a>
+          <a class="action" href="#">
+            <i class="fas fa-calculator"></i>
+            <div class="action-t">حاسبة المخاطر</div>
+            <div class="action-d">حجم الصفقة</div>
+          </a>
+          <a class="action" href="#">
+            <i class="fas fa-calendar-alt"></i>
+            <div class="action-t">أخبار اليوم</div>
+            <div class="action-d">economic calendar</div>
+          </a>
+        </div>
+      </section>
+
+      <!-- Community -->
+      <section class="community-card">
+        <div class="community-icon"><i class="fab fa-discord"></i></div>
+        <div class="community-h">انضم لمجتمع Discord</div>
+        <div class="community-d">صفقات لايف، أسئلة وأجوبة، ومراجعات أسبوعية مع 500+ متداول.</div>
+        <a class="community-btn" href="#" target="_blank">انضم الآن <i class="fas fa-arrow-left"></i></a>
+      </section>
+    </aside>
+  </div>
+</main>
+
+<script type="module">
+import { requireAuth, signOut, onAuthChange } from './supabase-client.js';
+
+/* ── Auth gate: redirect to signin if not logged in ── */
+const session = await requireAuth();
+if (!session) {/* requireAuth handles redirect */}
+else {
+  const user = session.user;
+  const meta = user.user_metadata || {};
+  const fullName = meta.full_name || meta.first_name || user.email.split('@')[0];
+  const firstName = meta.first_name || fullName.split(' ')[0];
+  const initial = (firstName[0] || 'G').toUpperCase();
+
+  document.getElementById('userName').textContent = firstName;
+  document.getElementById('userAvatar').textContent = initial;
+  document.getElementById('welcomeName').textContent = firstName;
+
+  /* Hide boot screen */
+  setTimeout(()=>{
+    document.getElementById('boot').classList.add('hide');
+    setTimeout(()=> document.getElementById('boot').remove(), 400);
+  }, 300);
+}
+
+/* ── User dropdown ── */
+const avatar = document.getElementById('userAvatar');
+const dropdown = document.getElementById('userDropdown');
+avatar.addEventListener('click', e=>{ e.stopPropagation(); dropdown.classList.toggle('open'); });
+document.addEventListener('click', ()=> dropdown.classList.remove('open'));
+dropdown.addEventListener('click', e=> e.stopPropagation());
+
+/* ── Logout ── */
+document.getElementById('logoutBtn').addEventListener('click', async ()=>{
+  await signOut();
+});
+
+/* ── Listen for sign out from another tab ── */
+onAuthChange((event, session)=>{
+  if (event === 'SIGNED_OUT') location.href = 'signin.html';
+});
+</script>
+</body>
+</html>

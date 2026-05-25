@@ -1,0 +1,1592 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="GLOREX — تداول كما يقول السوق. استراتيجية Supply & Demand وFair Value Gap على Nasdaq"/>
+<meta name="theme-color" content="#C9960C"/>
+<title>GLOREX — تداول كما يقول السوق</title>
+<link rel="manifest" href="manifest.json"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet"/>
+<script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.82/build/spline-viewer.js"></script>
+<style>
+/* ============================================================
+   DESIGN TOKENS
+============================================================ */
+:root{
+  /* Gold scale */
+  --r9:#2d2200;--r8:#483500;--r7:#8B6914;--r6:#A07810;
+  --r5:#C9960C;--r4:#D4A017;--r3:#F0C030;
+  /* Neutral scale */
+  --n95:#080808;--n90:#0a0a0a;--n87:#0d0d0d;--n85:#0f0f0f;
+  --n80:#111111;--n75:#141414;--n70:#1a1a1a;--n60:#242424;
+  --n40:#555555;--n30:#777777;--n20:#999999;--n10:#cccccc;--n0:#ffffff;
+  /* Semantic */
+  --bg:var(--n95);--surface:var(--n87);--card:var(--n85);
+  --border:rgba(255,255,255,0.07);--border-r:rgba(184,134,11,0.4);
+  --txt:var(--n0);--txt2:var(--n10);--txt3:var(--n30);--txt4:var(--n40);
+  --accent:var(--r7);--accent-h:var(--r6);
+  --glow:rgba(184,134,11,0.32);--subtle:rgba(184,134,11,0.1);
+  /* Spacing (8px base) */
+  --s1:.5rem;--s2:1rem;--s3:1.5rem;--s4:2rem;--s5:2.5rem;
+  --s6:3rem;--s8:4rem;--s10:5rem;--s12:6rem;--s16:8rem;
+  /* Type (Major Third ×1.25) */
+  --txs:.75rem;--tsm:.875rem;--tbase:1rem;--tlg:1.125rem;
+  --txl:1.25rem;--t2x:1.563rem;--t3x:1.953rem;--t4x:2.441rem;
+  --t5x:3.052rem;--t6x:3.815rem;--t7x:4.768rem;
+  /* Radius */
+  --rsm:.375rem;--rmd:.625rem;--rlg:.875rem;--rxl:1.25rem;
+  --r2x:1.75rem;--rfull:9999px;
+  /* Motion */
+  --ease:cubic-bezier(.4,0,.2,1);--fast:150ms;--base:260ms;--slow:400ms;
+  /* Layout */
+  --nav:72px;--max:1200px;--pad:1.5rem;
+}
+
+/* ============================================================
+   RESET & BASE
+============================================================ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Cairo',sans-serif;font-size:var(--tbase);
+  background:var(--bg);color:var(--txt);
+  direction:rtl;text-align:right;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased
+}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--accent);border-radius:var(--rfull)}
+a{text-decoration:none;color:inherit}
+ul{list-style:none}
+button{cursor:pointer;font-family:inherit;border:none;background:none}
+
+/* ============================================================
+   LAYOUT
+============================================================ */
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
+.sec{padding:var(--s16) 0}
+.sec--surface{background:var(--surface)}
+.sec-head{text-align:center;margin-bottom:var(--s10)}
+.sec-label{
+  display:inline-flex;align-items:center;gap:.4rem;
+  background:var(--subtle);border:1px solid var(--border-r);
+  color:var(--r3);padding:.3rem .9rem;border-radius:var(--rfull);
+  font-size:var(--txs);font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  margin-bottom:var(--s2)
+}
+.sec-title{
+  font-size:clamp(var(--t3x),4.5vw,var(--t5x));
+  font-weight:900;line-height:1.15;
+}
+.sec-sub{
+  font-size:var(--tlg);color:var(--txt3);
+  line-height:1.85;max-width:580px;margin:.9rem auto 0
+}
+.rule{
+  width:36px;height:3px;
+  background:linear-gradient(90deg,var(--r7),var(--r5));
+  border-radius:var(--rfull);margin:.7rem auto 0
+}
+.glow-line{
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(184,134,11,.55) 30%,rgba(212,162,20,.75) 50%,rgba(184,134,11,.55) 70%,transparent)
+}
+
+/* ============================================================
+   BUTTONS
+============================================================ */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  padding:.8rem 1.8rem;border-radius:var(--rlg);font-family:inherit;
+  font-size:var(--tbase);font-weight:700;line-height:1;
+  transition:transform var(--base) var(--ease),box-shadow var(--base) var(--ease),background var(--base) var(--ease);
+  white-space:nowrap;user-select:none;cursor:pointer
+}
+.btn:focus-visible{outline:2px solid var(--r4);outline-offset:3px}
+.btn:active{transform:translateY(1px)!important}
+.btn-p{
+  background:linear-gradient(135deg,var(--r7),var(--r6));color:var(--n0);
+  box-shadow:0 6px 28px var(--glow)
+}
+.btn-p:hover{background:linear-gradient(135deg,var(--r6),var(--r5));box-shadow:0 10px 40px rgba(184,134,11,.5);transform:translateY(-2px)}
+.btn-g{background:rgba(255,255,255,.05);color:var(--txt);border:1.5px solid rgba(255,255,255,.18)}
+.btn-g:hover{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.32);transform:translateY(-2px)}
+.btn-lg{padding:1rem 2.2rem;font-size:var(--tlg);border-radius:var(--rxl)}
+.btn-w{width:100%}
+
+/* ============================================================
+   NAVIGATION
+============================================================ */
+.nav{
+  position:fixed;top:0;left:0;right:0;height:var(--nav);z-index:900;
+  display:flex;align-items:center;
+  transition:background var(--slow) var(--ease),height var(--base) var(--ease),box-shadow var(--slow) var(--ease)
+}
+.nav.on{
+  background:rgba(8,8,8,.9);
+  backdrop-filter:blur(22px) saturate(1.6);
+  -webkit-backdrop-filter:blur(22px) saturate(1.6);
+  box-shadow:0 1px 0 rgba(184,134,11,.18),0 4px 30px rgba(0,0,0,.5);
+  height:62px
+}
+.nav-inner{
+  max-width:var(--max);width:100%;margin:0 auto;padding:0 var(--pad);
+  display:flex;align-items:center;justify-content:space-between;gap:var(--s4)
+}
+.logo{display:flex;align-items:center;gap:.6rem;flex-shrink:0}
+.logo-mark{
+  width:40px;height:40px;
+  border-radius:var(--rmd);overflow:hidden;
+  box-shadow:0 0 22px rgba(184,134,11,.45);flex-shrink:0
+}
+.logo-name{font-size:1.42rem;font-weight:900;letter-spacing:2.5px}
+.nav-links{display:flex;align-items:center;gap:var(--s5)}
+.nav-links a{
+  font-size:var(--tsm);font-weight:600;color:var(--txt4);
+  transition:color var(--base) var(--ease);position:relative;padding-bottom:2px
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:-3px;right:0;
+  width:0;height:1.5px;background:var(--r4);border-radius:var(--rfull);
+  transition:width var(--slow) var(--ease)
+}
+.nav-links a:hover,.nav-links a.active{color:var(--txt)}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+
+/* Nav right cluster (theme + signin + cta) */
+.nav-cta-d{display:flex;align-items:center;gap:.85rem}
+.nav-theme{
+  width:38px;height:38px;border-radius:50%;
+  background:rgba(255,255,255,.04);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--txt3);font-size:.95rem;
+  transition:all var(--base) var(--ease)
+}
+.nav-theme:hover{border-color:var(--r4);color:var(--r4);transform:rotate(15deg)}
+.nav-signin{
+  font-size:var(--tsm);font-weight:600;color:var(--txt2);
+  transition:color var(--base) var(--ease);text-decoration:none
+}
+.nav-signin:hover{color:var(--r3)}
+.ham{display:none;flex-direction:column;gap:5px;padding:4px}
+.ham span{display:block;width:22px;height:1.5px;background:var(--n0);border-radius:var(--rfull);transition:all var(--slow) var(--ease)}
+.ham.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.ham.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.ham.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.drawer{
+  position:fixed;top:0;right:-100%;width:min(300px,84vw);height:100dvh;
+  background:var(--n87);border-left:1px solid var(--border);z-index:850;
+  padding:calc(var(--nav) + var(--s4)) var(--s3) var(--s4);
+  display:flex;flex-direction:column;gap:var(--s1);
+  transition:right var(--slow) var(--ease);overflow-y:auto
+}
+.drawer.open{right:0}
+.drawer a{
+  padding:.85rem var(--s2);border-radius:var(--rlg);font-size:var(--tbase);
+  font-weight:600;color:var(--txt2);transition:all var(--base) var(--ease)
+}
+.drawer a:hover{color:var(--txt);background:var(--subtle)}
+.drawer .btn{margin-top:var(--s3)}
+.overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:849;
+  opacity:0;pointer-events:none;transition:opacity var(--base) var(--ease)
+}
+.overlay.show{opacity:1;pointer-events:all}
+
+/* ============================================================
+   HERO
+============================================================ */
+.hero{
+  min-height:100vh;padding:calc(var(--nav) + var(--s16)) 0 var(--s16);
+  position:relative;overflow:hidden;display:flex;align-items:center;background:var(--bg)
+}
+.hero-bg{position:absolute;inset:0;pointer-events:none}
+.hero-glow{
+  position:absolute;top:-10%;left:50%;transform:translateX(-50%);
+  width:860px;height:680px;
+  background:radial-gradient(ellipse,rgba(184,134,11,.17) 0%,rgba(184,134,11,.06) 42%,transparent 70%)
+}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(184,134,11,.038) 1px,transparent 1px),linear-gradient(90deg,rgba(184,134,11,.038) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(ellipse 85% 75% at 50% 40%,black,transparent 78%)
+}
+.hero-orb-a{
+  position:absolute;width:400px;height:400px;top:-100px;left:-80px;
+  background:rgba(184,134,11,.08);border-radius:50%;filter:blur(90px);
+  animation:driftA 14s ease-in-out infinite
+}
+.hero-orb-b{
+  position:absolute;width:280px;height:280px;bottom:60px;right:-40px;
+  background:rgba(80,0,0,.07);border-radius:50%;filter:blur(80px);
+  animation:driftB 18s ease-in-out infinite
+}
+@keyframes driftA{0%,100%{transform:translate(0,0)}40%{transform:translate(40px,30px)}70%{transform:translate(-20px,50px)}}
+@keyframes driftB{0%,100%{transform:translate(0,0)}50%{transform:translate(-35px,-40px)}}
+
+.hero-layout{
+  position:relative;z-index:2;
+  display:grid;grid-template-columns:1fr 1fr;gap:var(--s8);align-items:center
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:rgba(184,134,11,.11);border:1px solid rgba(184,134,11,.26);
+  color:var(--r3);padding:.38rem 1rem;border-radius:var(--rfull);
+  font-size:var(--txs);font-weight:700;letter-spacing:.05em;
+  margin-bottom:var(--s4);width:fit-content
+}
+.blink{width:6px;height:6px;background:var(--r4);border-radius:50%;animation:blink 1.6s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.hero-h1{
+  font-size:clamp(2.7rem,6vw,var(--t7x));font-weight:900;line-height:1.1;
+  margin-bottom:var(--s4);
+  background:linear-gradient(160deg,#fff 25%,rgba(255,255,255,.72) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text
+}
+.hero-h1 em{
+  font-style:normal;
+  background:linear-gradient(135deg,var(--r6),var(--r4));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text
+}
+.hero-sub{
+  font-size:var(--tlg);color:var(--txt3);line-height:1.88;
+  margin-bottom:var(--s6);max-width:500px
+}
+.hero-ctas{display:flex;gap:var(--s2);flex-wrap:wrap;margin-bottom:var(--s8)}
+.hero-trust{display:flex;align-items:center;gap:var(--s3);flex-wrap:wrap}
+.trust-i{display:flex;align-items:center;gap:.45rem;font-size:var(--tsm);color:var(--txt4)}
+.trust-i i{color:var(--r4);font-size:.75rem}
+
+/* ── Spline full-bg hero ── */
+.hero-overlay{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    linear-gradient(to left, transparent 35%, rgba(8,8,8,.82) 65%, rgba(8,8,8,.96) 85%),
+    linear-gradient(to top, rgba(8,8,8,.9) 0%, transparent 30%),
+    linear-gradient(to bottom, rgba(8,8,8,.6) 0%, transparent 20%)
+}
+.hero-spotlight{
+  pointer-events:none;position:absolute;z-index:2;
+  height:169%;width:138%;top:-60%;left:-30%;
+  opacity:0;animation:spotlight 2.5s ease .5s 1 forwards
+}
+@keyframes spotlight{
+  0%{opacity:0;transform:translate(-72%,-62%) scale(.5)}
+  100%{opacity:1;transform:translate(-50%,-40%) scale(1)}
+}
+/* Override hero-layout for bg mode */
+.hero-layout--bg{
+  grid-template-columns:1fr;
+  max-width:680px
+}
+.hero-content--bg{
+  text-align:right
+}
+
+/* Stats strip (full-width below layout) */
+.hero-stats{
+  position:relative;z-index:2;
+  display:grid;grid-template-columns:repeat(4,1fr);
+  background:rgba(255,255,255,.025);border:1px solid var(--border);
+  border-radius:var(--rxl);padding:var(--s4);margin-top:var(--s8)
+}
+.stat{text-align:center;position:relative}
+.stat:not(:last-child)::after{
+  content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);
+  width:1px;height:30px;background:var(--border)
+}
+.stat-v{display:block;font-size:var(--t2x);font-weight:900;color:var(--r4);line-height:1;margin-bottom:.3rem}
+.stat-l{font-size:var(--txs);color:var(--txt4);font-weight:500}
+
+/* ============================================================
+   TICKER
+============================================================ */
+.ticker{
+  padding:.7rem 0;overflow:hidden;
+  background:rgba(184,134,11,.05);
+  border-top:1px solid rgba(184,134,11,.12);
+  border-bottom:1px solid rgba(184,134,11,.12)
+}
+.ticker-track{display:flex;gap:var(--s8);width:max-content;animation:tick 32s linear infinite}
+.ticker-track:hover{animation-play-state:paused}
+.ticker-item{display:flex;align-items:center;gap:.4rem;font-size:var(--txs);font-weight:600;color:var(--txt4);white-space:nowrap}
+.ticker-item .up{color:#4ade80}
+.ticker-item .dn{color:var(--r4)}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ============================================================
+   PROBLEM
+============================================================ */
+.prob-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s4)}
+.prob-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--rxl);
+  padding:var(--s5);transition:all var(--slow) var(--ease);position:relative;overflow:hidden
+}
+.prob-card::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--r7),var(--r5));
+  transform:scaleX(0);transform-origin:right;transition:transform var(--slow) var(--ease)
+}
+.prob-card:hover{border-color:var(--border-r);transform:translateY(-5px);box-shadow:0 16px 50px var(--glow)}
+.prob-card:hover::after{transform:scaleX(1)}
+.prob-ico{
+  width:48px;height:48px;background:rgba(184,134,11,.09);border:1px solid rgba(184,134,11,.18);
+  border-radius:var(--rlg);display:flex;align-items:center;justify-content:center;
+  color:var(--r4);font-size:var(--txl);margin-bottom:var(--s3)
+}
+.prob-card h3{font-size:var(--tbase);font-weight:700;margin-bottom:var(--s2);line-height:1.35}
+.prob-card p{font-size:var(--tsm);color:var(--txt4);line-height:1.78}
+
+/* ============================================================
+   SOLUTION
+============================================================ */
+.sol-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s4)}
+.sol-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--r2x);
+  padding:var(--s5);transition:all var(--slow) var(--ease);position:relative;overflow:hidden
+}
+.sol-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:130px;
+  background:radial-gradient(ellipse at 50% -20%,rgba(184,134,11,.13),transparent 70%);
+  opacity:0;transition:opacity var(--slow) var(--ease);pointer-events:none
+}
+.sol-card:hover{border-color:var(--border-r);transform:translateY(-7px);box-shadow:0 24px 65px var(--glow)}
+.sol-card:hover::before{opacity:1}
+.sol-badge{
+  display:inline-flex;align-items:center;gap:.35rem;
+  background:rgba(184,134,11,.1);border:1px solid rgba(184,134,11,.2);
+  color:var(--r3);padding:.22rem .7rem;border-radius:var(--rfull);
+  font-size:var(--txs);font-weight:700;margin-bottom:var(--s3)
+}
+.sol-icon{font-size:2.6rem;display:block;margin-bottom:var(--s2);filter:drop-shadow(0 4px 14px rgba(184,134,11,.3))}
+.sol-card h3{font-size:var(--txl);font-weight:800;margin-bottom:var(--s2);line-height:1.3}
+.sol-card>p{font-size:var(--tsm);color:var(--txt3);line-height:1.82;margin-bottom:var(--s4)}
+.feat-list li{
+  display:flex;align-items:center;gap:var(--s2);padding:.52rem 0;
+  font-size:var(--tsm);color:var(--txt2);border-bottom:1px solid var(--border)
+}
+.feat-list li:last-child{border-bottom:none}
+.ck{
+  width:18px;height:18px;min-width:18px;border-radius:50%;
+  background:rgba(184,134,11,.12);border:1px solid rgba(184,134,11,.25);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.6rem;color:var(--r4)
+}
+
+/* ============================================================
+   HOW IT WORKS
+============================================================ */
+.steps{max-width:860px;margin:0 auto;display:flex;align-items:flex-start}
+.step{flex:1;text-align:center;padding:0 var(--s3)}
+.step-n{
+  width:56px;height:56px;margin:0 auto var(--s3);
+  background:linear-gradient(135deg,var(--r7),var(--r5));
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;font-weight:900;position:relative;
+  box-shadow:0 0 0 8px rgba(184,134,11,.1),0 0 28px rgba(184,134,11,.35);
+  animation:gpulse 3s ease-in-out infinite
+}
+@keyframes gpulse{
+  0%,100%{box-shadow:0 0 0 8px rgba(184,134,11,.1),0 0 28px rgba(184,134,11,.35)}
+  50%{box-shadow:0 0 0 8px rgba(184,134,11,.2),0 0 48px rgba(184,134,11,.55)}
+}
+.step-n::after{
+  content:'';position:absolute;inset:-5px;border-radius:50%;
+  border:1px dashed rgba(184,134,11,.3);animation:spin 14s linear infinite
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.step h3{font-size:var(--tbase);font-weight:700;margin-bottom:.5rem;line-height:1.35}
+.step p{font-size:var(--tsm);color:var(--txt4);line-height:1.72}
+.step-con{
+  flex:0 0 56px;height:1px;margin-top:27px;
+  background:linear-gradient(to left,var(--r7),rgba(184,134,11,.15))
+}
+
+/* ============================================================
+   PRICING
+============================================================ */
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s4);align-items:center}
+.price-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--r2x);padding:var(--s5);position:relative;
+  transition:all var(--slow) var(--ease)
+}
+.price-card:not(.feat):hover{border-color:var(--border-r);transform:translateY(-5px);box-shadow:0 20px 55px var(--glow)}
+.price-card.feat{
+  background:linear-gradient(160deg,#170000,#0e0000);
+  border:1px solid rgba(184,134,11,.52);
+  transform:scale(1.04);
+  box-shadow:0 28px 80px rgba(184,134,11,.22)
+}
+.price-card.feat:hover{transform:scale(1.04) translateY(-5px);box-shadow:0 34px 90px rgba(184,134,11,.3)}
+.pop-tag{
+  position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+  background:linear-gradient(90deg,var(--r7),var(--r5));color:var(--n0);
+  padding:.3rem 1.2rem;border-radius:var(--rfull);font-size:var(--txs);font-weight:700;
+  white-space:nowrap;box-shadow:0 4px 18px var(--glow)
+}
+.price-tier{font-size:var(--txs);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--txt4);margin-bottom:var(--s4)}
+.price-card.feat .price-tier{color:rgba(255,180,180,.6)}
+.price-num{margin-bottom:var(--s5);line-height:1}
+.price-num .cur{font-size:var(--txl);font-weight:700;vertical-align:super;color:var(--txt4)}
+.price-num .amt{font-size:var(--t6x);font-weight:900;letter-spacing:-.03em}
+.price-num .per{display:block;font-size:var(--tsm);color:var(--txt4);margin-top:.35rem}
+.price-feats{display:flex;flex-direction:column;gap:.75rem;margin-bottom:var(--s5)}
+.price-feats li{display:flex;align-items:center;gap:.6rem;font-size:var(--tsm);color:var(--txt2)}
+.price-feats li .fa-check{color:#4ade80;font-size:var(--txs);flex-shrink:0}
+
+/* ============================================================
+   TESTIMONIALS
+============================================================ */
+/* ── Testimonials columns (infinite scroll) ── */
+.testi-cols{
+  display:flex;gap:var(--s3);justify-content:center;
+  max-height:720px;overflow:hidden;margin-top:var(--s8);
+  mask-image:linear-gradient(to bottom,transparent,black 18%,black 82%,transparent);
+  -webkit-mask-image:linear-gradient(to bottom,transparent,black 18%,black 82%,transparent)
+}
+.testi-col{flex:0 0 280px}
+.testi-col-inner{
+  display:flex;flex-direction:column;gap:var(--s3);
+  animation:testiScroll var(--dur,15s) linear infinite
+}
+@keyframes testiScroll{from{transform:translateY(0)}to{transform:translateY(-50%)}}
+.testi-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--rxl);
+  padding:var(--s4);transition:border-color var(--base) var(--ease)
+}
+.testi-card:hover{border-color:var(--border-r)}
+.testi-stars{font-size:var(--tsm);color:#fbbf24;letter-spacing:2px;margin-bottom:var(--s2)}
+.testi-txt{font-size:var(--tsm);color:var(--txt3);line-height:1.9;margin-bottom:var(--s3)}
+.testi-author{display:flex;align-items:center;gap:var(--s2);padding-top:var(--s2);border-top:1px solid var(--border)}
+.testi-av{
+  width:38px;height:38px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--r7),var(--r4));
+  display:flex;align-items:center;justify-content:center;font-weight:700;font-size:var(--tbase)
+}
+.testi-name{font-size:var(--tsm);font-weight:700}
+.testi-role{font-size:var(--txs);color:var(--txt4);margin-top:2px}
+
+/* ── Lamp effect (hero) ── */
+.hero-lamp{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  z-index:1;pointer-events:none;overflow:hidden
+}
+.lamp-beam{
+  position:absolute;top:0;height:55%;overflow:hidden;
+  width:34rem;opacity:1
+}
+.lamp-beam-r{
+  right:calc(50% - 1px);
+  background-image:conic-gradient(from 70deg at center top,#C9960C 0%,rgba(196,150,15,.35) 30%,transparent 60%)
+}
+.lamp-beam-l{
+  left:calc(50% - 1px);
+  background-image:conic-gradient(from 290deg at center top,transparent 40%,rgba(196,150,15,.35) 70%,#C9960C 100%)
+}
+/* fade beam bottom edge into bg */
+.lamp-beam::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:50%;
+  background:linear-gradient(to top,var(--bg),transparent)
+}
+.lamp-line{
+  position:absolute;top:55%;left:50%;transform:translate(-50%,-50%);
+  width:32rem;height:1px;
+  background:linear-gradient(90deg,transparent 0%,#D4A017 30%,#F0C030 50%,#D4A017 70%,transparent 100%);
+  box-shadow:0 0 22px 6px rgba(212,162,20,.7),0 0 60px 12px rgba(184,134,11,.4)
+}
+.lamp-glow{
+  position:absolute;top:calc(55% + 1px);left:50%;transform:translateX(-50%);
+  width:28rem;height:10rem;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(212,162,20,.6) 0%,rgba(184,134,11,.25) 45%,transparent 70%);
+  filter:blur(28px)
+}
+/* bright core spot */
+.lamp-core{
+  position:absolute;top:calc(55% - 2rem);left:50%;transform:translateX(-50%);
+  width:10rem;height:4rem;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(240,192,48,.55) 0%,rgba(212,162,20,.2) 60%,transparent 80%);
+  filter:blur(12px)
+}
+
+/* ============================================================
+   FAQ
+============================================================ */
+/* proof grid */
+.proof-grid{display:flex;gap:var(--s3);margin-top:var(--s6);overflow-x:auto;padding-bottom:var(--s3);scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.proof-grid::-webkit-scrollbar{height:4px}
+.proof-grid::-webkit-scrollbar-track{background:var(--card);border-radius:var(--rfull)}
+.proof-grid::-webkit-scrollbar-thumb{background:var(--r7);border-radius:var(--rfull)}
+.proof-card{flex:0 0 260px;border-radius:var(--rxl);overflow:hidden;border:1px solid var(--border);transition:transform var(--base) var(--ease),box-shadow var(--base) var(--ease);aspect-ratio:9/16;position:relative;scroll-snap-align:start}
+.proof-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.5)}
+.proof-card img{width:100%;height:100%;object-fit:cover;object-position:center 25%;display:block;position:absolute;inset:0}
+.faq-wrap{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:var(--s2)}
+.faq-item{background:var(--card);border:1px solid var(--border);border-radius:var(--rxl);overflow:hidden;transition:border-color var(--base) var(--ease)}
+.faq-item.open{border-color:rgba(184,134,11,.35)}
+.faq-q{
+  width:100%;display:flex;align-items:center;justify-content:space-between;
+  gap:var(--s3);padding:var(--s3) var(--s4);cursor:pointer;background:none;text-align:right
+}
+.faq-q span{font-size:var(--tbase);font-weight:600;color:var(--txt);flex:1}
+.faq-tog{
+  width:28px;height:28px;min-width:28px;border-radius:50%;
+  background:rgba(184,134,11,.08);border:1px solid rgba(184,134,11,.18);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--r4);font-size:.8rem;transition:all var(--slow) var(--ease)
+}
+.faq-item.open .faq-tog{background:var(--r7);border-color:var(--r7);color:var(--n0);transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .45s var(--ease)}
+.faq-a p{padding:0 var(--s4) var(--s3);font-size:var(--tsm);color:var(--txt4);line-height:1.88}
+.faq-item.open .faq-a{max-height:280px}
+
+/* ============================================================
+   CTA
+============================================================ */
+.cta-sec{
+  padding:var(--s16) 0;text-align:center;position:relative;overflow:hidden;
+  background:linear-gradient(160deg,#1a0000 0%,#0e0000 50%,#150000 100%)
+}
+.cta-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 100% 100% at 50% 50%,rgba(184,134,11,.22),transparent 64%)}
+.cta-grid-bg{
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(184,134,11,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(184,134,11,.05) 1px,transparent 1px);
+  background-size:48px 48px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black,transparent 80%)
+}
+.cta-inner{position:relative;z-index:1}
+.cta-sec h2{font-size:clamp(var(--t3x),5vw,var(--t6x));font-weight:900;line-height:1.12;margin-bottom:var(--s3)}
+.cta-sec>div>p{font-size:var(--tlg);color:rgba(255,255,255,.62);max-width:510px;margin:0 auto var(--s6);line-height:1.88}
+.cta-note{margin-top:var(--s4);font-size:var(--tsm);color:rgba(255,255,255,.28)}
+
+/* ============================================================
+   FOOTER
+============================================================ */
+footer{background:#050505;border-top:1px solid rgba(184,134,11,.12);padding:var(--s10) 0 var(--s6)}
+.footer-main{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--s6);flex-wrap:wrap;padding-bottom:var(--s6);margin-bottom:var(--s6);border-bottom:1px solid var(--border)}
+.footer-brand p{font-size:var(--tsm);color:var(--txt4);line-height:1.78;margin-top:var(--s3);max-width:260px}
+.footer-col h4{font-size:var(--tsm);font-weight:700;color:var(--txt2);margin-bottom:var(--s3)}
+.footer-col ul{display:flex;flex-direction:column;gap:var(--s2)}
+.footer-col ul a{font-size:var(--tsm);color:var(--txt4);transition:color var(--base) var(--ease)}
+.footer-col ul a:hover{color:var(--txt)}
+.footer-btm{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--s4);flex-wrap:wrap}
+.footer-disc{font-size:var(--txs);color:rgba(255,255,255,.24);line-height:1.72;max-width:550px}
+.footer-cr{font-size:var(--txs);color:var(--txt4);white-space:nowrap}
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+@media(max-width:960px){
+  .hero-layout{grid-template-columns:1fr}
+  .hero-sub{max-width:100%}
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+  .prob-grid,.sol-grid,.price-grid{grid-template-columns:1fr}
+  .proof-card{flex:0 0 200px}
+  .price-card.feat{transform:scale(1)}
+  .price-card.feat:hover{transform:translateY(-5px)}
+  .nav-links,.nav-cta-d{display:none}
+  .ham{display:flex}
+  .footer-main{flex-direction:column}
+  .testi-col--md,.testi-col--lg{display:none}
+  .testi-col{flex:0 0 90vw;max-width:340px}
+  .lamp-beam{width:22rem}.lamp-line{width:22rem}.lamp-glow{width:16rem}
+}
+@media(min-width:768px){
+  .testi-col--md{display:block}
+}
+@media(min-width:1024px){
+  .testi-col--lg{display:block}
+}
+@media(max-width:640px){
+  .sec{padding:var(--s10) 0}
+  .steps{flex-direction:column;align-items:center}
+  .step-con{flex:none;width:1px;height:36px;background:linear-gradient(180deg,var(--r7),rgba(184,134,11,.15))}
+  .stat:not(:last-child)::after{display:none}
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+  .footer-btm{flex-direction:column;align-items:flex-end}
+}
+@media(max-width:480px){
+  .hero-ctas{flex-direction:column}
+  .hero-ctas .btn{width:100%;justify-content:center}
+  .footer-main{align-items:flex-end}
+}
+
+/* ============================================================
+   PREMIUM UPGRADES — Typography, Gradients, Glassmorphism
+============================================================ */
+
+/* Use IBM Plex Sans Arabic for premium body feel */
+body{font-family:'IBM Plex Sans Arabic','Cairo',system-ui,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;font-feature-settings:"ss01","ss02"}
+.logo-name,.hero-h1,.h2,.price-amt,.stat-v{font-family:'Space Grotesk','IBM Plex Sans Arabic',sans-serif}
+
+/* Better heading tracking */
+.hero-h1{letter-spacing:-.035em;line-height:1.02;font-weight:700}
+.h2{letter-spacing:-.025em;font-weight:700}
+
+/* Gradient text effect for hero em */
+.hero-h1 em{
+  font-style:normal;
+  background:linear-gradient(135deg,#F0C030 0%,#D4A017 40%,#A07810 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  position:relative;display:inline-block
+}
+.hero-h1 em::after{
+  content:'';position:absolute;left:-10%;right:-10%;bottom:-2px;height:8px;
+  background:radial-gradient(ellipse at center,rgba(212,160,23,.4),transparent 70%);
+  filter:blur(6px);z-index:-1
+}
+
+/* Premium card glassmorphism */
+.prob-card,.sol-card,.faq-item,.price-card,.proof-card{
+  position:relative;
+  background:linear-gradient(180deg,rgba(255,255,255,.03) 0%,rgba(255,255,255,.01) 100%);
+  border:1px solid var(--border);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  transition:transform var(--slow) var(--ease),border-color var(--slow) var(--ease),box-shadow var(--slow) var(--ease)
+}
+.prob-card:hover,.sol-card:hover{
+  transform:translateY(-4px);
+  border-color:rgba(212,160,23,.3);
+  box-shadow:0 20px 60px -20px rgba(212,160,23,.25)
+}
+
+/* Premium pricing card glow */
+.price-card.feat{
+  position:relative;overflow:visible
+}
+.price-card.feat::before{
+  content:'';position:absolute;inset:-2px;border-radius:inherit;z-index:-1;
+  background:linear-gradient(135deg,#F0C030,#D4A017,#A07810,#D4A017,#F0C030);
+  background-size:300% 300%;
+  animation:gradient-shift 6s ease infinite;
+  opacity:.7;filter:blur(10px)
+}
+@keyframes gradient-shift{
+  0%,100%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+}
+
+/* Buttons — premium shine on hover */
+.btn-p{
+  background:linear-gradient(135deg,var(--r4) 0%,var(--r5) 50%,var(--r6) 100%);
+  background-size:200% 200%;
+  position:relative;overflow:hidden;
+  box-shadow:0 8px 24px rgba(212,160,23,.32),inset 0 1px 0 rgba(255,255,255,.2)
+}
+.btn-p::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.35) 50%,transparent 70%);
+  transform:translateX(100%);transition:transform .7s var(--ease);pointer-events:none
+}
+.btn-p:hover{
+  background-position:100% 100%;
+  box-shadow:0 14px 40px rgba(212,160,23,.5),inset 0 1px 0 rgba(255,255,255,.25);
+  transform:translateY(-2px)
+}
+.btn-p:hover::before{transform:translateX(-100%)}
+
+/* Section h2 with gradient underline */
+.h2{position:relative;display:inline-block}
+.h2::after{
+  content:'';position:absolute;bottom:-12px;right:50%;transform:translateX(50%);
+  width:60px;height:3px;border-radius:2px;
+  background:linear-gradient(90deg,transparent,var(--r4),transparent)
+}
+section[id] .h2,.h2-wrap{text-align:center}
+
+/* Premium animated underline on nav */
+.nav-links a::after{
+  background:linear-gradient(90deg,var(--r3),var(--r4),var(--r3));
+  height:2px
+}
+
+/* Smoother scroll */
+html{scroll-behavior:smooth}
+
+/* Better focus states */
+a:focus-visible,button:focus-visible,input:focus-visible{
+  outline:2px solid var(--r4);outline-offset:3px;border-radius:6px
+}
+
+/* Premium scrollbar */
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:#050505}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--r6),var(--r4));border-radius:5px;border:2px solid #050505}
+::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,var(--r5),var(--r3))}
+
+/* ============================================================
+   LIGHT MODE
+============================================================ */
+body.light{
+  --bg:#fafafa;--surface:#ffffff;--card:#f4f4f5;
+  --n95:#fafafa;--n90:#f4f4f5;--n87:#ffffff;--n85:#fafafa;
+  --n80:#f4f4f5;--n75:#e4e4e7;--n70:#d4d4d8;--n60:#a1a1aa;
+  --n40:#52525b;--n30:#3f3f46;--n20:#27272a;--n10:#18181b;--n0:#0a0a0a;
+  --border:rgba(0,0,0,.08);
+  --txt:#0a0a0a;--txt2:#27272a;--txt3:#52525b;--txt4:#71717a;
+  --bg:#fafafa
+}
+body.light{background:#fafafa;color:#0a0a0a}
+body.light .nav.on{background:rgba(255,255,255,.85);box-shadow:0 1px 0 rgba(0,0,0,.06),0 4px 30px rgba(0,0,0,.06)}
+body.light .nav-theme{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.08);color:#52525b}
+body.light .nav-signin{color:#27272a}
+body.light .nav-links a{color:#71717a}
+body.light .nav-links a:hover,body.light .nav-links a.active{color:#0a0a0a}
+body.light .logo-name{color:#0a0a0a}
+body.light .ham span{background:#0a0a0a}
+body.light .hero{background:#fafafa}
+body.light .hero-overlay{
+  background:linear-gradient(to left,transparent 35%,rgba(250,250,250,.82) 65%,rgba(250,250,250,.96) 85%),linear-gradient(to top,rgba(250,250,250,.9) 0%,transparent 30%),linear-gradient(to bottom,rgba(250,250,250,.6) 0%,transparent 20%)
+}
+body.light .hero{color:#0a0a0a}
+body.light .hero-content,body.light .hero-content *:not(em):not(.btn):not(.btn *):not(i){color:#0a0a0a}
+body.light .hero-h1{color:#0a0a0a !important}
+body.light .hero-h1 em{
+  background:linear-gradient(135deg,#A07810 0%,#8B6914 50%,#5C4400 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text
+}
+body.light .hero-sub{color:#3f3f46 !important}
+body.light .hero-trust span,body.light .hero-trust i{color:#52525b !important}
+body.light .btn-g{color:#0a0a0a !important}
+body.light .hero-eyebrow{background:rgba(212,160,23,.1);border-color:rgba(212,160,23,.3);color:#A07810}
+body.light .hero-trust{color:#52525b}
+body.light .stat-v{color:#0a0a0a}
+body.light .stat-l{color:#71717a}
+body.light .hero-stats{background:rgba(255,255,255,.6);border-top-color:rgba(0,0,0,.06);border-bottom-color:rgba(0,0,0,.06);backdrop-filter:blur(10px)}
+body.light section{background:#fafafa;color:#0a0a0a}
+body.light .sec--surface{background:#ffffff}
+body.light .sec--dark{background:#f4f4f5}
+body.light .h2{color:#0a0a0a}
+body.light .sub{color:#52525b}
+body.light .eyebrow{background:rgba(212,160,23,.12);border-color:rgba(212,160,23,.3);color:#A07810}
+body.light .prob-card,body.light .sol-card,body.light .faq-item,body.light .price-card{
+  background:#ffffff;border-color:rgba(0,0,0,.06);
+  box-shadow:0 1px 3px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.04)
+}
+body.light .prob-card:hover,body.light .sol-card:hover{
+  box-shadow:0 20px 60px -20px rgba(212,160,23,.25),0 1px 3px rgba(0,0,0,.04)
+}
+body.light .prob-card h3,body.light .sol-card h3,body.light .faq-q,body.light .price-h{color:#0a0a0a}
+body.light .prob-card p,body.light .sol-card p,body.light .faq-a,body.light .price-feats li{color:#52525b}
+body.light .price-amt{color:#0a0a0a}
+body.light .price-card.feat{background:linear-gradient(180deg,#fff8eb 0%,#ffffff 100%);border-color:rgba(212,160,23,.4)}
+body.light .btn-g{background:rgba(0,0,0,.04);color:#0a0a0a;border-color:rgba(0,0,0,.1)}
+body.light .btn-g:hover{background:rgba(0,0,0,.08);border-color:rgba(0,0,0,.18)}
+body.light footer{background:#0a0a0a;color:#fafafa}
+body.light .testi-col{}
+body.light .testi-card{background:#ffffff;border-color:rgba(0,0,0,.08);box-shadow:0 1px 3px rgba(0,0,0,.05)}
+body.light .testi-card .testi-text,body.light .testi-card .testi-name{color:#0a0a0a}
+body.light .testi-card .testi-role{color:#52525b}
+body.light .cta-sec{background:linear-gradient(135deg,#fff8eb,#fdf6e3)}
+body.light .cta-sec h2{color:#0a0a0a}
+body.light .cta-sec p{color:#3f3f46}
+body.light ::-webkit-scrollbar-track{background:#e4e4e7}
+body.light ::-webkit-scrollbar-thumb{border-color:#e4e4e7}
+
+/* Spline viewer hide in light mode (since the dark 3D doesn't fit light bg) */
+body.light .hero-bg spline-viewer{opacity:.3;filter:invert(1) hue-rotate(180deg)}
+
+/* Smooth theme transition */
+body,body *{
+  transition:background-color .35s var(--ease),border-color .35s var(--ease),color .35s var(--ease)
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#hero" class="logo">
+      <div class="logo-mark"><img src="glorex_logo.png" alt="GLOREX"/></div>
+      <span class="logo-name">GLOREX</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#hero" class="active">الرئيسية</a></li>
+      <li><a href="#solution">المميزات</a></li>
+      <li><a href="#pricing">الأسعار</a></li>
+      <li><a href="#cta">انضم الآن</a></li>
+    </ul>
+    <div class="nav-cta-d">
+      <button class="nav-theme" id="themeToggle" aria-label="تبديل الوضع"><i class="fas fa-moon"></i></button>
+      <a href="signin.html" class="nav-signin">تسجيل الدخول</a>
+      <a href="signup.html" class="btn btn-p" style="padding:.65rem 1.5rem;font-size:var(--tsm)">ابدأ الآن</a>
+    </div>
+    <button class="ham" id="ham" aria-label="القائمة"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="overlay" id="ov"></div>
+<div class="drawer" id="drawer">
+  <a href="#hero"     class="dl">الرئيسية</a>
+  <a href="#solution" class="dl">المميزات</a>
+  <a href="#pricing"  class="dl">الأسعار</a>
+  <a href="#cta"      class="dl">انضم الآن</a>
+  <a href="signin.html" class="dl">تسجيل الدخول</a>
+  <a href="signup.html" class="btn btn-p dl">ابدأ الآن</a>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-bg">
+    <!-- Spline 3D — full background -->
+    <spline-viewer
+      id="heroSpline"
+      url="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
+      style="position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:auto">
+    </spline-viewer>
+    <!-- Gradient overlay — readability layer -->
+    <div class="hero-overlay"></div>
+    <!-- Spotlight SVG (Aceternity) -->
+    <svg class="hero-spotlight" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3787 2842" fill="none">
+      <g filter="url(#sp-filter)">
+        <ellipse cx="1924.71" cy="273.501" rx="1924.71" ry="273.501"
+          transform="matrix(-0.822377 -0.568943 -0.568943 0.822377 3631.88 2291.09)"
+          fill="#8B6914" fill-opacity="0.32"/>
+      </g>
+      <defs>
+        <filter id="sp-filter" x="0.86" y="0.84" width="3785.16" height="2840.26"
+          filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+          <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+          <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+          <feGaussianBlur stdDeviation="151" result="effect1"/>
+        </filter>
+      </defs>
+    </svg>
+    <div class="hero-grid"></div>
+  </div>
+
+  <div class="wrap" style="width:100%">
+    <div class="hero-layout hero-layout--bg">
+
+      <!-- Content — centered over the 3D background -->
+      <div class="hero-content hero-content--bg">
+        <div class="hero-eyebrow" data-aos="fade-down" data-aos-duration="700">
+          <span class="blink"></span>
+          منصة تعليم التداول الاحترافية — 100% عربي
+        </div>
+        <h1 class="hero-h1" data-aos="fade-up" data-aos-delay="80">
+          تداول كما<br>تقول <em>الخطة</em>
+        </h1>
+        <p class="hero-sub" data-aos="fade-up" data-aos-delay="160">
+          تعبت من اللخبطة؟ حان وقت نظام واحد واضح
+        </p>
+        <div class="hero-ctas" data-aos="fade-up" data-aos-delay="220">
+          <a href="#pricing" class="btn btn-p btn-lg">ابدأ الآن <i class="fas fa-arrow-left"></i></a>
+          <a href="#how"     class="btn btn-g btn-lg"><i class="fas fa-play-circle"></i> شاهد كيف يعمل</a>
+        </div>
+        <div class="hero-trust" data-aos="fade-up" data-aos-delay="280">
+          <div class="trust-i"><i class="fas fa-shield-alt"></i> بدون التزامات</div>
+          <div class="trust-i"><i class="fas fa-rotate-left"></i> إلغاء في أي وقت</div>
+          <div class="trust-i"><i class="fas fa-lock"></i> دفع آمن</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Stats -->
+    <div class="hero-stats" data-aos="fade-up" data-aos-delay="400">
+      <div class="stat">
+        <span class="stat-v" data-count="500">0</span>
+        <span class="stat-l">+500 متداول</span>
+      </div>
+      <div class="stat">
+        <span class="stat-v">9</span>
+        <span class="stat-l">دروس احترافية</span>
+      </div>
+      <div class="stat">
+        <span class="stat-v">1:2</span>
+        <span class="stat-l">نسبة المخاطرة</span>
+      </div>
+      <div class="stat">
+        <span class="stat-v">NQ</span>
+        <span class="stat-l">Nasdaq Futures</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Ticker -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span class="ticker-item">NQ Futures <span class="up">▲ +1.42%</span></span>
+    <span class="ticker-item">Supply & Demand ✦</span>
+    <span class="ticker-item">ES S&P500 <span class="up">▲ +0.81%</span></span>
+    <span class="ticker-item">Fair Value Gap ✦</span>
+    <span class="ticker-item">NASDAQ 100 <span class="up">▲ +1.22%</span></span>
+    <span class="ticker-item">Higher Highs & Lows ✦</span>
+    <span class="ticker-item">GC Gold <span class="up">▲ +0.35%</span></span>
+    <span class="ticker-item">Risk Reward 1:2 ✦</span>
+    <span class="ticker-item">BTC/USD <span class="dn">▼ −0.54%</span></span>
+    <span class="ticker-item">GLOREX Strategy ✦</span>
+    <!-- duplicate -->
+    <span class="ticker-item">NQ Futures <span class="up">▲ +1.42%</span></span>
+    <span class="ticker-item">Supply & Demand ✦</span>
+    <span class="ticker-item">ES S&P500 <span class="up">▲ +0.81%</span></span>
+    <span class="ticker-item">Fair Value Gap ✦</span>
+    <span class="ticker-item">NASDAQ 100 <span class="up">▲ +1.22%</span></span>
+    <span class="ticker-item">Higher Highs & Lows ✦</span>
+    <span class="ticker-item">GC Gold <span class="up">▲ +0.35%</span></span>
+    <span class="ticker-item">Risk Reward 1:2 ✦</span>
+    <span class="ticker-item">BTC/USD <span class="dn">▼ −0.54%</span></span>
+    <span class="ticker-item">GLOREX Strategy ✦</span>
+  </div>
+</div>
+
+<div class="glow-line"></div>
+
+<!-- PROBLEM -->
+<section class="sec sec--surface" id="problem">
+  <div class="wrap">
+    <div class="sec-head" data-aos="fade-up">
+      <div class="sec-label">المشكلة</div>
+      <h2 class="sec-title">هل تعاني من هذه المشاكل؟</h2>
+      <div class="rule"></div>
+    </div>
+    <div class="prob-grid">
+      <div class="prob-card" data-aos="fade-up" data-aos-delay="80">
+        <div class="prob-ico"><i class="fas fa-stop-circle"></i></div>
+        <h3>"أدخل صفقة وتلاقي السوق أخذ الـ SL ورجع لفوق"</h3>
+        <p>السوق يصطاد الـ Stop Loss تبعك ثم يكمل باتجاهك — تخسر مرتين: المال والثقة. هذا مو خطأك، هذا liquidity sweep وفي له حل</p>
+      </div>
+      <div class="prob-card" data-aos="fade-up" data-aos-delay="160">
+        <div class="prob-ico"><i class="fas fa-sync-alt"></i></div>
+        <h3>"كل ما يجيني يوم أحمر أغير الاستراتيجية"</h3>
+        <p>تتداول بطريقة مختلفة كل أسبوع — تيوتيوب، توصيات، تقليد — بدون نظام ثابت تقدر تقيمه وتحسّنه</p>
+      </div>
+      <div class="prob-card" data-aos="fade-up" data-aos-delay="240">
+        <div class="prob-ico"><i class="fas fa-question-circle"></i></div>
+        <h3>"كل يوم أخسر وما بعرف ليش"</h3>
+        <p>ما تسجل صفقاتك، ما تتتبع أداءك، ما تعرف هل المشكلة في الاستراتيجية أو الدخول أو الـ Stop أو ردة فعلك العاطفية</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="glow-line"></div>
+
+<!-- SOLUTION -->
+<section class="sec" id="solution">
+  <div class="wrap">
+    <div class="sec-head" data-aos="fade-up">
+      <div class="sec-label">الحل</div>
+      <h2 class="sec-title">الحل الكامل في مكان واحد</h2>
+      <p class="sec-sub">GLOREX يعطيك كل الأدوات لتتحول من متداول عشوائي إلى متداول يعمل بنظام</p>
+    </div>
+    <div class="sol-grid">
+      <div class="sol-card" data-aos="fade-up" data-aos-delay="80">
+        <div class="sol-badge">📚 9 دروس فيديو</div>
+        <span class="sol-icon">📚</span>
+        <h3>استراتيجية كاملة — مش قطع ناقصة</h3>
+        <p>شفت مئات الفيديوهات بس ما حصلت الصورة الكاملة؟ هنا الـ 9 دروس تغطي كل شيء من الاتجاه للدخول للخروج — بالعربي، بصوت وصورة المدرب</p>
+        <ul class="feat-list">
+          <li><span class="ck"><i class="fas fa-check"></i></span>تحديد الاتجاه: Higher Highs & Higher Lows</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>مناطق العرض والطلب: Supply & Demand</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>تأكيد الدخول: Fair Value Gap</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>Top-Down: دمج الإطارات الزمنية</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>Liquidity Sweeps — ليش السوق يأخذ الـ SL؟</li>
+        </ul>
+      </div>
+      <div class="sol-card" data-aos="fade-up" data-aos-delay="180">
+        <div class="sol-badge">✅ Pre-Trade Checklist</div>
+        <span class="sol-icon">✅</span>
+        <h3>7 خطوات قبل ما تضغط Buy أو Sell</h3>
+        <p>بدل ما تدخل الصفقة بإحساس، اتبع نظام من 7 نقاط يحكم كل دخول. إذا مو كل الشروط موجودة — ما تدخل</p>
+        <ul class="feat-list">
+          <li><span class="ck"><i class="fas fa-check"></i></span>تأكيد الاتجاه على Daily, H4, H1</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>التحقق من منطقة Supply أو Demand</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>تأكيد FVG على الـ 1 دقيقة</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>حساب Risk/Reward 1:2 قبل الدخول</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>تحديد SL و TP بدقة</li>
+        </ul>
+      </div>
+      <div class="sol-card" data-aos="fade-up" data-aos-delay="280">
+        <div class="sol-badge">📓 Trade Journal</div>
+        <span class="sol-icon">📓</span>
+        <h3>أول ما بدأت أسجل — كل شيء تغير</h3>
+        <p>90% من المتداولين يكررون نفس الأخطاء لأنهم ما يسجلون. الـ Journal هو الأداة #1 للتحسن — بدونه أنت تتداول بعمى</p>
+        <ul class="feat-list">
+          <li><span class="ck"><i class="fas fa-check"></i></span>تسجيل كل صفقة بالتفاصيل الكاملة</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>اكتشاف الأنماط في أخطاءك</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>إحصائيات الأداء الشهري</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>ملاحظات ما بعد الصفقة</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>مخطط تطور الأداء بمرور الوقت</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="glow-line"></div>
+
+<!-- HOW IT WORKS -->
+<section class="sec sec--surface" id="how">
+  <div class="wrap">
+    <div class="sec-head" data-aos="fade-up">
+      <div class="sec-label">الطريقة</div>
+      <h2 class="sec-title">كيف يعمل GLOREX؟</h2>
+      <div class="rule"></div>
+    </div>
+    <div class="steps" data-aos="fade-up" data-aos-delay="100">
+      <div class="step">
+        <div class="step-n">١</div>
+        <h3>اشترك واختر باقتك</h3>
+        <p>سجل وادفع خلال دقيقة وابدأ فوراً</p>
+      </div>
+      <div class="step-con"></div>
+      <div class="step">
+        <div class="step-n">٢</div>
+        <h3>تعلم الاستراتيجية</h3>
+        <p>شاهد الدروس بالترتيب وافهم كل خطوة</p>
+      </div>
+      <div class="step-con"></div>
+      <div class="step">
+        <div class="step-n">٣</div>
+        <h3>طبق وسجل</h3>
+        <p>استخدم الـ Checklist والـ Journal يومياً</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="sec" id="pricing">
+  <div class="wrap">
+    <div class="sec-head" data-aos="fade-up">
+      <div class="sec-label">الأسعار</div>
+      <h2 class="sec-title">اختر باقتك</h2>
+      <p class="sec-sub">ابدأ اليوم وألغ في أي وقت — بدون أي التزامات</p>
+    </div>
+    <div class="price-grid">
+      <div class="price-card" data-aos="fade-up" data-aos-delay="80">
+        <p class="price-tier">الأساسي</p>
+        <div class="price-num">
+          <span class="cur">$</span><span class="amt">15</span>
+          <span class="per">/ شهرياً</span>
+        </div>
+        <ul class="price-feats">
+          <li><i class="fas fa-check"></i>Checklist التفاعلية</li>
+          <li><i class="fas fa-check"></i>Trade Journal</li>
+          <li><i class="fas fa-check"></i>وصول للمجتمع</li>
+        </ul>
+        <a href="#" class="btn btn-g btn-w">اشترك</a>
+      </div>
+      <div class="price-card feat" data-aos="fade-up" data-aos-delay="160">
+        <div class="pop-tag">⭐ الأكثر شعبية</div>
+        <p class="price-tier">الاحترافي</p>
+        <div class="price-num">
+          <span class="cur">$</span><span class="amt">29</span>
+          <span class="per">/ شهرياً</span>
+        </div>
+        <ul class="price-feats">
+          <li><i class="fas fa-check"></i>كل ما في الأساسي</li>
+          <li><i class="fas fa-check"></i>9 دروس فيديو كاملة</li>
+          <li><i class="fas fa-check"></i>Ebook PDF</li>
+          <li><i class="fas fa-check"></i>دعم مباشر</li>
+        </ul>
+        <a href="#" class="btn btn-p btn-w">اشترك الآن</a>
+      </div>
+      <div class="price-card" data-aos="fade-up" data-aos-delay="240">
+        <p class="price-tier">الكامل</p>
+        <div class="price-num">
+          <span class="cur">$</span><span class="amt">49</span>
+          <span class="per">/ شهرياً</span>
+        </div>
+        <ul class="price-feats">
+          <li><i class="fas fa-check"></i>كل ما في الاحترافي</li>
+          <li><i class="fas fa-check"></i>محتوى حصري شهري</li>
+          <li><i class="fas fa-check"></i>نظام Affiliate 30%</li>
+          <li><i class="fas fa-check"></i>أولوية الدعم</li>
+        </ul>
+        <a href="#" class="btn btn-g btn-w">اشترك</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="glow-line"></div>
+
+<!-- TESTIMONIALS -->
+<section class="sec sec--surface" id="testimonials">
+  <div class="wrap">
+    <div class="sec-head" data-aos="fade-up">
+      <div class="sec-label">آراء المتداولين</div>
+      <h2 class="sec-title">ماذا يقول المتداولون؟</h2>
+      <div class="rule"></div>
+    </div>
+  </div>
+
+  <!-- Columns scroll — full width, no wrap constraint -->
+  <div class="testi-cols">
+
+    <!-- Column 1 -->
+    <div class="testi-col" style="--dur:16s">
+      <div class="testi-col-inner">
+        <!-- original set -->
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-txt">كنت أغير الاستراتيجية كل أسبوع. بعد GLOREX صار عندي نظام واحد أفهمه وأثق فيه. الـ Checklist منعتني من أكثر من 10 صفقات خاسرة في الشهر الأول</p>
+          <div class="testi-author">
+            <div class="testi-av">أ</div>
+            <div><p class="testi-name">أحمد م. — السعودية</p><p class="testi-role">Prop Firm Trader · 6 أشهر</p></div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-txt">ما صدقت إنو بـ $29 بالشهر تحصل على محتوى أعمق من كورسات بمئات الدولارات. NQ صار منطقياً عندي بعد أسبوعين بس</p>
+          <div class="testi-author">
+            <div class="testi-av">خ</div>
+            <div><p class="testi-name">خالد ر. — السعودية</p><p class="testi-role">Retail Trader · 3 أشهر</p></div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-txt">أول مرة في حياتي أدخل صفقة وأنا فاهم ليش بالضبط. الـ Supply & Demand مع الـ FVG صار منطقي تماماً بعد الدروس</p>
+          <div class="testi-author">
+            <div class="testi-av">ن</div>
+            <div><p class="testi-name">نورا س. — الكويت</p><p class="testi-role">مبتدئة · شهرين مع GLOREX</p></div>
+          </div>
+        </div>
+        <!-- duplicate for seamless loop -->
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-txt">كنت أغير الاستراتيجية كل أسبوع. بعد GLOREX صار عندي نظام واحد أفهمه وأثق فيه. الـ Checklist منعتني من أكثر من 10 صفقات خاسرة في الشهر الأول</p>
+          <div class="testi-author">
+            <div class="testi-av">أ</div>
+            <div><p class="testi-name">أحمد م. — السعودية</p><p class="testi-role">Prop Firm Trader · 6 أشهر</p></div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-txt">ما صدقت إنو بـ $29 بالشهر تحصل على محتوى أعمق من كورسات بمئات الدولارات. NQ صار منطقياً عندي بعد أسبوعين بس</p>
+          <div class="testi-author">
+            <div class="testi-av">خ</div>
+            <div><p class="testi-name">خالد ر. — السعودية</p><p class="testi-role">Retail Trader · 3 أشهر</p></div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-txt">أول مرة في حياتي أدخل صفقة وأنا فاهم ليش بالضبط. الـ Supply & Demand مع الـ FVG صار منطقي تماماً بعد الدروس</p>
+          <div class="testi-author">
+            <div class="testi-av">ن</div>
+            <div><p class="testi-name">نورا س. — الكويت</p><p class="testi-role">مبتدئة · شهرين مع GLOREX</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Column 2 (hidden on mobile) -->
+    <div class="testi-col testi-col--md" style="--dur:20s">
+      <div class="testi-col-inner">
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-txt">فهمت أخيراً ليش السوق كان يأخذ الـ Stop Loss تبعي كل مرة. درس الـ Liquidity Sweeps وحده يساوي ثمن الاشتراك كله</p>
+          <div class="testi-author">
+            <div class="testi-av">م</div>
+            <div><p class="testi-name">محمد خ. — الإمارات</p><p class="testi-role">NQ Trader · 4 أشهر</p></div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-txt">جربت Forex والـ Crypto وكل مرة نفس النتيجة. بعد ما بدأت NQ مع GLOREX فهمت إن المشكلة كانت في الأداة مو في التركيز</p>
+          <div class="testi-author">
+            <div class="testi-av">ع</div>
+            <div><p class="testi-name">عبدالله ف. — قطر</p><p class="testi-role">Full-Time Trader · 5 أشهر</p></div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-txt">الـ Pre-Trade Checklist غيّر طريقة تفكيري كلياً. ما قدرت أدخل صفقة عشوائية بعد ما صرت أمشي على النظام خطوة خطوة</p>
+          <div class="testi-author">
+            <div class="testi-av">س</div>
+            <div><p class="testi-name">سلمى ح. — الأردن</p><p class="testi-role">Part-Time Trader · 4 أشهر</p></div>
+          </div>
+        </div>
+        <!-- duplicate -->
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-txt">فهمت أخيراً ليش السوق كان يأخذ الـ Stop Loss تبعي كل مرة. درس الـ Liquidity Sweeps وحده يساوي ثمن الاشتراك كله</p>
+          <div class="testi-author">
+            <div class="testi-av">م</div>
+            <div><p class="testi-name">محمد خ. — الإمارات</p><p class="testi-role">NQ Trader · 4 أشهر</p></div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-txt">جربت Forex والـ Crypto وكل مرة نفس النتيجة. بعد ما بدأت NQ مع GLOREX فهمت إن المشكلة كانت في الأداة مو في التركيز</p>
+          <div class="testi-author">
+            <div class="testi-av">ع</div>
+            <div><p class="testi-name">عبدالله ف. — قطر</p><p class="testi-role">Full-Time Trader · 5 أشهر</p></div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-txt">الـ Pre-Trade Checklist غيّر طريقة تفكيري كلياً. ما قدرت أدخل صفقة عشوائية بعد ما صرت أمشي على النظام خطوة خطوة</p>
+          <div class="testi-author">
+            <div class="testi-av">س</div>
+            <div><p class="testi-name">سلمى ح. — الأردن</p><p class="testi-role">Part-Time Trader · 4 أشهر</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Column 3 (hidden on mobile + tablet) -->
+    <div class="testi-col testi-col--lg" style="--dur:18s">
+      <div class="testi-col-inner">
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-txt">بدأت أسجل صفقاتي بالـ Journal وبعد شهر اكتشفت إني كنت أخسر في نفس الوقت كل يوم. غيرت سلوك واحد وتحسنت النتائج بشكل واضح</p>
+          <div class="testi-author">
+            <div class="testi-av">ي</div>
+            <div><p class="testi-name">يوسف ع. — الأردن</p><p class="testi-role">Full-Time Trader · 8 أشهر</p></div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-txt">كنت خايف من الـ Prop Firm. بعد ما فهمت كيف أشتغل على NQ بالنظام، نجحت في أول Evaluation خلال 3 أسابيع</p>
+          <div class="testi-author">
+            <div class="testi-av">ر</div>
+            <div><p class="testi-name">رامي ب. — لبنان</p><p class="testi-role">Prop Firm Trader · 7 أشهر</p></div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-txt">المحتوى بالعربي مو مجرد ترجمة — في فهم حقيقي للسوق وللسيكولوجي. أحس إنهم يعرفون وين نحن بالضبط كمتداولين عرب</p>
+          <div class="testi-author">
+            <div class="testi-av">ل</div>
+            <div><p class="testi-name">لينا م. — مصر</p><p class="testi-role">مبتدئة · 3 أشهر مع GLOREX</p></div>
+          </div>
+        </div>
+        <!-- duplicate -->
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-txt">بدأت أسجل صفقاتي بالـ Journal وبعد شهر اكتشفت إني كنت أخسر في نفس الوقت كل يوم. غيرت سلوك واحد وتحسنت النتائج بشكل واضح</p>
+          <div class="testi-author">
+            <div class="testi-av">ي</div>
+            <div><p class="testi-name">يوسف ع. — الأردن</p><p class="testi-role">Full-Time Trader · 8 أشهر</p></div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-txt">كنت خايف من الـ Prop Firm. بعد ما فهمت كيف أشتغل على NQ بالنظام، نجحت في أول Evaluation خلال 3 أسابيع</p>
+          <div class="testi-author">
+            <div class="testi-av">ر</div>
+            <div><p class="testi-name">رامي ب. — لبنان</p><p class="testi-role">Prop Firm Trader · 7 أشهر</p></div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-txt">المحتوى بالعربي مو مجرد ترجمة — في فهم حقيقي للسوق وللسيكولوجي. أحس إنهم يعرفون وين نحن بالضبط كمتداولين عرب</p>
+          <div class="testi-author">
+            <div class="testi-av">ل</div>
+            <div><p class="testi-name">لينا م. — مصر</p><p class="testi-role">مبتدئة · 3 أشهر مع GLOREX</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PROOF GRID -->
+<section class="sec sec--dark" id="proof">
+  <div class="wrap">
+    <div class="sec-head" data-aos="fade-up">
+      <div class="sec-label">نتائج حقيقية</div>
+      <h2>شوف بعينك</h2>
+      <p class="sec-sub">لقطات شاشة حقيقية من متداولين في المجموعة — بدون تعديل</p>
+    </div>
+    <div class="proof-grid" data-aos="fade-up" data-aos-delay="100">
+      <div class="proof-card"><img src="proof1.jpg" alt="نتيجة متداول 1" loading="lazy"/></div>
+      <div class="proof-card"><img src="proof3.jpg" alt="نتيجة متداول 3" loading="lazy"/></div>
+      <div class="proof-card"><img src="proof4.jpg" alt="نتيجة متداول 4" loading="lazy"/></div>
+      <div class="proof-card"><img src="proof2.jpg" alt="نتيجة متداول 2" loading="lazy"/></div>
+      <div class="proof-card"><img src="proof5.jpg" alt="نتيجة متداول 5" loading="lazy"/></div>
+      <div class="proof-card"><img src="proof6.jpg" alt="نتيجة متداول 6" loading="lazy"/></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec" id="faq">
+  <div class="wrap">
+    <div class="sec-head" data-aos="fade-up">
+      <div class="sec-label">الأسئلة</div>
+      <h2 class="sec-title">أسئلة شائعة</h2>
+      <div class="rule"></div>
+    </div>
+    <div class="faq-wrap">
+      <div class="faq-item" data-aos="fade-up" data-aos-delay="60">
+        <button class="faq-q">
+          <span>أنا مبتدئ وما عندي خبرة — هل GLOREX مناسب لي؟</span>
+          <div class="faq-tog"><i class="fas fa-plus"></i></div>
+        </button>
+        <div class="faq-a"><p>نعم، صُمم خصيصاً لك. الدروس تبدأ من الصفر وكل مفهوم يُشرح بأمثلة حقيقية على الشارت. كثير من طلابنا ما كان عندهم أي خبرة قبل GLOREX</p></div>
+      </div>
+      <div class="faq-item" data-aos="fade-up" data-aos-delay="110">
+        <button class="faq-q">
+          <span>ليش NQ تحديداً وليس Forex أو Bitcoin؟</span>
+          <div class="faq-tog"><i class="fas fa-plus"></i></div>
+        </button>
+        <div class="faq-a"><p>NQ Futures في جلسة نيويورك يتحرك بشكل واضح ومتوقع مع استراتيجية Supply & Demand. السيولة عالية، التلاعب أقل، والحركة أنظف — وهذا بالضبط اللي يحتاجه المتداول المبتدئ</p></div>
+      </div>
+      <div class="faq-item" data-aos="fade-up" data-aos-delay="160">
+        <button class="faq-q">
+          <span>هل تنفع الاستراتيجية لـ Prop Firms مثل FTMO؟</span>
+          <div class="faq-tog"><i class="fas fa-plus"></i></div>
+        </button>
+        <div class="faq-a"><p>نعم، الاستراتيجية مبنية على risk management محكم (1:2 RR) وعدد صفقات منخفض وانتقائي — وهذا بالضبط ما تحتاجه لتجتاز Challenge الـ Prop Firm بدون ضغط</p></div>
+      </div>
+      <div class="faq-item" data-aos="fade-up" data-aos-delay="210">
+        <button class="faq-q">
+          <span>هل يمكنني الإلغاء في أي وقت؟ وهل المحتوى بالعربي؟</span>
+          <div class="faq-tog"><i class="fas fa-plus"></i></div>
+        </button>
+        <div class="faq-a"><p>نعم للاثنين — تقدر تلغي في أي وقت بدون رسوم. وكل المحتوى 100% عربي، من الفيديوهات إلى الـ Checklist والـ Journal. صُمم للمتداول العربي من البداية للنهاية</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="glow-line"></div>
+
+<!-- CTA -->
+<section class="cta-sec" id="cta">
+  <div class="cta-grid-bg"></div>
+  <div class="wrap">
+    <div class="cta-inner" data-aos="fade-up">
+      <h2>بدك نظام واضح<br>تثق فيه؟</h2>
+      <p>انضم لمئات المتداولين اللي قرروا يوقفوا اللخبطة ويبدأوا يتداولون بنظام — باللغة العربية، بأدوات حقيقية، بنتائج قابلة للقياس</p>
+      <a href="#pricing" class="btn btn-p btn-lg">
+        اشترك الآن بـ 29$/شهر <i class="fas fa-arrow-left"></i>
+      </a>
+      <p class="cta-note">بدون التزامات · إلغاء في أي وقت · دفع آمن 🔒</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a href="#hero" class="logo">
+          <div class="logo-mark"><img src="glorex_logo.png" alt="GLOREX"/></div>
+          <span class="logo-name">GLOREX</span>
+        </a>
+        <p>منصة تعليم التداول الاحترافية الأولى باللغة العربية — استراتيجية واضحة، أدوات عملية، نتائج حقيقية</p>
+      </div>
+      <div class="footer-col">
+        <h4>الروابط</h4>
+        <ul>
+          <li><a href="#hero">الرئيسية</a></li>
+          <li><a href="#solution">المميزات</a></li>
+          <li><a href="#pricing">الأسعار</a></li>
+          <li><a href="#faq">الأسئلة الشائعة</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>قانوني</h4>
+        <ul>
+          <li><a href="#">سياسة الخصوصية</a></li>
+          <li><a href="#">شروط الاستخدام</a></li>
+          <li><a href="#">تواصل معنا</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-btm">
+      <p class="footer-disc">⚠️ التداول ينطوي على مخاطر عالية. هذا المحتوى تعليمي فقط وليس نصيحة مالية. الأداء السابق لا يضمن نتائج مستقبلية. تداول فقط بما تستطيع تحمل خسارته.</p>
+      <p class="footer-cr">© 2026 GLOREX. جميع الحقوق محفوظة</p>
+    </div>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script>
+AOS.init({duration:780,once:true,offset:65,easing:'ease-out-cubic'});
+
+/* ── Theme Toggle (Light/Dark) ── */
+(()=>{
+  const tt=document.getElementById('themeToggle');
+  if(!tt)return;
+  const saved=localStorage.getItem('glorex-theme');
+  if(saved==='light'){document.body.classList.add('light');tt.innerHTML='<i class="fas fa-sun"></i>'}
+  tt.addEventListener('click',()=>{
+    document.body.classList.toggle('light');
+    const isLight=document.body.classList.contains('light');
+    localStorage.setItem('glorex-theme',isLight?'light':'dark');
+    tt.innerHTML=isLight?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>';
+  });
+})();
+
+/* Navbar scroll */
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('on',scrollY>40),{passive:true});
+
+/* Hamburger */
+const ham=document.getElementById('ham'),drawer=document.getElementById('drawer'),ov=document.getElementById('ov');
+function closeD(){ham.classList.remove('open');drawer.classList.remove('open');ov.classList.remove('show');document.body.style.overflow=''}
+function openD(){ham.classList.add('open');drawer.classList.add('open');ov.classList.add('show');document.body.style.overflow='hidden'}
+ham.addEventListener('click',()=>drawer.classList.contains('open')?closeD():openD());
+ov.addEventListener('click',closeD);
+document.querySelectorAll('.dl').forEach(l=>l.addEventListener('click',closeD));
+
+/* Active nav */
+const secs=document.querySelectorAll('section[id]'),nls=document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll',()=>{
+  let cur='';
+  secs.forEach(s=>{if(scrollY>=s.offsetTop-110)cur=s.id});
+  nls.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
+},{passive:true});
+
+/* FAQ */
+document.querySelectorAll('.faq-q').forEach(q=>{
+  q.addEventListener('click',()=>{
+    const it=q.parentElement,was=it.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i=>i.classList.remove('open'));
+    if(!was)it.classList.add('open');
+  });
+});
+
+/* Counter */
+const ctrs=document.querySelectorAll('.stat-v[data-count]');
+(()=>{
+  const o=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(!e.isIntersecting)return;
+      const el=e.target,t=+el.dataset.count,step=Math.ceil(t/55);
+      let c=0;const id=setInterval(()=>{c=Math.min(c+step,t);el.textContent='+'+c;if(c>=t)clearInterval(id)},22);
+      o.unobserve(el);
+    });
+  },{threshold:.5});
+  ctrs.forEach(c=>o.observe(c));
+})();
+
+/* SW — disabled during dev, also unregister any existing one */
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister()));
+  if(window.caches) caches.keys().then(ks=>ks.forEach(k=>caches.delete(k)));
+}
+
+/* ── Auth state: show user info if logged in ── */
+(async()=>{
+  try{
+    const mod = await import('./supabase-client.js');
+    const session = await mod.getSession();
+    if(session){
+      const user = session.user;
+      const meta = user.user_metadata || {};
+      const firstName = meta.first_name || (meta.full_name||user.email.split('@')[0]).split(' ')[0];
+      const initial = (firstName[0]||'G').toUpperCase();
+
+      const cta = document.querySelector('.nav-cta-d');
+      if(cta){
+        cta.innerHTML = `
+          <button class="nav-theme" id="themeToggle" aria-label="تبديل الوضع"><i class="fas fa-moon"></i></button>
+          <a href="dashboard.html" class="nav-signin" style="display:flex;align-items:center;gap:.5rem">
+            <span style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#F0C030,#A07810);display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:.82rem">${initial}</span>
+            ${firstName}
+          </a>
+          <a href="dashboard.html" class="btn btn-p" style="padding:.65rem 1.5rem;font-size:var(--tsm)">لوحة التحكم <i class="fas fa-arrow-left"></i></a>`;
+        /* Re-bind theme toggle (was replaced) */
+        const tt=document.getElementById('themeToggle');
+        const saved=localStorage.getItem('glorex-theme');
+        if(saved==='light'){document.body.classList.add('light');tt.innerHTML='<i class="fas fa-sun"></i>'}
+        tt.addEventListener('click',()=>{
+          document.body.classList.toggle('light');
+          const isLight=document.body.classList.contains('light');
+          localStorage.setItem('glorex-theme',isLight?'light':'dark');
+          tt.innerHTML=isLight?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>';
+        });
+      }
+
+      /* Update hero CTA: change "ابدأ الآن" to "ادخل للوحة التحكم" */
+      const heroCta = document.querySelector('.hero-ctas .btn-p');
+      if(heroCta){heroCta.textContent='لوحة التحكم'; heroCta.href='dashboard.html';
+        const i=document.createElement('i'); i.className='fas fa-arrow-left'; heroCta.appendChild(i);}
+    }
+  }catch(e){/* Supabase not configured yet, silent */}
+})();
+
+/* ── Canvas Cursor (spring physics trail) ── */
+(()=>{
+  const cvs=document.createElement('canvas');
+  cvs.id='canvas';
+  cvs.style.cssText='position:fixed;inset:0;pointer-events:none;z-index:99999';
+  document.body.appendChild(cvs);
+
+  var ctx,f,e=0,pos={x:0,y:0},lines=[],
+  E={friction:0.5,trails:20,size:50,dampening:0.25,tension:0.98};
+
+  function Osc(cfg){this.phase=cfg.phase||0;this.offset=cfg.offset||0;this.frequency=cfg.frequency||0.001;this.amplitude=cfg.amplitude||1;}
+  Osc.prototype.update=function(){this.phase+=this.frequency;e=this.offset+Math.sin(this.phase)*this.amplitude;return e;};
+
+  function Node(){this.x=this.y=this.vx=this.vy=0;}
+
+  function Line(cfg){
+    this.spring=cfg.spring+0.1*Math.random()-0.02;
+    this.friction=E.friction+0.01*Math.random()-0.002;
+    this.nodes=[];
+    for(var i=0;i<E.size;i++){var nd=new Node();nd.x=pos.x;nd.y=pos.y;this.nodes.push(nd);}
+  }
+  Line.prototype.update=function(){
+    var sp=this.spring,t=this.nodes[0];
+    t.vx+=(pos.x-t.x)*sp; t.vy+=(pos.y-t.y)*sp;
+    for(var n,i=0,a=this.nodes.length;i<a;i++){
+      t=this.nodes[i];
+      if(i>0){n=this.nodes[i-1];t.vx+=(n.x-t.x)*sp;t.vy+=(n.y-t.y)*sp;t.vx+=n.vx*E.dampening;t.vy+=n.vy*E.dampening;}
+      t.vx*=this.friction;t.vy*=this.friction;t.x+=t.vx;t.y+=t.vy;sp*=E.tension;
+    }
+  };
+  Line.prototype.draw=function(){
+    var e,t,nx=this.nodes[0].x,ny=this.nodes[0].y;
+    ctx.beginPath();ctx.moveTo(nx,ny);
+    for(var a=1,o=this.nodes.length-2;a<o;a++){
+      e=this.nodes[a];t=this.nodes[a+1];
+      nx=0.5*(e.x+t.x);ny=0.5*(e.y+t.y);
+      ctx.quadraticCurveTo(e.x,e.y,nx,ny);
+    }
+    e=this.nodes[a];t=this.nodes[a+1];
+    ctx.quadraticCurveTo(e.x,e.y,t.x,t.y);
+    ctx.stroke();ctx.closePath();
+  };
+
+  function spawnLines(){lines=[];for(var i=0;i<E.trails;i++)lines.push(new Line({spring:0.4+(i/E.trails)*0.025}));}
+
+  function render(){
+    if(!ctx.running)return;
+    ctx.globalCompositeOperation='source-over';
+    ctx.clearRect(0,0,cvs.width,cvs.height);
+    ctx.globalCompositeOperation='lighter';
+    ctx.strokeStyle='hsla('+Math.round(f.update())+',50%,50%,0.2)';
+    ctx.lineWidth=1;
+    for(var i=0;i<E.trails;i++){lines[i].update();lines[i].draw();}
+    requestAnimationFrame(render);
+  }
+
+  function onFirstMove(ev){
+    document.removeEventListener('mousemove',onFirstMove);
+    function move(ev){pos.x=ev.clientX;pos.y=ev.clientY;}
+    document.addEventListener('mousemove',move);
+    pos.x=ev.clientX;pos.y=ev.clientY;
+    spawnLines();render();
+  }
+  document.addEventListener('mousemove',onFirstMove);
+
+  function resize(){cvs.width=innerWidth;cvs.height=innerHeight;}
+  resize();window.addEventListener('resize',resize);
+
+  ctx=cvs.getContext('2d');
+  ctx.running=true;
+  f=new Osc({phase:Math.random()*2*Math.PI,amplitude:85,frequency:0.0015,offset:285});
+})();
+
+</script>
+</body>
+</html>

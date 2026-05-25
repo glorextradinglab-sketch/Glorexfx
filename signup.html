@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>إنشاء حساب — GLOREX</title>
+<meta name="theme-color" content="#0a0a0a"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<style>
+/* GLOREX — Sign Up Page (shares same design system as signin) */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold:#D4A017;--gold-l:#F0C030;--gold-d:#A07810;
+  --bg:#080808;--surface:#0d0d0d;--card:#111111;
+  --border:rgba(255,255,255,0.08);--border-h:rgba(212,160,23,0.4);
+  --txt:#ffffff;--txt2:#cccccc;--txt3:#999999;--txt4:#666666;
+  --glow:rgba(212,160,23,0.25);
+  --ease:cubic-bezier(.4,0,.2,1);--base:.3s;
+}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:'IBM Plex Sans Arabic',system-ui,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden}
+.auth-shell{min-height:100vh;display:grid;grid-template-columns:1.1fr 1fr;position:relative}
+
+/* LEFT */
+.auth-visual{position:relative;overflow:hidden;background:#050505;display:flex;flex-direction:column;justify-content:space-between;padding:3rem 3.5rem}
+.auth-mesh{position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse 800px 600px at 20% 20%,rgba(212,160,23,.22),transparent 60%),radial-gradient(ellipse 600px 800px at 80% 80%,rgba(160,120,16,.18),transparent 60%),radial-gradient(ellipse 400px 400px at 50% 50%,rgba(240,192,48,.08),transparent 70%);animation:mesh-float 18s ease-in-out infinite}
+@keyframes mesh-float{0%,100%{transform:scale(1) rotate(0deg)}50%{transform:scale(1.15) rotate(-3deg)}}
+.auth-grid{position:absolute;inset:0;z-index:0;opacity:.4;background-image:linear-gradient(rgba(212,160,23,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(212,160,23,.04) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse at center,black 30%,transparent 75%);-webkit-mask-image:radial-gradient(ellipse at center,black 30%,transparent 75%)}
+.auth-noise{position:absolute;inset:0;z-index:1;opacity:.025;pointer-events:none;background-image:url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='.6'/></svg>");mix-blend-mode:overlay}
+
+.brand{position:relative;z-index:2;display:flex;align-items:center;gap:.7rem;text-decoration:none;color:var(--txt)}
+.brand-logo{width:42px;height:42px;border-radius:11px;background:linear-gradient(135deg,var(--gold),var(--gold-d));display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(212,160,23,.4),inset 0 1px 0 rgba(255,255,255,.15);font-weight:700;font-family:'Space Grotesk';color:#000;font-size:1.2rem}
+.brand-name{font-family:'Space Grotesk';font-weight:700;font-size:1.5rem;letter-spacing:-.02em}
+
+.visual-content{position:relative;z-index:2;max-width:520px}
+.eyebrow{display:inline-flex;align-items:center;gap:.5rem;padding:.45rem 1rem;border-radius:999px;background:rgba(212,160,23,.1);border:1px solid rgba(212,160,23,.3);font-size:.82rem;color:var(--gold-l);font-weight:500;margin-bottom:1.8rem}
+.eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold);animation:pulse-dot 2s ease-in-out infinite}
+@keyframes pulse-dot{50%{opacity:.5;transform:scale(.8)}}
+.visual-h1{font-size:clamp(2.4rem,4.5vw,3.6rem);line-height:1.05;letter-spacing:-.025em;font-weight:700;margin-bottom:1.2rem}
+.visual-h1 em{font-style:normal;background:linear-gradient(135deg,var(--gold-l) 0%,var(--gold) 50%,var(--gold-d) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.visual-sub{color:var(--txt2);font-size:1.05rem;line-height:1.7;max-width:480px}
+
+/* Testimonial */
+.testimonial{position:relative;z-index:2;padding:1.5rem;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:18px;backdrop-filter:blur(10px)}
+.testi-text{color:var(--txt);font-size:.98rem;line-height:1.7;margin-bottom:1rem;font-style:italic}
+.testi-author{display:flex;align-items:center;gap:.8rem}
+.testi-avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-d));display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-family:'Space Grotesk'}
+.testi-name{font-weight:600;font-size:.92rem}
+.testi-role{color:var(--txt3);font-size:.82rem}
+.testi-stars{margin-bottom:.7rem;color:var(--gold)}
+
+/* RIGHT */
+.auth-form-wrap{display:flex;align-items:center;justify-content:center;padding:3rem;position:relative;background:var(--bg);overflow-y:auto}
+.auth-form{width:100%;max-width:460px;position:relative;z-index:2}
+.theme-toggle{position:absolute;top:1.5rem;left:1.5rem;width:42px;height:42px;border-radius:50%;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--txt2);transition:all var(--base) var(--ease)}
+.theme-toggle:hover{border-color:var(--gold);color:var(--gold);transform:rotate(15deg)}
+
+.form-head{margin-bottom:2rem}
+.form-h1{font-size:1.85rem;font-weight:700;letter-spacing:-.02em;margin-bottom:.5rem}
+.form-sub{color:var(--txt3);font-size:.95rem}
+.form-sub a{color:var(--gold);text-decoration:none;font-weight:500}
+.form-sub a:hover{text-decoration:underline}
+
+.social-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.3rem}
+.social-btn{display:flex;align-items:center;justify-content:center;gap:.55rem;padding:.85rem;border-radius:12px;background:var(--surface);border:1px solid var(--border);color:var(--txt);font-size:.92rem;font-weight:500;font-family:inherit;cursor:pointer;transition:all var(--base) var(--ease)}
+.social-btn:hover{background:var(--card);border-color:rgba(255,255,255,.18);transform:translateY(-1px)}
+.social-btn i{font-size:1.05rem}
+.social-btn .fa-google{color:#ea4335}
+.social-btn .fa-apple{color:#fff}
+
+.divider{display:flex;align-items:center;gap:1rem;margin:1.5rem 0;color:var(--txt4);font-size:.78rem;text-transform:uppercase;letter-spacing:.12em}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent)}
+
+/* Field rows */
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+.field{margin-bottom:.95rem;position:relative}
+.field-lbl{display:block;font-size:.82rem;color:var(--txt2);margin-bottom:.4rem;font-weight:500}
+.field-input-wrap{position:relative}
+.field-icon{position:absolute;right:1rem;top:50%;transform:translateY(-50%);color:var(--txt4);font-size:.95rem;pointer-events:none;transition:color var(--base) var(--ease)}
+.field-input{width:100%;padding:.85rem 2.8rem .85rem 1rem;background:var(--surface);border:1.5px solid var(--border);border-radius:12px;color:var(--txt);font-size:.95rem;font-family:inherit;transition:all var(--base) var(--ease);outline:none}
+.field-input:focus{border-color:var(--gold);background:var(--card);box-shadow:0 0 0 4px rgba(212,160,23,.1)}
+.field-input:focus + .field-icon{color:var(--gold)}
+.field-input::placeholder{color:var(--txt4)}
+.field-toggle-pwd{position:absolute;left:1rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--txt4);cursor:pointer;font-size:.95rem;transition:color var(--base) var(--ease)}
+.field-toggle-pwd:hover{color:var(--gold)}
+
+/* Password strength */
+.pwd-strength{display:flex;gap:.3rem;margin-top:.5rem}
+.pwd-bar{flex:1;height:3px;background:var(--border);border-radius:2px;transition:background var(--base) var(--ease)}
+.pwd-bar.active.weak{background:#ef4444}
+.pwd-bar.active.med{background:#f59e0b}
+.pwd-bar.active.strong{background:#22c55e}
+.pwd-msg{font-size:.78rem;color:var(--txt3);margin-top:.4rem;min-height:1em}
+
+/* Checkbox row */
+.terms-row{margin-bottom:1.3rem;font-size:.85rem}
+.check{display:inline-flex;align-items:flex-start;gap:.6rem;cursor:pointer;color:var(--txt2);user-select:none;line-height:1.5}
+.check input{position:absolute;opacity:0;width:18px;height:18px;cursor:pointer}
+.check-box{flex-shrink:0;margin-top:.15rem;width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;transition:all var(--base) var(--ease);background:var(--surface)}
+.check input:checked ~ .check-box{background:var(--gold);border-color:var(--gold)}
+.check input:checked ~ .check-box::after{content:'\f00c';font-family:'Font Awesome 6 Free';font-weight:900;color:#000;font-size:.7rem}
+.check a{color:var(--gold);text-decoration:none;font-weight:500}
+.check a:hover{text-decoration:underline}
+
+/* Submit */
+.btn-submit{width:100%;padding:1rem;border-radius:12px;border:none;cursor:pointer;background:linear-gradient(135deg,var(--gold) 0%,var(--gold-d) 100%);color:#000;font-weight:700;font-size:1rem;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:.6rem;box-shadow:0 8px 30px rgba(212,160,23,.35),inset 0 1px 0 rgba(255,255,255,.2);transition:all var(--base) var(--ease);position:relative;overflow:hidden}
+.btn-submit::before{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.3) 50%,transparent 70%);transform:translateX(100%);transition:transform .6s var(--ease)}
+.btn-submit:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(212,160,23,.5)}
+.btn-submit:hover::before{transform:translateX(-100%)}
+
+.form-foot{text-align:center;margin-top:1.5rem;color:var(--txt3);font-size:.88rem}
+
+/* Light mode */
+body.light{--bg:#fafafa;--surface:#ffffff;--card:#f4f4f5;--border:rgba(0,0,0,.08);--txt:#0a0a0a;--txt2:#3f3f46;--txt3:#71717a;--txt4:#a1a1aa}
+body.light .auth-visual{background:#0a0a0a}
+body.light .auth-form-wrap{background:#fafafa}
+
+.fade-up{opacity:0;transform:translateY(20px);animation:fadeUp .8s var(--ease) forwards}
+.fade-up.d1{animation-delay:.1s}.fade-up.d2{animation-delay:.2s}.fade-up.d3{animation-delay:.3s}.fade-up.d4{animation-delay:.4s}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+
+@media(max-width:980px){.auth-shell{grid-template-columns:1fr}.auth-visual{display:none}.auth-form-wrap{padding:2rem 1.5rem}}
+</style>
+</head>
+<body>
+
+<div class="auth-shell">
+  <aside class="auth-visual">
+    <div class="auth-mesh"></div>
+    <div class="auth-grid"></div>
+    <div class="auth-noise"></div>
+
+    <a href="glorex_landing.html" class="brand fade-up">
+      <div class="brand-logo">G</div>
+      <div class="brand-name">GLOREX</div>
+    </a>
+
+    <div class="visual-content">
+      <div class="eyebrow fade-up d1">انضم لـ 500+ متداول نشط</div>
+      <h1 class="visual-h1 fade-up d2">
+        ابدأ <em>رحلتك</em><br>للاحتراف
+      </h1>
+      <p class="visual-sub fade-up d3">
+        احصل على نظام التداول الكامل، Discord الخاص بنا، Trade Journal، و Checklist بضغطة زر — بدون أي التزامات.
+      </p>
+    </div>
+
+    <div class="testimonial fade-up d4">
+      <div class="testi-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+      <p class="testi-text">"خلال أول شهر من GLOREX، حققت أعلى من 10 صفقات ناجحة على الشهر الأول. النظام واضح والدعم ممتاز."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">أ</div>
+        <div><div class="testi-name">أحمد م.</div><div class="testi-role">Prop Firm Trader — السعودية</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="auth-form-wrap">
+    <button class="theme-toggle" id="themeToggle" aria-label="تبديل الوضع">
+      <i class="fas fa-moon"></i>
+    </button>
+
+    <form class="auth-form" id="signupForm">
+      <div class="form-head fade-up">
+        <h1 class="form-h1">أنشئ حسابك مجاناً</h1>
+        <p class="form-sub">
+          عندك حساب مسبقاً؟ <a href="signin.html">تسجيل الدخول</a>
+        </p>
+      </div>
+
+      <div class="social-row fade-up d1">
+        <button type="button" class="social-btn"><i class="fab fa-google"></i> Google</button>
+        <button type="button" class="social-btn"><i class="fab fa-apple"></i> Apple</button>
+      </div>
+
+      <div class="divider fade-up d1">أو</div>
+
+      <div class="field-row fade-up d2">
+        <div class="field">
+          <label class="field-lbl" for="fname">الاسم الأول</label>
+          <div class="field-input-wrap">
+            <input class="field-input" id="fname" type="text" placeholder="محمد" required/>
+            <i class="fas fa-user field-icon"></i>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-lbl" for="lname">الاسم الأخير</label>
+          <div class="field-input-wrap">
+            <input class="field-input" id="lname" type="text" placeholder="أحمد" required/>
+            <i class="fas fa-user field-icon"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="field fade-up d2">
+        <label class="field-lbl" for="email">البريد الإلكتروني</label>
+        <div class="field-input-wrap">
+          <input class="field-input" id="email" type="email" placeholder="you@example.com" required/>
+          <i class="fas fa-envelope field-icon"></i>
+        </div>
+      </div>
+
+      <div class="field fade-up d3">
+        <label class="field-lbl" for="password">كلمة المرور</label>
+        <div class="field-input-wrap">
+          <input class="field-input" id="password" type="password" placeholder="8 أحرف على الأقل" required minlength="8"/>
+          <i class="fas fa-lock field-icon"></i>
+          <button type="button" class="field-toggle-pwd" data-target="password">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
+        <div class="pwd-strength" id="pwdStrength">
+          <div class="pwd-bar"></div><div class="pwd-bar"></div><div class="pwd-bar"></div><div class="pwd-bar"></div>
+        </div>
+        <div class="pwd-msg" id="pwdMsg"></div>
+      </div>
+
+      <div class="terms-row fade-up d3">
+        <label class="check">
+          <input type="checkbox" required/>
+          <span class="check-box"></span>
+          <span>أوافق على <a href="#">الشروط والأحكام</a> و<a href="#">سياسة الخصوصية</a> الخاصة بـ GLOREX</span>
+        </label>
+      </div>
+
+      <button type="submit" class="btn-submit fade-up d4">
+        إنشاء الحساب <i class="fas fa-arrow-left"></i>
+      </button>
+
+      <p class="form-foot fade-up d4">
+        أنت محمي بتشفير SSL على جميع البيانات 🔒
+      </p>
+    </form>
+  </main>
+</div>
+
+<script type="module">
+import { signUp, signInWithGoogle, signInWithApple, translateError } from './supabase-client.js';
+
+const tt=document.getElementById('themeToggle');
+if(localStorage.getItem('glorex-theme')==='light'){document.body.classList.add('light');tt.innerHTML='<i class="fas fa-sun"></i>'}
+tt.addEventListener('click',()=>{
+  document.body.classList.toggle('light');
+  const isLight=document.body.classList.contains('light');
+  localStorage.setItem('glorex-theme',isLight?'light':'dark');
+  tt.innerHTML=isLight?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>';
+});
+
+document.querySelectorAll('.field-toggle-pwd').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const inp=document.getElementById(btn.dataset.target);
+    const icon=btn.querySelector('i');
+    if(inp.type==='password'){inp.type='text';icon.className='fas fa-eye-slash'}
+    else{inp.type='password';icon.className='fas fa-eye'}
+  });
+});
+
+/* Password strength */
+const pwd=document.getElementById('password');
+const bars=document.querySelectorAll('#pwdStrength .pwd-bar');
+const msg=document.getElementById('pwdMsg');
+pwd.addEventListener('input',()=>{
+  const v=pwd.value;
+  let score=0;
+  if(v.length>=8) score++;
+  if(/[A-Z]/.test(v)) score++;
+  if(/[0-9]/.test(v)) score++;
+  if(/[^A-Za-z0-9]/.test(v)) score++;
+  bars.forEach((b,i)=>{
+    b.className='pwd-bar';
+    if(i<score){
+      b.classList.add('active');
+      if(score<=1) b.classList.add('weak');
+      else if(score<=2) b.classList.add('med');
+      else b.classList.add('strong');
+    }
+  });
+  msg.textContent = v.length===0?'':['ضعيفة جداً','ضعيفة','متوسطة','قوية','قوية جداً'][score];
+  msg.style.color = score<=1?'#ef4444':score<=2?'#f59e0b':'#22c55e';
+});
+
+/* ── Social OAuth ── */
+document.querySelectorAll('.social-btn').forEach(btn=>{
+  btn.addEventListener('click', async ()=>{
+    const isGoogle = btn.querySelector('.fa-google');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> جاري التحويل...';
+    const { error } = await (isGoogle ? signInWithGoogle() : signInWithApple());
+    if (error) { btn.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${translateError(error)}`; setTimeout(()=>location.reload(), 2500); }
+  });
+});
+
+/* ── Toast helper ── */
+function toast(msg, type='error'){
+  const t = document.createElement('div');
+  t.style.cssText = `position:fixed;top:1.5rem;right:50%;transform:translateX(50%);padding:.85rem 1.5rem;border-radius:10px;font-size:.92rem;font-weight:500;z-index:99999;color:#fff;box-shadow:0 10px 40px rgba(0,0,0,.5);${type==='error'?'background:linear-gradient(135deg,#ef4444,#dc2626);':'background:linear-gradient(135deg,#22c55e,#16a34a);'}`;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(()=>{ t.style.opacity='0'; t.style.transition='opacity .4s'; setTimeout(()=>t.remove(),400); }, 3500);
+}
+
+/* ── Email/Password Signup ── */
+document.getElementById('signupForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const btn = e.target.querySelector('.btn-submit');
+  const firstName = document.getElementById('fname').value.trim();
+  const lastName  = document.getElementById('lname').value.trim();
+  const email     = document.getElementById('email').value.trim();
+  const password  = document.getElementById('password').value;
+
+  btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> جاري الإنشاء...';
+  btn.disabled = true;
+
+  const { data, error } = await signUp({ email, password, firstName, lastName });
+
+  if (error) {
+    btn.innerHTML = 'إنشاء الحساب <i class="fas fa-arrow-left"></i>';
+    btn.disabled = false;
+    toast(translateError(error), 'error');
+    return;
+  }
+
+  /* Success — check if email confirmation is required */
+  btn.innerHTML = '<i class="fas fa-check"></i> تم! تحقق من بريدك';
+  btn.style.background = 'linear-gradient(135deg,#22c55e,#16a34a)';
+  toast('تم إنشاء حسابك! تحقق من بريدك لتأكيد الحساب 📧', 'success');
+
+  if (data.session) {
+    /* Email confirmation disabled → user is logged in */
+    setTimeout(()=> location.href = 'dashboard.html', 1500);
+  } else {
+    /* Email confirmation required */
+    setTimeout(()=> location.href = `signin.html?check_email=${encodeURIComponent(email)}`, 2500);
+  }
+});
+</script>
+</body>
+</html>
