@@ -140,9 +140,18 @@ button{cursor:pointer;font-family:inherit;border:none;background:none}
 }
 .logo{display:flex;align-items:center;gap:.6rem;flex-shrink:0}
 .logo-mark{
-  width:40px;height:40px;
-  border-radius:var(--rmd);overflow:hidden;
-  box-shadow:0 0 22px rgba(184,134,11,.45);flex-shrink:0
+  width:64px;height:64px;
+  border-radius:var(--rlg);overflow:hidden;flex-shrink:0;
+  background:#ffffff;
+  border:1.5px solid rgba(212,160,23,0.5);
+  box-shadow:0 0 18px rgba(184,134,11,.55),0 0 6px rgba(212,160,23,.25);
+  display:flex;align-items:center;justify-content:center;
+  padding:8px
+}
+.logo-mark img{
+  width:100%;height:100%;
+  display:block;
+  object-fit:contain
 }
 .logo-name{font-size:1.42rem;font-weight:900;letter-spacing:2.5px}
 .nav-links{display:flex;align-items:center;gap:var(--s5)}
@@ -800,11 +809,25 @@ body,body *{
 </head>
 <body>
 
+<!-- SVG Filter: Gold Bull -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="goldBullFilter" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="
+        0.169 0     0     0 0.831
+        0     0.373 0     0 0.627
+        0     0     0.910 0 0.090
+        0     0     0     1 0
+      "/>
+    </filter>
+  </defs>
+</svg>
+
 <!-- NAV -->
 <nav class="nav" id="nav">
   <div class="nav-inner">
     <a href="#hero" class="logo">
-      <div class="logo-mark"><img src="glorex_logo.png" alt="GLOREX"/></div>
+      <div class="logo-mark"><img src="glorex_bull_gold.png" alt="GLOREX"/></div>
       <span class="logo-name">GLOREX</span>
     </a>
     <ul class="nav-links">
@@ -1377,7 +1400,7 @@ body,body *{
     <div class="footer-main">
       <div class="footer-brand">
         <a href="#hero" class="logo">
-          <div class="logo-mark"><img src="glorex_logo.png" alt="GLOREX"/></div>
+          <div class="logo-mark"><img src="glorex_bull_gold.png" alt="GLOREX"/></div>
           <span class="logo-name">GLOREX</span>
         </a>
         <p>منصة تعليم التداول الاحترافية الأولى باللغة العربية — استراتيجية واضحة، أدوات عملية، نتائج حقيقية</p>
@@ -1514,78 +1537,42 @@ if('serviceWorker' in navigator){
   }catch(e){/* Supabase not configured yet, silent */}
 })();
 
-/* ── Canvas Cursor (spring physics trail) ── */
+/* ── Gold Dot Cursor ── */
 (()=>{
-  const cvs=document.createElement('canvas');
-  cvs.id='canvas';
-  cvs.style.cssText='position:fixed;inset:0;pointer-events:none;z-index:99999';
-  document.body.appendChild(cvs);
+  const dot = document.createElement('div');
+  dot.style.cssText = [
+    'position:fixed',
+    'width:10px',
+    'height:10px',
+    'border-radius:50%',
+    'background:radial-gradient(circle at 35% 35%,#F0C030,#D4A017)',
+    'box-shadow:0 0 10px rgba(212,160,23,0.9),0 0 22px rgba(212,160,23,0.5)',
+    'pointer-events:none',
+    'z-index:99999',
+    'transform:translate(-50%,-50%)',
+    'will-change:left,top',
+    'transition:width .15s,height .15s,opacity .2s'
+  ].join(';');
+  document.body.appendChild(dot);
 
-  var ctx,f,e=0,pos={x:0,y:0},lines=[],
-  E={friction:0.5,trails:20,size:50,dampening:0.25,tension:0.98};
+  let tx=window.innerWidth/2, ty=window.innerHeight/2;
+  let cx=tx, cy=ty;
 
-  function Osc(cfg){this.phase=cfg.phase||0;this.offset=cfg.offset||0;this.frequency=cfg.frequency||0.001;this.amplitude=cfg.amplitude||1;}
-  Osc.prototype.update=function(){this.phase+=this.frequency;e=this.offset+Math.sin(this.phase)*this.amplitude;return e;};
+  document.addEventListener('mousemove', e=>{ tx=e.clientX; ty=e.clientY; });
 
-  function Node(){this.x=this.y=this.vx=this.vy=0;}
+  /* shrink dot on click */
+  document.addEventListener('mousedown', ()=>{ dot.style.width='7px'; dot.style.height='7px'; });
+  document.addEventListener('mouseup',   ()=>{ dot.style.width='10px'; dot.style.height='10px'; });
 
-  function Line(cfg){
-    this.spring=cfg.spring+0.1*Math.random()-0.02;
-    this.friction=E.friction+0.01*Math.random()-0.002;
-    this.nodes=[];
-    for(var i=0;i<E.size;i++){var nd=new Node();nd.x=pos.x;nd.y=pos.y;this.nodes.push(nd);}
-  }
-  Line.prototype.update=function(){
-    var sp=this.spring,t=this.nodes[0];
-    t.vx+=(pos.x-t.x)*sp; t.vy+=(pos.y-t.y)*sp;
-    for(var n,i=0,a=this.nodes.length;i<a;i++){
-      t=this.nodes[i];
-      if(i>0){n=this.nodes[i-1];t.vx+=(n.x-t.x)*sp;t.vy+=(n.y-t.y)*sp;t.vx+=n.vx*E.dampening;t.vy+=n.vy*E.dampening;}
-      t.vx*=this.friction;t.vy*=this.friction;t.x+=t.vx;t.y+=t.vy;sp*=E.tension;
-    }
-  };
-  Line.prototype.draw=function(){
-    var e,t,nx=this.nodes[0].x,ny=this.nodes[0].y;
-    ctx.beginPath();ctx.moveTo(nx,ny);
-    for(var a=1,o=this.nodes.length-2;a<o;a++){
-      e=this.nodes[a];t=this.nodes[a+1];
-      nx=0.5*(e.x+t.x);ny=0.5*(e.y+t.y);
-      ctx.quadraticCurveTo(e.x,e.y,nx,ny);
-    }
-    e=this.nodes[a];t=this.nodes[a+1];
-    ctx.quadraticCurveTo(e.x,e.y,t.x,t.y);
-    ctx.stroke();ctx.closePath();
-  };
-
-  function spawnLines(){lines=[];for(var i=0;i<E.trails;i++)lines.push(new Line({spring:0.4+(i/E.trails)*0.025}));}
-
-  function render(){
-    if(!ctx.running)return;
-    ctx.globalCompositeOperation='source-over';
-    ctx.clearRect(0,0,cvs.width,cvs.height);
-    ctx.globalCompositeOperation='lighter';
-    ctx.strokeStyle='hsla('+Math.round(f.update())+',50%,50%,0.2)';
-    ctx.lineWidth=1;
-    for(var i=0;i<E.trails;i++){lines[i].update();lines[i].draw();}
-    requestAnimationFrame(render);
-  }
-
-  function onFirstMove(ev){
-    document.removeEventListener('mousemove',onFirstMove);
-    function move(ev){pos.x=ev.clientX;pos.y=ev.clientY;}
-    document.addEventListener('mousemove',move);
-    pos.x=ev.clientX;pos.y=ev.clientY;
-    spawnLines();render();
-  }
-  document.addEventListener('mousemove',onFirstMove);
-
-  function resize(){cvs.width=innerWidth;cvs.height=innerHeight;}
-  resize();window.addEventListener('resize',resize);
-
-  ctx=cvs.getContext('2d');
-  ctx.running=true;
-  f=new Osc({phase:Math.random()*2*Math.PI,amplitude:85,frequency:0.0015,offset:285});
+  (function loop(){
+    cx += (tx-cx)*0.18;
+    cy += (ty-cy)*0.18;
+    dot.style.left = cx+'px';
+    dot.style.top  = cy+'px';
+    requestAnimationFrame(loop);
+  })();
 })();
+
 
 </script>
 </body>
