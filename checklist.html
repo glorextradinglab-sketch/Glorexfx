@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Checklist — GLOREX</title>
+<meta name="theme-color" content="#0a0a0a"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold:#D4A017;--gold-l:#F0C030;--gold-d:#A07810;
+  --bg:#080808;--surface:#0d0d0d;--card:#111111;
+  --border:rgba(255,255,255,0.08);
+  --txt:#fff;--txt2:#ccc;--txt3:#999;--txt4:#666;
+  --success:#10b981;--danger:#ef4444;--warning:#f59e0b;--neutral:#6b7280;
+  --ease:cubic-bezier(.4,0,.2,1);--base:.3s;
+}
+body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;font-family:inherit;border:none;background:none}
+
+.boot{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg);z-index:9999;flex-direction:column;gap:1rem}
+.boot.hide{opacity:0;pointer-events:none;transition:opacity .4s}
+.boot-logo{width:60px;height:60px;border-radius:15px;background:#fff;border:1.5px solid rgba(212,160,23,.5);padding:8px;display:flex;align-items:center;justify-content:center;animation:logo-pulse 1.4s ease-in-out infinite;box-shadow:0 8px 30px rgba(212,160,23,.4)}
+.boot-logo img{width:100%;height:100%;object-fit:contain}
+@keyframes logo-pulse{50%{transform:scale(1.08);box-shadow:0 8px 50px rgba(212,160,23,.7)}}
+.boot-txt{color:var(--txt3);font-size:.9rem}
+
+.bg-mesh{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 900px 700px at 80% 0%,rgba(212,160,23,.12),transparent 60%),radial-gradient(ellipse 600px 800px at 0% 100%,rgba(160,120,16,.1),transparent 60%)}
+
+.topbar{position:sticky;top:0;z-index:100;background:rgba(8,8,8,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:.95rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{display:flex;align-items:center;gap:.6rem}
+.brand-logo{width:40px;height:40px;border-radius:11px;background:#fff;border:1.5px solid rgba(212,160,23,.5);box-shadow:0 0 14px rgba(184,134,11,.45);display:flex;align-items:center;justify-content:center;padding:5px;overflow:hidden}
+.brand-logo img{width:100%;height:100%;object-fit:contain}
+.brand-name{font-family:'Space Grotesk';font-weight:700;letter-spacing:2px;font-size:1.1rem}
+.nav-tabs{display:flex;gap:.4rem}
+.nav-tab{padding:.55rem 1.1rem;border-radius:10px;color:var(--txt3);font-size:.88rem;font-weight:500;transition:all var(--base) var(--ease)}
+.nav-tab:hover{color:var(--txt);background:rgba(255,255,255,.04)}
+.nav-tab.active{color:var(--gold);background:rgba(212,160,23,.1)}
+.user-name{font-size:.88rem;color:var(--txt3)}
+.user-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:.92rem}
+.user-menu{display:flex;align-items:center;gap:.7rem}
+
+.main{max-width:920px;margin:0 auto;padding:2rem;position:relative;z-index:1}
+.page-head{margin-bottom:1.5rem}
+.page-h1{font-family:'Space Grotesk';font-size:1.9rem;font-weight:700;margin-bottom:.35rem}
+.page-h1 em{font-style:normal;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.page-sub{color:var(--txt3);font-size:.92rem}
+
+/* Score Banner */
+.score-banner{position:sticky;top:75px;z-index:50;margin-bottom:1.5rem;background:linear-gradient(135deg,rgba(212,160,23,.08),rgba(160,120,16,.05));border:1px solid rgba(212,160,23,.25);border-radius:18px;padding:1.2rem 1.5rem;backdrop-filter:blur(20px);display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:1.5rem;box-shadow:0 10px 40px rgba(0,0,0,.3)}
+.score-circle{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-weight:700;font-size:1.5rem;color:#fff;background:conic-gradient(var(--gold) calc(var(--p,0)*1%),rgba(255,255,255,.06) 0);position:relative;transition:--p .3s ease}
+.score-circle::before{content:'';position:absolute;inset:6px;border-radius:50%;background:var(--bg)}
+.score-circle span{position:relative;z-index:1}
+.score-info{display:flex;flex-direction:column;gap:.2rem}
+.score-label{font-size:.78rem;color:var(--txt4);text-transform:uppercase;letter-spacing:1.5px;font-weight:600}
+.score-tag{font-family:'Space Grotesk';font-size:1.35rem;font-weight:700}
+.score-rec{font-size:.88rem;color:var(--txt2)}
+.score-actions{display:flex;gap:.6rem;flex-direction:column}
+.btn{padding:.7rem 1.4rem;border-radius:12px;font-weight:600;font-size:.88rem;transition:all var(--base) var(--ease);display:inline-flex;align-items:center;gap:.5rem;justify-content:center;white-space:nowrap}
+.btn-p{background:linear-gradient(135deg,var(--gold),var(--gold-d));color:#000;box-shadow:0 4px 16px rgba(212,160,23,.3)}
+.btn-p:hover{background:linear-gradient(135deg,var(--gold-l),var(--gold));box-shadow:0 8px 28px rgba(212,160,23,.5);transform:translateY(-2px)}
+.btn-p:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn-g{background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--txt2)}
+.btn-g:hover{background:rgba(255,255,255,.08);color:var(--txt)}
+
+.tier-premium{color:#10b981!important}
+.tier-strong{color:#34d399!important}
+.tier-good{color:#facc15!important}
+.tier-weak{color:#fb923c!important}
+.tier-skip{color:#ef4444!important}
+
+/* Section */
+.section{background:var(--card);border:1px solid var(--border);border-radius:18px;margin-bottom:1.2rem;overflow:hidden}
+.section-head{padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:rgba(255,255,255,.02)}
+.section-title{display:flex;align-items:center;gap:.7rem;font-family:'Space Grotesk';font-weight:600;font-size:1.02rem}
+.section-num{width:28px;height:28px;border-radius:50%;background:rgba(212,160,23,.15);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700}
+.section-weight{font-size:.7rem;color:var(--txt4);font-weight:500;margin-right:.4rem}
+.section-score{font-family:'Space Grotesk';font-weight:700;font-size:.95rem;color:var(--gold);min-width:50px;text-align:left}
+.section-body{padding:1.2rem 1.5rem;display:grid;gap:.9rem}
+
+/* Field */
+.field{display:grid;grid-template-columns:140px 1fr;align-items:center;gap:1rem}
+.field-label{font-size:.9rem;color:var(--txt2);font-weight:500}
+.field-label em{font-style:normal;font-family:'Space Grotesk';color:var(--txt4);font-weight:400;font-size:.78rem;margin-right:.4rem}
+.field-label .star{color:var(--gold);font-size:.7rem;margin-right:.3rem}
+
+.pills{display:flex;flex-wrap:wrap;gap:.5rem}
+.pill{padding:.55rem 1.1rem;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.02);color:var(--txt3);font-size:.85rem;font-weight:500;transition:all .2s ease;user-select:none}
+.pill:hover{background:rgba(255,255,255,.05);color:var(--txt2)}
+.pill.active{background:rgba(212,160,23,.15);border-color:var(--gold);color:var(--gold)}
+.pill.bull.active{background:rgba(16,185,129,.15);border-color:var(--success);color:var(--success)}
+.pill.bear.active{background:rgba(239,68,68,.15);border-color:var(--danger);color:var(--danger)}
+
+/* Yes toggle */
+.yn{display:inline-flex;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.yn button{padding:.5rem 1.2rem;background:transparent;color:var(--txt3);font-size:.85rem;font-weight:500;transition:all .2s ease}
+.yn button:hover{background:rgba(255,255,255,.04);color:var(--txt2)}
+.yn button.active.yes{background:rgba(16,185,129,.15);color:var(--success)}
+.yn button.active.no{background:rgba(239,68,68,.1);color:#ef4444}
+
+.input{padding:.6rem .95rem;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;color:var(--txt);font-family:inherit;font-size:.9rem;transition:all .2s ease;width:100%}
+.input:focus{outline:none;border-color:var(--gold);background:rgba(212,160,23,.04)}
+textarea.input{min-height:80px;resize:vertical;font-family:inherit}
+
+/* Visual hint per item */
+.hint{display:flex;align-items:center;gap:.4rem;font-size:.78rem;color:var(--txt4);margin-top:.2rem}
+.hint .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold)}
+
+@media (max-width:768px){
+  .topbar{padding:.8rem 1rem}
+  .nav-tabs{display:none}
+  .main{padding:1.2rem}
+  .score-banner{grid-template-columns:1fr;text-align:center}
+  .score-actions{flex-direction:row;justify-content:center}
+  .field{grid-template-columns:1fr;gap:.5rem}
+}
+
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(20px);background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.8rem 1.4rem;color:var(--txt);font-size:.9rem;box-shadow:0 10px 40px rgba(0,0,0,.5);z-index:200;opacity:0;transition:all .3s ease;display:flex;align-items:center;gap:.5rem}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.success{border-color:rgba(16,185,129,.5)}
+.toast.error{border-color:rgba(239,68,68,.5)}
+.toast i{color:var(--gold)}
+.toast.success i{color:var(--success)}
+.toast.error i{color:var(--danger)}
+
+/* Dynamic label highlight */
+.zone-label{font-size:.9rem;font-weight:600;display:inline-flex;align-items:center;gap:.3rem;padding:.2rem .55rem;border-radius:6px;margin-right:.4rem}
+.zone-buy{background:rgba(16,185,129,.15);color:var(--success)}
+.zone-sell{background:rgba(239,68,68,.15);color:var(--danger)}
+</style>
+</head>
+<body>
+
+<div class="boot" id="boot">
+  <div class="boot-logo"><img src="glorex_bull_gold.png" alt="GLOREX"/></div>
+  <div class="boot-txt">جاري التحميل...</div>
+</div>
+
+<div class="bg-mesh"></div>
+
+<header class="topbar">
+  <a href="glorex_landing.html" class="brand">
+    <div class="brand-logo"><img src="glorex_bull_gold.png" alt="GLOREX"/></div>
+    <div class="brand-name">GLOREX</div>
+  </a>
+  <nav class="nav-tabs">
+    <a href="dashboard.html" class="nav-tab">الرئيسية</a>
+    <a href="checklist.html" class="nav-tab active">القائمة</a>
+    <a href="journal.html" class="nav-tab">السجل</a>
+    <a href="calendar.html" class="nav-tab">التقويم</a>
+    <a href="lessons.html" class="nav-tab">الدروس</a> <a href="chat.html" class="nav-tab">المحادثة</a>
+  </nav>
+  <div class="user-menu">
+    <span class="user-name" id="userName">...</span>
+    <div class="user-avatar" id="userAvatar">G</div>
+  </div>
+</header>
+
+<main class="main">
+
+  <div class="page-head">
+    <h1 class="page-h1">قائمة <em>التحقق الذكية</em></h1>
+    <p class="page-sub">عبّي الـ checklist بناءً على منهجية GLOREX — Direction + AOI + Sweep + IFVG</p>
+  </div>
+
+  <!-- Live Score -->
+  <div class="score-banner">
+    <div class="score-circle" id="scoreCircle" style="--p:0">
+      <span id="scorePct">0%</span>
+    </div>
+    <div class="score-info">
+      <div class="score-label">Confluence Score</div>
+      <div class="score-tag" id="scoreTag">— عبّي الحقول</div>
+      <div class="score-rec" id="scoreRec">ابدأ باختيار اتجاه الصفقة</div>
+    </div>
+    <div class="score-actions">
+      <button class="btn btn-p" id="saveBtn" disabled>
+        <i class="fas fa-save"></i> حفظ الصفقة
+      </button>
+      <button class="btn btn-g" id="resetBtn">
+        <i class="fas fa-redo"></i> إعادة تعيين
+      </button>
+    </div>
+  </div>
+
+  <!-- 1. تفاصيل الصفقة -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-title"><div class="section-num">1</div> تفاصيل الصفقة</div>
+    </div>
+    <div class="section-body">
+      <div class="field">
+        <div class="field-label">الأداة</div>
+        <input class="input" id="f-pair" value="NQ" style="max-width:200px"/>
+      </div>
+      <div class="field">
+        <div class="field-label">الاتجاه</div>
+        <div class="pills" data-field="side">
+          <button class="pill bull" data-val="buy">شراء</button>
+          <button class="pill bear" data-val="sell">بيع</button>
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-label">التاريخ</div>
+        <input class="input" type="date" id="f-date" style="max-width:200px"/>
+      </div>
+      <div class="field">
+        <div class="field-label">الجلسة</div>
+        <div class="pills" data-field="session">
+          <button class="pill" data-val="NY">نيويورك</button>
+          <button class="pill" data-val="London">لندن</button>
+          <button class="pill" data-val="Asia">آسيا</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. الاتجاه - 40% -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-title">
+        <div class="section-num">2</div>
+        الاتجاه
+        <span class="section-weight">— 40%</span>
+      </div>
+      <div class="section-score" id="sc-direction">0%</div>
+    </div>
+    <div class="section-body">
+      <div class="field">
+        <div class="field-label">يومي</div>
+        <div class="pills dir" data-field="directionD">
+          <button class="pill bull" data-val="Bullish">صاعد ↑</button>
+          <button class="pill bear" data-val="Bearish">هابط ↓</button>
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-label">4 ساعات</div>
+        <div class="pills dir" data-field="directionH4">
+          <button class="pill bull" data-val="Bullish">صاعد ↑</button>
+          <button class="pill bear" data-val="Bearish">هابط ↓</button>
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-label">ساعة</div>
+        <div class="pills dir" data-field="directionH1">
+          <button class="pill bull" data-val="Bullish">صاعد ↑</button>
+          <button class="pill bear" data-val="Bearish">هابط ↓</button>
+        </div>
+      </div>
+      <div class="hint" id="dirHint" style="padding:0 .2rem">
+        <span class="dot"></span>
+        <span>لما الـ 3 فريمات متطابقين مع اتجاه الصفقة → bonus 8%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. AOI - 20% -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-title">
+        <div class="section-num">3</div>
+        <span>منطقة <span class="zone-label" id="zoneLabel">—</span></span>
+        <span class="section-weight">— 20%</span>
+      </div>
+      <div class="section-score" id="sc-aoi">0%</div>
+    </div>
+    <div class="section-body">
+      <div class="field">
+        <div class="field-label">يومي</div>
+        <div class="yn" data-field="aoiD">
+          <button class="yes" data-val="1"><i class="fas fa-check"></i> متوفرة</button>
+          <button class="no"  data-val="0"><i class="fas fa-times"></i> غير متوفرة</button>
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-label">4 ساعات</div>
+        <div class="yn" data-field="aoiH4">
+          <button class="yes" data-val="1"><i class="fas fa-check"></i> متوفرة</button>
+          <button class="no"  data-val="0"><i class="fas fa-times"></i> غير متوفرة</button>
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-label">ساعة</div>
+        <div class="yn" data-field="aoiH1">
+          <button class="yes" data-val="1"><i class="fas fa-check"></i> متوفرة</button>
+          <button class="no"  data-val="0"><i class="fas fa-times"></i> غير متوفرة</button>
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-label">30 دقيقة</div>
+        <div class="yn" data-field="aoi30m">
+          <button class="yes" data-val="1"><i class="fas fa-check"></i> متوفرة</button>
+          <button class="no"  data-val="0"><i class="fas fa-times"></i> غير متوفرة</button>
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-label">15 دقيقة</div>
+        <div class="yn" data-field="aoi15m">
+          <button class="yes" data-val="1"><i class="fas fa-check"></i> متوفرة</button>
+          <button class="no"  data-val="0"><i class="fas fa-times"></i> غير متوفرة</button>
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-label">5 دقائق</div>
+        <div class="yn" data-field="aoi5m">
+          <button class="yes" data-val="1"><i class="fas fa-check"></i> متوفرة</button>
+          <button class="no"  data-val="0"><i class="fas fa-times"></i> غير متوفرة</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Sweep Liquidity - 25% -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-title">
+        <div class="section-num">4</div>
+        سحب السيولة
+        <span class="section-weight">— 25%</span>
+      </div>
+      <div class="section-score" id="sc-sweep">0%</div>
+    </div>
+    <div class="section-body">
+      <div class="field">
+        <div class="field-label">15 دقيقة</div>
+        <div class="yn" data-field="sweep15m">
+          <button class="yes" data-val="1"><i class="fas fa-check"></i> تم السحب</button>
+          <button class="no"  data-val="0"><i class="fas fa-times"></i> لم يحصل</button>
+        </div>
+      </div>
+      <div class="hint" style="padding:0 .2rem">
+        <span class="dot"></span>
+        <span>سحب للقمة/القاع الأخير اللي صنع المنطقة على فريم 15 دقيقة</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. دخول الصفقة - 15% -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-title">
+        <div class="section-num">5</div>
+        دخول الصفقة
+        <span class="section-weight">— 15%</span>
+      </div>
+      <div class="section-score" id="sc-entry">0%</div>
+    </div>
+    <div class="section-body">
+      <div class="field">
+        <div class="field-label">IFVG على فريم الدقيقة</div>
+        <div class="yn" data-field="ifvg1m">
+          <button class="yes" data-val="1"><i class="fas fa-check"></i> موجود</button>
+          <button class="no"  data-val="0"><i class="fas fa-times"></i> غير موجود</button>
+        </div>
+      </div>
+      <div class="hint" style="padding:0 .2rem">
+        <span class="dot"></span>
+        <span>هاد هو الإشارة الفعلية للدخول — Inverse Fair Value Gap على فريم الدقيقة فقط</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. ملاحظات -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-title"><div class="section-num">6</div> ملاحظات</div>
+    </div>
+    <div class="section-body">
+      <textarea class="input" id="f-note" placeholder="أي ملاحظات تخص الصفقة..."></textarea>
+    </div>
+  </div>
+
+</main>
+
+<div class="toast" id="toast"><i class="fas fa-info-circle"></i><span id="toastMsg"></span></div>
+
+<script type="module">
+import { supabase } from './supabase-client.js';
+import { setupUserMenu } from './user-menu.js?v=20260611';
+
+/* ============ Confluence Engine ============ */
+const W = {
+  direction: { d:12, h4:14, h1:10, allAlignedBonus:4 }, // sum = 40
+  aoi: { d:5, h4:4, h1:3, m30:3, m15:3, m5:2 },          // sum = 20
+  sweep: { m15:25 },                                      // sum = 25
+  entry: { ifvg1m:15 },                                   // sum = 15
+};
+// Total max = 100
+
+function dirOK(side, d){
+  if(!d) return false;
+  return side==='buy' ? d==='Bullish' : d==='Bearish';
+}
+
+function compute(s){
+  // Direction
+  let dEarn=0;
+  if(dirOK(s.side, s.directionD)) dEarn+=W.direction.d;
+  if(dirOK(s.side, s.directionH4)) dEarn+=W.direction.h4;
+  if(dirOK(s.side, s.directionH1)) dEarn+=W.direction.h1;
+  if(dirOK(s.side,s.directionD)&&dirOK(s.side,s.directionH4)&&dirOK(s.side,s.directionH1)) dEarn+=W.direction.allAlignedBonus;
+  const dMax = W.direction.d+W.direction.h4+W.direction.h1+W.direction.allAlignedBonus;
+
+  // AOI (yes/no)
+  let aEarn=0;
+  if(s.aoiD  ==='1') aEarn+=W.aoi.d;
+  if(s.aoiH4 ==='1') aEarn+=W.aoi.h4;
+  if(s.aoiH1 ==='1') aEarn+=W.aoi.h1;
+  if(s.aoi30m==='1') aEarn+=W.aoi.m30;
+  if(s.aoi15m==='1') aEarn+=W.aoi.m15;
+  if(s.aoi5m ==='1') aEarn+=W.aoi.m5;
+  const aMax = W.aoi.d+W.aoi.h4+W.aoi.h1+W.aoi.m30+W.aoi.m15+W.aoi.m5;
+
+  // Sweep
+  let swEarn=0;
+  if(s.sweep15m==='1') swEarn+=W.sweep.m15;
+  const swMax = W.sweep.m15;
+
+  // Entry (IFVG)
+  let eEarn=0;
+  if(s.ifvg1m==='1') eEarn+=W.entry.ifvg1m;
+  const eMax = W.entry.ifvg1m;
+
+  const totalE = dEarn+aEarn+swEarn+eEarn;
+  const totalM = dMax+aMax+swMax+eMax;
+  const total = totalM===0 ? 0 : Math.round((totalE/totalM)*100);
+
+  let label,rec,tier;
+  if(total>=90){label='Premium Setup';rec='صفقة ممتازة — ادخل بثقة كاملة 💎';tier='premium'}
+  else if(total>=75){label='Strong Setup';rec='صفقة قوية — ادخل بحجم عادي ✅';tier='strong'}
+  else if(total>=60){label='Good Setup';rec='صفقة جيدة — قلل حجم المخاطرة';tier='good'}
+  else if(total>=40){label='Weak Setup';rec='صفقة ضعيفة — يفضّل الانتظار';tier='weak'}
+  else {label='Skip Trade';rec='لا تدخل — إشارات غير مكتملة ❌';tier='skip'}
+
+  return {
+    total,label,rec,tier,
+    sections:{
+      direction: dMax? Math.round(dEarn/dMax*100):0,
+      aoi:       aMax? Math.round(aEarn/aMax*100):0,
+      sweep:     swMax?Math.round(swEarn/swMax*100):0,
+      entry:     eMax? Math.round(eEarn/eMax*100):0,
+    }
+  };
+}
+
+/* ============ State ============ */
+const state = {
+  pair:'NQ', side:null, date: new Date().toISOString().slice(0,10), session:null,
+  directionD:null, directionH4:null, directionH1:null,
+  aoiD:null, aoiH4:null, aoiH1:null, aoi30m:null, aoi15m:null, aoi5m:null,
+  sweep15m:null,
+  ifvg1m:null,
+  note:'',
+};
+document.getElementById('f-date').value = state.date;
+
+/* Pills */
+document.querySelectorAll('.pills').forEach(group=>{
+  const field = group.dataset.field;
+  group.addEventListener('click', e=>{
+    const btn = e.target.closest('.pill');
+    if(!btn) return;
+    const val = btn.dataset.val;
+    if(state[field]===val){
+      state[field]=null;
+      btn.classList.remove('active');
+    } else {
+      state[field]=val;
+      group.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+      btn.classList.add('active');
+    }
+    refresh();
+  });
+});
+
+/* Yes/No toggles */
+document.querySelectorAll('.yn').forEach(group=>{
+  const field = group.dataset.field;
+  group.addEventListener('click', e=>{
+    const btn = e.target.closest('button');
+    if(!btn) return;
+    const val = btn.dataset.val;
+    if(state[field]===val){
+      state[field]=null;
+      btn.classList.remove('active');
+    } else {
+      state[field]=val;
+      group.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+    refresh();
+  });
+});
+
+/* Text */
+document.getElementById('f-pair').addEventListener('input', e=>{ state.pair=e.target.value; });
+document.getElementById('f-date').addEventListener('input', e=>{ state.date=e.target.value; });
+document.getElementById('f-note').addEventListener('input', e=>{ state.note=e.target.value; });
+
+/* Refresh UI */
+function refresh(){
+  const r = compute(state);
+  document.getElementById('scoreCircle').style.setProperty('--p', r.total);
+  const pct = document.getElementById('scorePct');
+  pct.textContent = r.total + '%';
+  pct.className = 'tier-'+r.tier;
+  const tag = document.getElementById('scoreTag');
+  tag.textContent = r.label;
+  tag.className = 'score-tag tier-'+r.tier;
+  document.getElementById('scoreRec').textContent = r.rec;
+
+  document.getElementById('sc-direction').textContent = r.sections.direction+'%';
+  document.getElementById('sc-aoi').textContent       = r.sections.aoi+'%';
+  document.getElementById('sc-sweep').textContent     = r.sections.sweep+'%';
+  document.getElementById('sc-entry').textContent     = r.sections.entry+'%';
+
+  // Zone label depends on side
+  const zl = document.getElementById('zoneLabel');
+  if(state.side==='buy'){ zl.textContent='Demand'; zl.className='zone-label zone-buy'; }
+  else if(state.side==='sell'){ zl.textContent='Supply'; zl.className='zone-label zone-sell'; }
+  else { zl.textContent='Demand / Supply'; zl.className='zone-label'; }
+
+  document.getElementById('saveBtn').disabled = !state.side || r.total < 40;
+}
+
+/* Toast */
+function toast(msg, type='info'){
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.className = 'toast show ' + type;
+  const icon = t.querySelector('i');
+  icon.className = type==='success'?'fas fa-check-circle':type==='error'?'fas fa-exclamation-circle':'fas fa-info-circle';
+  setTimeout(()=>t.classList.remove('show'), 2800);
+}
+
+/* Reset */
+document.getElementById('resetBtn').addEventListener('click', ()=>{
+  Object.keys(state).forEach(k=>{ if(!['pair','date'].includes(k)) state[k]=null; });
+  state.note='';
+  document.querySelectorAll('.pill.active, .yn button.active').forEach(p=>p.classList.remove('active'));
+  document.getElementById('f-note').value='';
+  refresh();
+  toast('تم تصفير الـ Checklist', 'success');
+});
+
+/* Save */
+document.getElementById('saveBtn').addEventListener('click', async ()=>{
+  const r = compute(state);
+  const { data:{session} } = await supabase.auth.getSession();
+  if(!session){
+    toast('سجل دخول أولاً لحفظ الصفقة', 'error');
+    setTimeout(()=>{ location.href='signin.html'; }, 1500);
+    return;
+  }
+  const payload = {
+    user_id: session.user.id,
+    pair: state.pair||'NQ',
+    side: state.side,
+    date: state.date,
+    session: state.session,
+    direction_d: state.directionD,
+    direction_h4: state.directionH4,
+    direction_h1: state.directionH1,
+    aoi_d:  state.aoiD === '1' ? (state.side==='buy'?'Demand':'Supply') : 'NON',
+    aoi_h4: state.aoiH4=== '1' ? (state.side==='buy'?'Demand':'Supply') : 'NON',
+    aoi_h1: state.aoiH1=== '1' ? (state.side==='buy'?'Demand':'Supply') : 'NON',
+    entry_30m: 'NON',
+    entry_15m: state.sweep15m==='1' ? 'sweep' : 'NON',
+    entry_5m:  'NON',
+    entry_1m:  state.ifvg1m  ==='1' ? 'IFVG'  : 'NON',
+    status: 'planned',
+    pnl: 0,
+    confluence_pct: r.total,
+    confluence_label: r.label,
+    note: state.note,
+  };
+  const btn = document.getElementById('saveBtn');
+  btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> جاري الحفظ...';
+  const { error } = await supabase.from('trades').insert(payload);
+  if(error){
+    console.error(error);
+    toast('خطأ: '+(error.message||'فشل الحفظ'), 'error');
+    btn.innerHTML='<i class="fas fa-save"></i> حفظ الصفقة'; btn.disabled=false; return;
+  }
+  toast('✅ تم حفظ الصفقة', 'success');
+  setTimeout(()=>{ location.href='journal.html'; }, 1000);
+});
+
+/* Init */
+async function init(){
+  try{
+    const { data:{session} } = await supabase.auth.getSession();
+    if(session){
+      const fn = session.user.user_metadata?.first_name || session.user.email.split('@')[0];
+      document.getElementById('userName').textContent = fn;
+      document.getElementById('userAvatar').textContent = (fn[0]||'G').toUpperCase();
+      await setupUserMenu(session.user);
+    } else {
+      document.getElementById('userName').textContent = 'زائر';
+    }
+  } catch(e){ console.warn(e); document.getElementById('userName').textContent='زائر'; }
+  document.getElementById('boot').classList.add('hide');
+  refresh();
+}
+init();
+setTimeout(()=>document.getElementById('boot')?.classList.add('hide'), 2000);
+</script>
+
+</body>
+</html>

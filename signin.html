@@ -71,7 +71,9 @@ body{
   mix-blend-mode:overlay
 }
 
-.brand{position:relative;z-index:2;display:flex;align-items:center;gap:.7rem}
+.brand{position:relative;z-index:2;display:flex;align-items:center;gap:.7rem;text-decoration:none !important}
+.brand:hover{text-decoration:none !important}
+.brand .brand-name{text-decoration:none}
 .brand-logo{
   width:42px;height:42px;border-radius:11px;
   background:linear-gradient(135deg,var(--gold),var(--gold-d));
@@ -79,7 +81,7 @@ body{
   box-shadow:0 4px 20px rgba(212,160,23,.4),inset 0 1px 0 rgba(255,255,255,.15);
   font-weight:700;font-family:'Space Grotesk';color:#000;font-size:1.2rem
 }
-.brand-name{font-family:'Space Grotesk';font-weight:700;font-size:1.5rem;letter-spacing:-.02em}
+.brand-name{font-family:'Space Grotesk';font-weight:700;font-size:1.5rem;letter-spacing:-.02em;background:linear-gradient(135deg,var(--gold-l,#F0C030),var(--gold,#D4A017));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
 
 .visual-content{position:relative;z-index:2;max-width:520px}
 .eyebrow{
@@ -140,7 +142,7 @@ body{
 .form-sub a:hover{text-decoration:underline}
 
 /* ── Social Buttons ── */
-.social-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.5rem}
+.social-row{display:grid;grid-template-columns:1fr;gap:.75rem;margin-bottom:1.5rem}
 .social-btn{
   display:flex;align-items:center;justify-content:center;gap:.55rem;
   padding:.85rem;border-radius:12px;
@@ -220,9 +222,35 @@ body{
 .btn-submit:hover::before{transform:translateX(-100%)}
 .btn-submit:active{transform:translateY(0)}
 
-.form-foot{text-align:center;margin-top:2rem;color:var(--txt3);font-size:.9rem}
-.form-foot a{color:var(--gold);text-decoration:none;font-weight:600}
+.form-foot{text-align:center;margin-top:1.2rem;color:var(--txt4);font-size:.78rem;line-height:1.7}
+.form-foot a{color:var(--gold);text-decoration:none;font-weight:500}
 .form-foot a:hover{text-decoration:underline}
+
+.signup-cta{
+  margin-top:1.8rem;
+  padding:1.1rem 1.2rem;
+  background:linear-gradient(135deg,rgba(212,160,23,.06),rgba(160,120,16,.03));
+  border:1px solid rgba(212,160,23,.2);
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:space-between;gap:.6rem;
+  flex-wrap:wrap;
+  transition:all var(--base) var(--ease);
+}
+.signup-cta:hover{border-color:rgba(212,160,23,.4);background:linear-gradient(135deg,rgba(212,160,23,.1),rgba(160,120,16,.06))}
+.signup-cta>span{color:var(--txt2);font-size:.9rem;font-weight:500}
+.signup-cta>a{
+  display:inline-flex;align-items:center;gap:.5rem;
+  color:var(--gold);text-decoration:none;font-weight:700;font-size:.92rem;
+  padding:.55rem 1.1rem;border-radius:9px;
+  background:rgba(212,160,23,.12);
+  transition:all var(--base) var(--ease);
+}
+.signup-cta>a:hover{
+  background:linear-gradient(135deg,var(--gold-l,#F0C030),var(--gold,#D4A017));
+  color:#000;transform:translateY(-1px);
+  box-shadow:0 6px 18px rgba(212,160,23,.3)
+}
+.signup-cta>a i{font-size:.78rem}
 
 /* ── Light mode ── */
 body.light{
@@ -260,32 +288,27 @@ body.light .auth-form-wrap{background:#fafafa}
     <div class="auth-noise"></div>
 
     <a href="glorex_landing.html" class="brand fade-up">
-      <div class="brand-logo">G</div>
       <div class="brand-name">GLOREX</div>
     </a>
 
     <div class="visual-content">
-      <div class="eyebrow fade-up d1">منصة #1 في تعليم تداول NQ بالعربي</div>
       <h1 class="visual-h1 fade-up d2">
         ادخل عالم <em>التداول المنظم</em>
       </h1>
       <p class="visual-sub fade-up d3">
-        انضم لمئات المتداولين اللي تحولوا من التخمين لخطة واضحة باستخدام Supply & Demand + Fair Value Gap على Nasdaq Futures.
+        انضم لمئات المتداولين اللي تحولوا من التخمين لخطة واضحة — بنظام واحد، وأدوات احترافية، ومجتمع عربي حقيقي.
       </p>
     </div>
 
     <div class="visual-stats fade-up d4">
       <div><div class="vs-num">500+</div><div class="vs-lbl">متداول نشط</div></div>
-      <div><div class="vs-num">1:2</div><div class="vs-lbl">نسبة المخاطرة</div></div>
       <div><div class="vs-num">9</div><div class="vs-lbl">دروس احترافية</div></div>
+      <div><div class="vs-num">100%</div><div class="vs-lbl">محتوى عربي</div></div>
     </div>
   </aside>
 
   <!-- RIGHT: Form Panel -->
   <main class="auth-form-wrap">
-    <button class="theme-toggle" id="themeToggle" aria-label="تبديل الوضع">
-      <i class="fas fa-moon"></i>
-    </button>
 
     <form class="auth-form" id="signinForm">
       <div class="form-head fade-up">
@@ -297,8 +320,7 @@ body.light .auth-form-wrap{background:#fafafa}
 
       <!-- Social -->
       <div class="social-row fade-up d1">
-        <button type="button" class="social-btn"><i class="fab fa-google"></i> Google</button>
-        <button type="button" class="social-btn"><i class="fab fa-apple"></i> Apple</button>
+        <button type="button" class="social-btn"><i class="fab fa-google"></i> المتابعة عبر Google</button>
       </div>
 
       <div class="divider fade-up d1">أو</div>
@@ -337,26 +359,26 @@ body.light .auth-form-wrap{background:#fafafa}
         تسجيل الدخول <i class="fas fa-arrow-left"></i>
       </button>
 
+      <div class="signup-cta fade-up d4">
+        <span>ما عندك حساب؟</span>
+        <a href="signup.html">إنشاء حساب جديد <i class="fas fa-user-plus"></i></a>
+      </div>
+
       <p class="form-foot fade-up d4">
-        بتسجيلك دخول، أنت توافق على <a href="#">الشروط</a> و<a href="#">سياسة الخصوصية</a>
+        بتسجيلك دخول، أنت توافق على <a href="terms.html">الشروط</a> و<a href="privacy.html">سياسة الخصوصية</a>
       </p>
     </form>
   </main>
 </div>
 
 <script type="module">
-import { signIn, signInWithGoogle, signInWithApple, resetPassword, translateError } from './supabase-client.js';
+import { signIn, signInWithGoogle, resetPassword, translateError, getSession } from './supabase-client.js';
 
-/* Theme toggle */
-const tt=document.getElementById('themeToggle');
-const savedTheme=localStorage.getItem('glorex-theme');
-if(savedTheme==='light'){document.body.classList.add('light');tt.innerHTML='<i class="fas fa-sun"></i>'}
-tt.addEventListener('click',()=>{
-  document.body.classList.toggle('light');
-  const isLight=document.body.classList.contains('light');
-  localStorage.setItem('glorex-theme',isLight?'light':'dark');
-  tt.innerHTML=isLight?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>';
-});
+/* لو مسجل دخول، روح للـ Dashboard مباشرة */
+(async()=>{
+  const session = await getSession();
+  if(session) location.replace('dashboard.html');
+})();
 
 /* Password show/hide */
 document.querySelectorAll('.field-toggle-pwd').forEach(btn=>{
@@ -384,13 +406,12 @@ if (urlParams.get('check_email')) {
   toast('تحقق من بريدك الإلكتروني لتأكيد الحساب قبل تسجيل الدخول 📧', 'info');
 }
 
-/* ── Social OAuth ── */
+/* ── Google OAuth ── */
 document.querySelectorAll('.social-btn').forEach(btn=>{
   btn.addEventListener('click', async ()=>{
-    const isGoogle = btn.querySelector('.fa-google');
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> جاري التحويل...';
-    const { error } = await (isGoogle ? signInWithGoogle() : signInWithApple());
+    const { error } = await signInWithGoogle();
     if (error) { toast(translateError(error), 'error'); setTimeout(()=>location.reload(), 2500); }
   });
 });
@@ -426,7 +447,9 @@ document.getElementById('signinForm').addEventListener('submit', async e=>{
 
   btn.innerHTML = '<i class="fas fa-check"></i> تم تسجيل الدخول';
   btn.style.background = 'linear-gradient(135deg,#22c55e,#16a34a)';
-  setTimeout(()=> location.href = 'dashboard.html', 800);
+  const params = new URLSearchParams(location.search);
+  const nextUrl = params.get('next') || 'dashboard.html';
+  setTimeout(()=> location.href = nextUrl, 800);
 });
 </script>
 </body>

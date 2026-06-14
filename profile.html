@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>الملف الشخصي — GLOREX</title>
+<meta name="theme-color" content="#0a0a0a"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold:#D4A017;--gold-l:#F0C030;--gold-d:#A07810;
+  --bg:#080808;--surface:#0d0d0d;--card:#111111;
+  --border:rgba(255,255,255,0.08);
+  --txt:#fff;--txt2:#ccc;--txt3:#999;--txt4:#666;
+  --ease:cubic-bezier(.4,0,.2,1);--base:.3s;
+  --ok:#22c55e;--warn:#f59e0b;--err:#ef4444;--info:#3b82f6;
+}
+body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;font-family:inherit;border:none;background:none;color:inherit}
+
+.bg-mesh{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 900px 700px at 80% 0%,rgba(212,160,23,.08),transparent 60%)}
+
+.topbar{position:sticky;top:0;z-index:100;background:rgba(8,8,8,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:.95rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{display:flex;align-items:center;gap:.6rem}
+.brand-logo{width:40px;height:40px;border-radius:11px;background:#fff;border:1.5px solid rgba(212,160,23,.5);box-shadow:0 0 14px rgba(184,134,11,.45);display:flex;align-items:center;justify-content:center;padding:5px;overflow:hidden}
+.brand-logo img{width:100%;height:100%;object-fit:contain}
+.brand-name{font-family:'Space Grotesk';font-weight:700;font-size:1.25rem;letter-spacing:-.02em}
+.nav-tabs{display:flex;gap:.4rem}
+.nav-tab{padding:.55rem 1.1rem;border-radius:10px;color:var(--txt3);font-size:.88rem;font-weight:500;transition:all var(--base) var(--ease)}
+.nav-tab:hover{color:var(--txt);background:rgba(255,255,255,.04)}
+.nav-tab.active{color:var(--gold);background:rgba(212,160,23,.1)}
+.user-name{font-size:.92rem;color:var(--txt2)}
+.user-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-family:'Space Grotesk';font-size:.92rem}
+.user-menu{display:flex;align-items:center;gap:.7rem}
+
+.main{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:2.5rem 2rem 5rem}
+
+.page-head{margin-bottom:2.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.page-h1{font-family:'Space Grotesk';font-size:2rem;font-weight:700;margin-bottom:.3rem;letter-spacing:-.02em}
+.page-sub{color:var(--txt3);font-size:.95rem}
+.edit-link{display:inline-flex;align-items:center;gap:.5rem;background:rgba(212,160,23,.1);color:var(--gold);padding:.7rem 1.3rem;border-radius:10px;font-size:.92rem;font-weight:600;transition:all var(--base) var(--ease);border:1px solid rgba(212,160,23,.25)}
+.edit-link:hover{background:rgba(212,160,23,.18)}
+
+/* Hero Profile Card */
+.hero-card{background:linear-gradient(160deg,#161106,#0d0a04);border:1px solid rgba(212,160,23,.25);border-radius:18px;padding:2.5rem 2rem;margin-bottom:1.5rem;position:relative;overflow:hidden}
+.hero-card::before{content:'';position:absolute;top:-40%;right:-15%;width:300px;height:300px;background:radial-gradient(circle,rgba(212,160,23,.15),transparent 70%);pointer-events:none}
+.hero-inner{position:relative;display:flex;align-items:center;gap:1.8rem;flex-wrap:wrap}
+.hero-avatar{width:96px;height:96px;border-radius:50%;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-family:'Space Grotesk';font-size:2.4rem;box-shadow:0 12px 36px rgba(212,160,23,.3)}
+.hero-info{flex-grow:1;min-width:0}
+.hero-name{font-family:'Space Grotesk';font-size:1.8rem;font-weight:700;margin-bottom:.3rem;letter-spacing:-.02em}
+.hero-email{color:var(--txt3);font-size:.95rem;direction:ltr;text-align:right;margin-bottom:.8rem}
+.tier-badge{display:inline-flex;align-items:center;gap:.45rem;padding:.45rem 1rem;border-radius:999px;font-size:.85rem;font-weight:700;letter-spacing:.3px}
+.tier-badge.free{background:rgba(255,255,255,.08);color:#bbb;border:1px solid rgba(255,255,255,.1)}
+.tier-badge.basic{background:rgba(59,130,246,.12);color:#60a5fa;border:1px solid rgba(59,130,246,.3)}
+.tier-badge.premium{background:linear-gradient(135deg,rgba(240,192,48,.18),rgba(160,120,16,.1));color:var(--gold);border:1px solid rgba(212,160,23,.4)}
+
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-bottom:1.5rem}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.5rem;transition:all var(--base) var(--ease)}
+.card:hover{border-color:rgba(255,255,255,.14)}
+.card-h{display:flex;align-items:center;gap:.7rem;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.card-h i{width:36px;height:36px;border-radius:9px;background:rgba(212,160,23,.12);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:.95rem}
+.card-h h2{font-family:'Space Grotesk';font-size:1.05rem;font-weight:600}
+
+.info-list{display:flex;flex-direction:column;gap:.85rem}
+.info-row{display:flex;justify-content:space-between;align-items:center;gap:.8rem;padding:.6rem 0;border-bottom:1px dashed rgba(255,255,255,.06);font-size:.92rem}
+.info-row:last-child{border:none}
+.info-lbl{color:var(--txt3);font-weight:500}
+.info-val{color:var(--txt);font-weight:600;text-align:left;font-family:'Space Grotesk';direction:ltr}
+.info-val.ar{font-family:inherit;direction:rtl}
+
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem}
+.stat-mini{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center}
+.stat-mini-v{font-family:'Space Grotesk';font-size:1.7rem;font-weight:700;color:var(--gold);line-height:1;margin-bottom:.3rem}
+.stat-mini-l{font-size:.75rem;color:var(--txt3)}
+
+.sub-progress{margin-top:.8rem}
+.progress-bar{height:6px;background:rgba(255,255,255,.06);border-radius:999px;overflow:hidden;margin-bottom:.5rem}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold-l),var(--gold-d));border-radius:999px;transition:width .6s var(--ease)}
+.progress-text{font-size:.78rem;color:var(--txt3);text-align:center}
+
+.upgrade-cta{background:linear-gradient(135deg,rgba(212,160,23,.1),rgba(160,120,16,.04));border:1px dashed rgba(212,160,23,.35);border-radius:12px;padding:1.3rem;text-align:center;margin-top:1rem}
+.upgrade-cta p{color:var(--txt2);font-size:.88rem;margin-bottom:.8rem;line-height:1.7}
+.upgrade-cta a{display:inline-flex;align-items:center;gap:.4rem;background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#000;padding:.6rem 1.2rem;border-radius:9px;font-weight:700;font-size:.85rem;text-decoration:none;transition:all var(--base) var(--ease)}
+.upgrade-cta a:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(212,160,23,.3)}
+
+/* Payment / Booking history */
+.history-card{grid-column:span 2}
+.history-item{display:flex;align-items:center;justify-content:space-between;gap:.8rem;padding:.95rem 0;border-bottom:1px dashed rgba(255,255,255,.06)}
+.history-item:last-child{border:none}
+.history-info{display:flex;align-items:center;gap:.85rem;min-width:0;flex-grow:1}
+.history-ico{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0}
+.history-ico.ok{background:rgba(34,197,94,.1);color:var(--ok)}
+.history-ico.warn{background:rgba(245,158,11,.1);color:var(--warn)}
+.history-ico.err{background:rgba(239,68,68,.1);color:var(--err)}
+.history-ico.info{background:rgba(59,130,246,.1);color:var(--info)}
+.history-text strong{display:block;font-size:.92rem;margin-bottom:.15rem}
+.history-text span{color:var(--txt3);font-size:.78rem;direction:ltr}
+.history-amount{font-family:'Space Grotesk';font-weight:700;color:var(--gold);font-size:1rem;flex-shrink:0}
+.history-empty{text-align:center;padding:2rem 1rem;color:var(--txt3);font-size:.9rem}
+.history-empty i{font-size:2rem;color:var(--txt4);display:block;margin-bottom:.7rem}
+
+@media (max-width:920px){
+  .grid{grid-template-columns:1fr}
+  .history-card{grid-column:span 1}
+  .nav-tabs{display:none}
+  .main{padding:1.5rem 1rem 3rem}
+  .hero-card{padding:1.8rem 1.4rem}
+  .hero-inner{flex-direction:column;text-align:center}
+  .hero-avatar{width:80px;height:80px;font-size:2rem}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-mesh"></div>
+
+<header class="topbar">
+  <a href="dashboard.html" class="brand">
+    <div class="brand-logo"><img src="glorex_bull_gold.png" alt="GLOREX"/></div>
+    <div class="brand-name">GLOREX</div>
+  </a>
+  <nav class="nav-tabs">
+    <a href="dashboard.html" class="nav-tab">الرئيسية</a>
+    <a href="checklist.html" class="nav-tab">القائمة</a>
+    <a href="journal.html" class="nav-tab">السجل</a>
+    <a href="calendar.html" class="nav-tab">التقويم</a>
+    <a href="lessons.html" class="nav-tab">الدروس</a>
+    <a href="chat.html" class="nav-tab">المحادثة</a>
+  </nav>
+  <div class="user-menu">
+    <span class="user-name" id="userName">...</span>
+    <div class="user-avatar" id="userAvatar">G</div>
+  </div>
+</header>
+
+<main class="main">
+
+  <div class="page-head">
+    <div>
+      <h1 class="page-h1">الملف الشخصي</h1>
+      <p class="page-sub">بياناتك واشتراكك وسجل نشاطك</p>
+    </div>
+    <a href="settings.html" class="edit-link">
+      <i class="fas fa-cog"></i> الإعدادات
+    </a>
+  </div>
+
+  <!-- Hero Card -->
+  <div class="hero-card">
+    <div class="hero-inner">
+      <div class="hero-avatar" id="heroAvatar">G</div>
+      <div class="hero-info">
+        <div class="hero-name" id="heroName">جاري التحميل...</div>
+        <div class="hero-email" id="heroEmail">—</div>
+        <div class="tier-badge free" id="heroTier">🆓 Free</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cards Grid -->
+  <div class="grid">
+
+    <!-- Account Info -->
+    <div class="card">
+      <div class="card-h">
+        <i class="fas fa-id-card"></i>
+        <h2>معلومات الحساب</h2>
+      </div>
+      <div class="info-list">
+        <div class="info-row">
+          <span class="info-lbl">الاسم الكامل</span>
+          <span class="info-val ar" id="infoName">—</span>
+        </div>
+        <div class="info-row">
+          <span class="info-lbl">البريد الإلكتروني</span>
+          <span class="info-val" id="infoEmail">—</span>
+        </div>
+        <div class="info-row">
+          <span class="info-lbl">تاريخ التسجيل</span>
+          <span class="info-val ar" id="infoJoined">—</span>
+        </div>
+        <div class="info-row">
+          <span class="info-lbl">طريقة الدخول</span>
+          <span class="info-val ar" id="infoProvider">إيميل + كلمة سر</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Subscription -->
+    <div class="card">
+      <div class="card-h">
+        <i class="fas fa-crown"></i>
+        <h2>الاشتراك</h2>
+      </div>
+      <div class="info-list">
+        <div class="info-row">
+          <span class="info-lbl">الباقة الحالية</span>
+          <span class="info-val ar" id="subTier">Free</span>
+        </div>
+        <div class="info-row">
+          <span class="info-lbl">تاريخ البداية</span>
+          <span class="info-val ar" id="subStart">—</span>
+        </div>
+        <div class="info-row">
+          <span class="info-lbl">تاريخ الانتهاء</span>
+          <span class="info-val ar" id="subEnd">—</span>
+        </div>
+        <div class="info-row">
+          <span class="info-lbl">الأيام المتبقية</span>
+          <span class="info-val ar" id="subDays">—</span>
+        </div>
+      </div>
+
+      <div class="sub-progress" id="subProgressArea" style="display:none">
+        <div class="progress-bar"><div class="progress-fill" id="subProgress" style="width:0%"></div></div>
+        <div class="progress-text" id="subProgressText">—</div>
+      </div>
+
+      <div class="upgrade-cta" id="upgradeCta">
+        <p>اشترك بـ Basic أو Premium لفتح كل الميزات الاحترافية</p>
+        <a href="subscribe.html">شوف الباقات <i class="fas fa-arrow-left"></i></a>
+      </div>
+
+      <!-- رصيد الإحالات -->
+      <a href="referral.html" id="balanceCard" style="display:none;text-decoration:none;background:linear-gradient(135deg,rgba(34,197,94,.08),rgba(34,197,94,.02));border:1px solid rgba(34,197,94,.25);border-radius:12px;padding:1rem 1.2rem;margin-top:1rem;display:flex;align-items:center;gap:.8rem;transition:all .3s">
+        <div style="width:42px;height:42px;border-radius:10px;background:rgba(34,197,94,.12);color:#22c55e;display:flex;align-items:center;justify-content:center;font-size:1.1rem"><i class="fas fa-wallet"></i></div>
+        <div style="flex-grow:1">
+          <div style="font-size:.78rem;color:var(--txt3);margin-bottom:.15rem">رصيد الإحالات</div>
+          <div style="font-family:'Space Grotesk';font-size:1.3rem;font-weight:700;color:#22c55e" id="balanceValue">$0</div>
+        </div>
+        <i class="fas fa-arrow-left" style="color:var(--txt3);font-size:.85rem"></i>
+      </a>
+    </div>
+
+    <!-- Usage Stats (يظهر بس لو في نشاط) -->
+    <div class="card" id="statsCard" style="display:none">
+      <div class="card-h">
+        <i class="fas fa-chart-line"></i>
+        <h2>نشاطك</h2>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-mini">
+          <div class="stat-mini-v" id="statTrades">0</div>
+          <div class="stat-mini-l">صفقات بالسجل</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-v" id="statChecklist">0</div>
+          <div class="stat-mini-l">قوائم تحقق</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-v" id="statBookings">0</div>
+          <div class="stat-mini-l">جلسات 1:1</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-v" id="statMessages">0</div>
+          <div class="stat-mini-l">رسائل بالمحادثة</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment History (يظهر بس لو في مدفوعات) -->
+    <div class="card history-card" id="paymentCard" style="display:none">
+      <div class="card-h">
+        <i class="fas fa-receipt"></i>
+        <h2>سجل المدفوعات</h2>
+      </div>
+      <div id="paymentHistory"></div>
+    </div>
+
+    <!-- Booking History (يظهر بس لو Premium و في حجوزات) -->
+    <div class="card" id="bookingCard" style="display:none">
+      <div class="card-h">
+        <i class="fas fa-video"></i>
+        <h2>جلساتي 1:1</h2>
+      </div>
+      <div id="bookingHistory"></div>
+    </div>
+
+  </div>
+
+</main>
+
+<script type="module">
+import { supabase, requireAuth, getUser, getSubscriptionTier } from './supabase-client.js?v=20260610';
+import { setupUserMenu } from './user-menu.js?v=20260611';
+
+const session = await requireAuth();
+if(!session) throw new Error('not auth');
+
+const user = await getUser();
+const fullName = user.user_metadata?.full_name || user.user_metadata?.name || user.email.split('@')[0];
+const initial = (fullName[0]||'G').toUpperCase();
+
+// Topbar
+document.getElementById('userName').textContent = fullName.split(' ')[0];
+document.getElementById('userAvatar').textContent = initial;
+
+// User dropdown menu
+await setupUserMenu(user);
+
+// Hero
+document.getElementById('heroAvatar').textContent = initial;
+document.getElementById('heroName').textContent = fullName;
+document.getElementById('heroEmail').textContent = user.email;
+
+// Account info
+document.getElementById('infoName').textContent = fullName;
+document.getElementById('infoEmail').textContent = user.email;
+document.getElementById('infoJoined').textContent = new Date(user.created_at).toLocaleDateString('ar-EG-u-nu-latn', { dateStyle:'long' });
+const providers = user.app_metadata?.providers || ['email'];
+const providerMap = { email: 'إيميل + كلمة سر', google: 'Google', apple: 'Apple' };
+document.getElementById('infoProvider').textContent = providers.map(p => providerMap[p] || p).join('، ');
+
+// Subscription
+const userTier = await getSubscriptionTier() || 'free';
+const tierNames = { free: 'Free', basic: 'Basic', premium: 'Premium' };
+const tierIcons = { free: '🆓', basic: '⭐', premium: '👑' };
+
+const heroTier = document.getElementById('heroTier');
+heroTier.className = `tier-badge ${userTier}`;
+heroTier.innerHTML = `${tierIcons[userTier]} ${tierNames[userTier]}`;
+
+document.getElementById('subTier').textContent = tierNames[userTier];
+
+// Get profile for sub dates
+const { data: profile } = await supabase
+  .from('profiles')
+  .select('subscription_started_at, subscription_expires_at')
+  .eq('id', user.id)
+  .single();
+
+if(profile?.subscription_started_at && userTier !== 'free'){
+  const start = new Date(profile.subscription_started_at);
+  const end = new Date(profile.subscription_expires_at);
+  const now = new Date();
+  const totalDays = Math.ceil((end - start) / 86400000);
+  const passedDays = Math.ceil((now - start) / 86400000);
+  const remainingDays = Math.max(0, Math.ceil((end - now) / 86400000));
+
+  document.getElementById('subStart').textContent = start.toLocaleDateString('ar-EG-u-nu-latn', { dateStyle:'long' });
+  document.getElementById('subEnd').textContent = end.toLocaleDateString('ar-EG-u-nu-latn', { dateStyle:'long' });
+  document.getElementById('subDays').textContent = `${remainingDays} يوم`;
+
+  const progress = Math.min(100, Math.max(0, (passedDays / totalDays) * 100));
+  document.getElementById('subProgress').style.width = `${progress}%`;
+  document.getElementById('subProgressText').textContent = `مرّت ${passedDays} يوم من أصل ${totalDays}`;
+  document.getElementById('subProgressArea').style.display = 'block';
+  document.getElementById('upgradeCta').style.display = 'none';
+}
+
+// رصيد الإحالات
+try {
+  const { data: balance } = await supabase.rpc('get_account_balance');
+  const bal = Number(balance||0);
+  if(bal > 0){
+    document.getElementById('balanceValue').textContent = '$' + bal.toFixed(2);
+    document.getElementById('balanceCard').style.display = 'flex';
+  }
+} catch(e){ /* ignore */ }
+
+// Usage stats
+const [trades, checklists, bookings, messages] = await Promise.all([
+  supabase.from('trades').select('*', {count:'exact', head:true}).eq('user_id', user.id).then(r => r.count || 0).catch(() => 0),
+  supabase.from('checklists').select('*', {count:'exact', head:true}).eq('user_id', user.id).then(r => r.count || 0).catch(() => 0),
+  supabase.from('call_bookings').select('*', {count:'exact', head:true}).eq('user_id', user.id).then(r => r.count || 0).catch(() => 0),
+  supabase.from('chat_messages').select('*', {count:'exact', head:true}).eq('user_id', user.id).then(r => r.count || 0).catch(() => 0)
+]);
+
+document.getElementById('statTrades').textContent = trades;
+document.getElementById('statChecklist').textContent = checklists;
+document.getElementById('statBookings').textContent = bookings;
+document.getElementById('statMessages').textContent = messages;
+
+// أظهر stats card بس لو في نشاط
+if(trades + checklists + bookings + messages > 0){
+  document.getElementById('statsCard').style.display = 'block';
+}
+
+// Payment history — أظهر بس لو في مدفوعات
+const { data: payments } = await supabase
+  .from('payment_requests')
+  .select('*')
+  .eq('user_id', user.id)
+  .order('created_at', { ascending: false })
+  .limit(10);
+
+if(payments && payments.length > 0){
+  document.getElementById('paymentCard').style.display = 'block';
+  document.getElementById('paymentHistory').innerHTML = payments.map(p => {
+    const statusInfo = {
+      pending: { ico:'fa-clock', cls:'warn', text:'قيد المراجعة' },
+      approved: { ico:'fa-check', cls:'ok', text:'مفعّل' },
+      rejected: { ico:'fa-times', cls:'err', text:'مرفوض' }
+    }[p.status];
+    return `
+      <div class="history-item">
+        <div class="history-info">
+          <div class="history-ico ${statusInfo.cls}"><i class="fas ${statusInfo.ico}"></i></div>
+          <div class="history-text">
+            <strong>${tierNames[p.plan]} — ${statusInfo.text}</strong>
+            <span>${new Date(p.created_at).toLocaleDateString('ar-EG-u-nu-latn',{dateStyle:'medium'})} • USDT TRC20</span>
+          </div>
+        </div>
+        <span class="history-amount">$${p.amount}</span>
+      </div>
+    `;
+  }).join('');
+}
+
+// Booking history — أظهر بس لو Premium و في حجوزات
+const { data: bookingsData } = await supabase
+  .from('call_bookings')
+  .select('*')
+  .eq('user_id', user.id)
+  .order('scheduled_at', { ascending: false })
+  .limit(5);
+
+if(userTier === 'premium' && bookingsData && bookingsData.length > 0){
+  document.getElementById('bookingCard').style.display = 'block';
+  document.getElementById('bookingHistory').innerHTML = bookingsData.map(b => {
+    const statusInfo = {
+      pending: { ico:'fa-clock', cls:'warn', text:'بانتظار التأكيد' },
+      confirmed: { ico:'fa-check', cls:'ok', text:'مؤكد' },
+      completed: { ico:'fa-flag-checkered', cls:'info', text:'تمت' },
+      cancelled: { ico:'fa-times', cls:'err', text:'ملغي' }
+    }[b.status];
+    const d = new Date(b.scheduled_at);
+    return `
+      <div class="history-item">
+        <div class="history-info">
+          <div class="history-ico ${statusInfo.cls}"><i class="fas ${statusInfo.ico}"></i></div>
+          <div class="history-text">
+            <strong>${statusInfo.text}</strong>
+            <span>${d.toLocaleDateString('ar-EG-u-nu-latn',{weekday:'long', day:'numeric', month:'long'})} • ${d.toLocaleTimeString('ar-EG-u-nu-latn',{hour:'2-digit',minute:'2-digit'})}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+</script>
+
+</body>
+</html>

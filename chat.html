@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>المحادثة الجماعية — GLOREX</title>
+<meta name="theme-color" content="#0a0a0a"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold:#D4A017;--gold-l:#F0C030;--gold-d:#A07810;
+  --bg:#080808;--surface:#0d0d0d;--card:#111111;
+  --border:rgba(255,255,255,0.08);
+  --txt:#fff;--txt2:#ccc;--txt3:#999;--txt4:#666;
+  --success:#10b981;--danger:#ef4444;
+  --ease:cubic-bezier(.4,0,.2,1);--base:.3s;
+}
+body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;overflow:hidden}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;font-family:inherit;border:none;background:none;color:inherit}
+
+.bg-mesh{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 900px 700px at 80% 0%,rgba(212,160,23,.12),transparent 60%)}
+
+.topbar{position:sticky;top:0;z-index:100;background:rgba(8,8,8,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:.95rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{display:flex;align-items:center;gap:.6rem}
+.brand-logo{width:40px;height:40px;border-radius:11px;background:#fff;border:1.5px solid rgba(212,160,23,.5);box-shadow:0 0 14px rgba(184,134,11,.45);display:flex;align-items:center;justify-content:center;padding:5px;overflow:hidden}
+.brand-logo img{width:100%;height:100%;object-fit:contain}
+.brand-name{font-family:'Space Grotesk';font-weight:700;letter-spacing:2px;font-size:1.1rem}
+.nav-tabs{display:flex;gap:.4rem}
+.nav-tab{padding:.55rem 1.1rem;border-radius:10px;color:var(--txt3);font-size:.88rem;font-weight:500;transition:all var(--base) var(--ease)}
+.nav-tab:hover{color:var(--txt);background:rgba(255,255,255,.04)}
+.nav-tab.active{color:var(--gold);background:rgba(212,160,23,.1)}
+.user-name{font-size:.88rem;color:var(--txt3)}
+.user-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:.92rem;font-family:'Space Grotesk'}
+.user-menu{display:flex;align-items:center;gap:.7rem}
+
+/* Chat container */
+.chat-wrap{
+  max-width:900px;margin:0 auto;padding:1.5rem;
+  height:calc(100vh - 72px);
+  display:flex;flex-direction:column;
+  position:relative;z-index:1
+}
+
+.chat-head{margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.chat-title{display:flex;align-items:center;gap:.7rem}
+.chat-title h1{font-family:'Space Grotesk';font-size:1.4rem;font-weight:700}
+.chat-title h1 em{font-style:normal;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.live-badge{display:inline-flex;align-items:center;gap:.4rem;padding:.3rem .7rem;background:rgba(16,185,129,.12);color:#10b981;border:1px solid rgba(16,185,129,.3);border-radius:20px;font-size:.72rem;font-weight:600}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#10b981;animation:pulse-dot 1.4s ease-in-out infinite}
+@keyframes pulse-dot{50%{opacity:.4}}
+
+.online-count{font-size:.85rem;color:var(--txt3);display:flex;align-items:center;gap:.4rem}
+.online-count i{color:var(--gold)}
+
+/* Messages area */
+.messages{
+  flex:1;overflow-y:auto;
+  background:var(--card);border:1px solid var(--border);border-radius:16px;
+  padding:1rem 1.2rem;margin-bottom:.7rem;
+  display:flex;flex-direction:column;gap:.5rem
+}
+
+.msg{display:flex;gap:.7rem;align-items:flex-start;padding:.4rem .5rem;border-radius:10px;transition:background .15s ease}
+.msg:hover{background:rgba(255,255,255,.02)}
+.msg.mine{flex-direction:row-reverse;justify-content:flex-start}
+.msg-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-family:'Space Grotesk';font-size:.78rem;flex-shrink:0}
+.msg.mine .msg-avatar{background:linear-gradient(135deg,#6366f1,#4f46e5);color:#fff}
+
+.msg-body{display:flex;flex-direction:column;gap:.15rem;max-width:75%}
+.msg.mine .msg-body{align-items:flex-end}
+
+.msg-head{display:flex;align-items:baseline;gap:.5rem;font-size:.75rem}
+.msg-name{font-weight:600;color:var(--gold)}
+.msg.mine .msg-name{color:#a5b4fc}
+.msg-time{color:var(--txt4)}
+
+.msg-text{background:rgba(255,255,255,.04);padding:.55rem .9rem;border-radius:12px;font-size:.92rem;color:var(--txt);line-height:1.55;word-break:break-word;white-space:pre-wrap}
+.msg.mine .msg-text{background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.25)}
+
+.msg-actions{display:none;gap:.3rem;margin-top:.2rem}
+.msg.mine:hover .msg-actions{display:flex}
+.msg-actions button{padding:.2rem .5rem;font-size:.7rem;color:var(--txt4);border-radius:5px;background:rgba(255,255,255,.04)}
+.msg-actions button:hover{color:#ef4444}
+
+/* Day separator */
+.day-sep{text-align:center;color:var(--txt4);font-size:.78rem;margin:1rem 0 .5rem;display:flex;align-items:center;gap:.7rem}
+.day-sep::before,.day-sep::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* Input */
+.input-bar{
+  background:var(--card);border:1px solid var(--border);border-radius:16px;
+  padding:.7rem;display:flex;gap:.6rem;align-items:flex-end
+}
+.input-bar textarea{
+  flex:1;background:transparent;border:none;outline:none;
+  color:var(--txt);font-family:inherit;font-size:.95rem;
+  resize:none;line-height:1.5;max-height:120px;min-height:24px;padding:.4rem
+}
+.input-bar textarea::placeholder{color:var(--txt4)}
+.send-btn{
+  width:42px;height:42px;border-radius:11px;
+  background:linear-gradient(135deg,var(--gold),var(--gold-d));color:#000;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s ease;flex-shrink:0
+}
+.send-btn:hover:not(:disabled){transform:scale(1.05);box-shadow:0 4px 14px rgba(212,160,23,.4)}
+.send-btn:disabled{opacity:.4;cursor:not-allowed}
+
+.input-meta{font-size:.7rem;color:var(--txt4);text-align:left;margin-top:.3rem;padding:0 .5rem;display:flex;justify-content:space-between}
+
+.loading{display:flex;justify-content:center;padding:2rem;color:var(--gold);font-size:1.3rem}
+.empty{text-align:center;padding:3rem 1rem;color:var(--txt4)}
+.empty i{font-size:2.5rem;color:var(--gold);opacity:.5;display:block;margin-bottom:.6rem}
+
+/* Login prompt */
+.login-prompt{background:var(--card);border:1px dashed var(--border);border-radius:18px;padding:3rem 2rem;text-align:center}
+.login-prompt i{font-size:3rem;color:var(--gold);margin-bottom:1rem;display:block}
+.login-prompt h2{font-family:'Space Grotesk';font-size:1.3rem;margin-bottom:.5rem}
+.login-prompt p{color:var(--txt3);margin-bottom:1.5rem}
+.btn-gold{padding:.7rem 1.6rem;background:linear-gradient(135deg,var(--gold),var(--gold-d));color:#000;border-radius:12px;font-weight:600;display:inline-block}
+
+@media (max-width:768px){
+  .topbar{padding:.8rem 1rem}
+  .nav-tabs{display:none}
+  .chat-wrap{padding:.8rem}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-mesh"></div>
+
+<header class="topbar">
+  <a href="glorex_landing.html" class="brand">
+    <div class="brand-logo"><img src="glorex_bull_gold.png" alt="GLOREX"/></div>
+    <div class="brand-name">GLOREX</div>
+  </a>
+  <nav class="nav-tabs">
+    <a href="dashboard.html" class="nav-tab">الرئيسية</a>
+    <a href="checklist.html" class="nav-tab">القائمة</a>
+    <a href="journal.html" class="nav-tab">السجل</a>
+    <a href="calendar.html" class="nav-tab">التقويم</a>
+    <a href="news.html" class="nav-tab">الأخبار</a>
+    <a href="lessons.html" class="nav-tab">الدروس</a>
+    <a href="chat.html" class="nav-tab active">المحادثة</a>
+  </nav>
+  <div class="user-menu">
+    <span class="user-name" id="userName">...</span>
+    <div class="user-avatar" id="userAvatar">G</div>
+  </div>
+</header>
+
+<div class="chat-wrap" id="chatWrap">
+  <!-- محتوى ديناميكي -->
+  <div class="loading"><i class="fas fa-spinner fa-spin"></i></div>
+</div>
+
+<script type="module">
+import { supabase, getSubscriptionTier, showFeaturePaywall } from './supabase-client.js?v=20260610';
+import { setupUserMenu } from './user-menu.js?v=20260611';
+
+const TIER_LEVEL = { free: 0, basic: 1, premium: 2 };
+let userTier = 'free';
+let canWrite = false;
+
+let currentUser = null;
+let currentUserName = '';
+let messages = [];
+let channel = null;
+
+const fmtTime = d => new Intl.DateTimeFormat('ar-EG-u-nu-latn',{hour:'2-digit',minute:'2-digit'}).format(new Date(d));
+const fmtDay = d => new Intl.DateTimeFormat('ar-EG-u-nu-latn',{weekday:'long',day:'numeric',month:'long'}).format(new Date(d));
+const sameDay = (a,b) => new Date(a).toDateString() === new Date(b).toDateString();
+const escapeHtml = s => String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function renderChat(){
+  const wrap = document.getElementById('chatWrap');
+  wrap.innerHTML = `
+    <div class="chat-head">
+      <div class="chat-title">
+        <h1>💬 المحادثة <em>الجماعية</em></h1>
+        <span class="live-badge"><span class="live-dot"></span> مباشر</span>
+      </div>
+      <div class="online-count"><i class="fas fa-users"></i> <span id="onlineCount">0</span> متداول متصل</div>
+    </div>
+
+    <div class="messages" id="messages"></div>
+
+    ${canWrite ? `
+    <div class="input-bar">
+      <textarea id="msgInput" placeholder="اكتب رسالتك للمجموعة..." rows="1" maxlength="2000"></textarea>
+      <button class="send-btn" id="sendBtn" disabled>
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+    <div class="input-meta">
+      <span><kbd style="background:rgba(255,255,255,.06);padding:.1rem .35rem;border-radius:3px;font-size:.65rem">Enter</kbd> للإرسال • <kbd style="background:rgba(255,255,255,.06);padding:.1rem .35rem;border-radius:3px;font-size:.65rem">Shift+Enter</kbd> سطر جديد</span>
+      <span id="charCount">0/2000</span>
+    </div>
+    ` : `
+    <div class="input-bar" style="cursor:pointer;background:linear-gradient(135deg,rgba(212,160,23,.06),rgba(160,120,16,.03));border:1px dashed rgba(212,160,23,.3);padding:1rem;text-align:center;display:flex;flex-direction:column;align-items:center;gap:.5rem" id="readOnlyBar">
+      <div style="display:flex;align-items:center;gap:.6rem;color:var(--gold,#D4A017);font-weight:600;font-size:.95rem">
+        <i class="fas fa-lock"></i>
+        <span>القراءة فقط — اشترك للمشاركة في المحادثة</span>
+      </div>
+      <div style="color:var(--txt3,#999);font-size:.82rem">اضغط للترقية إلى Basic أو Premium</div>
+    </div>
+    `}
+  `;
+
+  // Free → readonly bar → paywall
+  if(!canWrite){
+    document.getElementById('readOnlyBar').addEventListener('click', () => {
+      showFeaturePaywall('basic', 'كتابة في المحادثة');
+    });
+    renderMessages();
+    scrollToBottom();
+    return;
+  }
+
+  // Auto-resize textarea
+  const input = document.getElementById('msgInput');
+  const sendBtn = document.getElementById('sendBtn');
+  const charCount = document.getElementById('charCount');
+
+  input.addEventListener('input', () => {
+    input.style.height = 'auto';
+    input.style.height = Math.min(input.scrollHeight, 120) + 'px';
+    const len = input.value.length;
+    charCount.textContent = `${len}/2000`;
+    sendBtn.disabled = !input.value.trim();
+  });
+
+  input.addEventListener('keydown', e => {
+    if(e.key === 'Enter' && !e.shiftKey){
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+
+  sendBtn.addEventListener('click', sendMessage);
+
+  renderMessages();
+  scrollToBottom();
+}
+
+function renderMessages(){
+  const container = document.getElementById('messages');
+  if(!container) return;
+
+  if(messages.length === 0){
+    container.innerHTML = `
+      <div class="empty">
+        <i class="far fa-comment-dots"></i>
+        <div>لا توجد رسائل بعد — كن أول من يكتب! 👋</div>
+      </div>`;
+    return;
+  }
+
+  let html = '';
+  let lastDate = null;
+
+  for(const m of messages){
+    if(!lastDate || !sameDay(lastDate, m.created_at)){
+      html += `<div class="day-sep">${fmtDay(m.created_at)}</div>`;
+      lastDate = m.created_at;
+    }
+
+    const isMine = m.user_id === currentUser?.id;
+    const initial = (m.user_name?.[0] || 'G').toUpperCase();
+
+    html += `
+      <div class="msg ${isMine?'mine':''}" data-id="${m.id}">
+        <div class="msg-avatar">${initial}</div>
+        <div class="msg-body">
+          <div class="msg-head">
+            <span class="msg-name">${escapeHtml(m.user_name)}</span>
+            <span class="msg-time">${fmtTime(m.created_at)}</span>
+          </div>
+          <div class="msg-text">${escapeHtml(m.content)}</div>
+          ${isMine ? `<div class="msg-actions"><button onclick="deleteMsg('${m.id}')"><i class="far fa-trash-alt"></i> حذف</button></div>` : ''}
+        </div>
+      </div>`;
+  }
+
+  container.innerHTML = html;
+}
+
+function scrollToBottom(){
+  const m = document.getElementById('messages');
+  if(m) m.scrollTop = m.scrollHeight;
+}
+
+async function sendMessage(){
+  const input = document.getElementById('msgInput');
+  const content = input.value.trim();
+  if(!content || !currentUser) return;
+
+  const sendBtn = document.getElementById('sendBtn');
+  sendBtn.disabled = true;
+
+  const { error } = await supabase.from('chat_messages').insert({
+    user_id: currentUser.id,
+    user_name: currentUserName,
+    content,
+  });
+
+  if(error){
+    alert('فشل الإرسال: ' + error.message);
+    sendBtn.disabled = false;
+    return;
+  }
+
+  input.value = '';
+  input.style.height = 'auto';
+  document.getElementById('charCount').textContent = '0/2000';
+}
+
+window.deleteMsg = async (id) => {
+  if(!confirm('حذف هذه الرسالة؟')) return;
+  await supabase.from('chat_messages').delete().eq('id', id);
+};
+
+async function loadMessages(){
+  const { data, error } = await supabase
+    .from('chat_messages')
+    .select('*')
+    .order('created_at', { ascending: true })
+    .limit(200);
+
+  if(error){
+    console.error(error);
+    return;
+  }
+  messages = data || [];
+  renderMessages();
+  scrollToBottom();
+}
+
+function subscribeToMessages(){
+  channel = supabase.channel('chat-room')
+    .on('postgres_changes',
+      { event: 'INSERT', schema: 'public', table: 'chat_messages' },
+      payload => {
+        messages.push(payload.new);
+        renderMessages();
+        scrollToBottom();
+      }
+    )
+    .on('postgres_changes',
+      { event: 'DELETE', schema: 'public', table: 'chat_messages' },
+      payload => {
+        messages = messages.filter(m => m.id !== payload.old.id);
+        renderMessages();
+      }
+    )
+    .subscribe();
+}
+
+async function init(){
+  const { data:{session} } = await supabase.auth.getSession();
+
+  if(!session){
+    document.querySelector('.chat-wrap').innerHTML = `
+      <div class="login-prompt">
+        <i class="fas fa-lock"></i>
+        <h2>سجّل دخولك للانضمام للمحادثة</h2>
+        <p>تواصل مع آلاف المتداولين العرب في مجتمع GLOREX</p>
+        <a href="signin.html" class="btn-gold">تسجيل الدخول</a>
+      </div>`;
+    return;
+  }
+
+  currentUser = session.user;
+  currentUserName = currentUser.user_metadata?.first_name || currentUser.email.split('@')[0];
+
+  document.getElementById('userName').textContent = currentUserName;
+  document.getElementById('userAvatar').textContent = (currentUserName[0]||'G').toUpperCase();
+  await setupUserMenu(currentUser);
+
+  /* تحقق من الباقة — Free يقرأ بس */
+  try {
+    userTier = await getSubscriptionTier() || 'free';
+  } catch(e) { userTier = 'free'; }
+  canWrite = (TIER_LEVEL[userTier] ?? 0) >= TIER_LEVEL.basic;
+
+  renderChat();
+  await loadMessages();
+  subscribeToMessages();
+}
+init();
+</script>
+
+</body>
+</html>

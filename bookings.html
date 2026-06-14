@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>احجز مكالمتك — GLOREX</title>
+<meta name="theme-color" content="#0a0a0a"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold:#D4A017;--gold-l:#F0C030;--gold-d:#A07810;
+  --bg:#080808;--surface:#0d0d0d;--card:#111111;
+  --border:rgba(255,255,255,0.08);
+  --txt:#fff;--txt2:#ccc;--txt3:#999;--txt4:#666;
+  --ease:cubic-bezier(.4,0,.2,1);--base:.3s;
+  --ok:#22c55e;--warn:#f59e0b;--err:#ef4444;
+}
+body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;font-family:inherit;border:none;background:none;color:inherit}
+textarea{font-family:inherit;color:inherit}
+
+.bg-mesh{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 900px 700px at 80% 0%,rgba(212,160,23,.1),transparent 60%),radial-gradient(ellipse 600px 800px at 0% 100%,rgba(160,120,16,.07),transparent 60%)}
+
+.topbar{position:sticky;top:0;z-index:100;background:rgba(8,8,8,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:.95rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{display:flex;align-items:center;gap:.6rem}
+.brand-logo{width:40px;height:40px;border-radius:11px;background:#fff;border:1.5px solid rgba(212,160,23,.5);box-shadow:0 0 14px rgba(184,134,11,.45);display:flex;align-items:center;justify-content:center;padding:5px;overflow:hidden}
+.brand-logo img{width:100%;height:100%;object-fit:contain}
+.brand-name{font-family:'Space Grotesk';font-weight:700;font-size:1.25rem;letter-spacing:-.02em}
+.nav-tabs{display:flex;gap:.4rem}
+.nav-tab{padding:.55rem 1.1rem;border-radius:10px;color:var(--txt3);font-size:.88rem;font-weight:500;transition:all var(--base) var(--ease)}
+.nav-tab:hover{color:var(--txt);background:rgba(255,255,255,.04)}
+.nav-tab.active{color:var(--gold);background:rgba(212,160,23,.1)}
+.user-name{font-size:.92rem;color:var(--txt2)}
+.user-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-family:'Space Grotesk';font-size:.92rem}
+.user-menu{display:flex;align-items:center;gap:.7rem}
+
+.main{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:3rem 2rem 5rem}
+
+.page-head{text-align:center;margin-bottom:2.5rem}
+.page-eyebrow{display:inline-flex;align-items:center;gap:.5rem;padding:.4rem 1rem;background:rgba(212,160,23,.1);border:1px solid rgba(212,160,23,.25);border-radius:999px;color:var(--gold);font-size:.82rem;font-weight:600;margin-bottom:1.2rem}
+.page-h1{font-family:'Space Grotesk';font-size:clamp(2rem,5vw,3rem);font-weight:700;line-height:1.15;margin-bottom:.7rem;letter-spacing:-.02em}
+.page-h1 em{font-style:normal;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.page-sub{color:var(--txt3);font-size:1.05rem;line-height:1.7;max-width:560px;margin:0 auto}
+
+.info-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
+.info-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem;display:flex;align-items:center;gap:.85rem}
+.info-ico{width:38px;height:38px;border-radius:10px;background:rgba(212,160,23,.12);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:1rem}
+.info-text strong{display:block;font-size:.92rem;margin-bottom:.1rem}
+.info-text span{font-size:.78rem;color:var(--txt3)}
+
+.layout{display:grid;grid-template-columns:1fr 380px;gap:1.6rem;align-items:start}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.8rem}
+.card-h{display:flex;align-items:center;gap:.7rem;margin-bottom:1.4rem;padding-bottom:1.4rem;border-bottom:1px solid var(--border)}
+.card-h i{width:36px;height:36px;border-radius:9px;background:rgba(212,160,23,.12);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:.95rem}
+.card-h h2{font-family:'Space Grotesk';font-size:1.15rem;font-weight:600}
+
+.weeks-nav{display:flex;align-items:center;justify-content:space-between;gap:.8rem;margin-bottom:1.4rem}
+.week-btn{background:var(--surface);border:1px solid var(--border);color:var(--txt2);width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;transition:all var(--base) var(--ease)}
+.week-btn:hover:not(:disabled){border-color:var(--gold);color:var(--gold)}
+.week-btn:disabled{opacity:.3;cursor:not-allowed}
+.week-label{font-family:'Space Grotesk';font-size:.95rem;font-weight:600}
+
+.days-grid{display:flex;flex-direction:column;gap:1.2rem}
+.day-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.2rem}
+.day-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem}
+.day-name{font-weight:700;font-size:1.05rem}
+.day-date{color:var(--txt3);font-size:.88rem}
+.day-pill{display:inline-flex;align-items:center;gap:.35rem;background:rgba(34,197,94,.1);color:var(--ok);padding:.25rem .7rem;border-radius:8px;font-size:.72rem;font-weight:700}
+.slots{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem}
+.slot{padding:.7rem;border-radius:9px;background:rgba(255,255,255,.04);border:1.5px solid var(--border);color:var(--txt2);font-family:'Space Grotesk';font-weight:600;font-size:.92rem;text-align:center;cursor:pointer;transition:all var(--base) var(--ease)}
+.slot:hover:not(.taken){border-color:var(--gold);color:var(--gold);transform:translateY(-1px)}
+.slot.selected{background:linear-gradient(135deg,var(--gold-l),var(--gold-d));color:#000;border-color:transparent;box-shadow:0 8px 24px rgba(212,160,23,.3)}
+.slot.taken{opacity:.35;cursor:not-allowed;text-decoration:line-through}
+
+/* Right: Summary + Form */
+.summary{position:sticky;top:90px;display:flex;flex-direction:column;gap:1rem}
+.field{margin-bottom:1rem}
+.field-lbl{display:block;font-size:.85rem;color:var(--txt2);margin-bottom:.5rem;font-weight:500}
+.field textarea{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:11px;padding:.85rem 1rem;color:var(--txt);font-size:.92rem;min-height:90px;resize:vertical}
+.field textarea:focus{outline:none;border-color:var(--gold)}
+.field textarea::placeholder{color:var(--txt4)}
+
+.selected-box{background:linear-gradient(135deg,rgba(212,160,23,.08),rgba(160,120,16,.03));border:1px solid rgba(212,160,23,.25);border-radius:11px;padding:1.1rem;margin-bottom:1.2rem;text-align:center}
+.selected-box .empty{color:var(--txt3);font-size:.88rem;padding:.6rem 0}
+.selected-box.has-sel{padding:1.2rem 1rem}
+.sel-time{font-family:'Space Grotesk';font-size:1.8rem;font-weight:700;color:var(--gold);letter-spacing:-.02em;line-height:1}
+.sel-date{font-size:.88rem;color:var(--txt2);margin-top:.4rem}
+.sel-duration{font-size:.78rem;color:var(--txt3);margin-top:.3rem;display:inline-flex;align-items:center;gap:.35rem}
+
+.submit-btn{width:100%;background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#000;padding:1.05rem;border-radius:12px;font-size:1rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:.5rem;transition:all var(--base) var(--ease);box-shadow:0 8px 28px rgba(212,160,23,.3)}
+.submit-btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 12px 32px rgba(212,160,23,.45)}
+.submit-btn:disabled{opacity:.4;cursor:not-allowed}
+
+.existing-booking{background:var(--card);border:1px solid rgba(34,197,94,.3);border-radius:14px;padding:1.4rem;margin-bottom:2rem}
+.existing-booking.pending{border-color:rgba(245,158,11,.3)}
+.eb-head{display:flex;align-items:center;gap:.7rem;margin-bottom:.9rem}
+.eb-head i{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.eb-head.confirmed i{background:rgba(34,197,94,.12);color:var(--ok)}
+.eb-head.pending i{background:rgba(245,158,11,.12);color:var(--warn)}
+.eb-head h3{font-family:'Space Grotesk';font-size:1.1rem;font-weight:600}
+.eb-info{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1rem}
+.eb-info-item span{display:block;font-size:.75rem;color:var(--txt3);margin-bottom:.2rem}
+.eb-info-item strong{font-family:'Space Grotesk';font-size:1rem;font-weight:700}
+.eb-link{display:inline-flex;align-items:center;gap:.5rem;background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#000;padding:.7rem 1.2rem;border-radius:9px;font-weight:600;font-size:.9rem}
+
+/* Toast */
+.toast{position:fixed;top:1.5rem;right:50%;transform:translateX(50%);padding:.85rem 1.5rem;border-radius:10px;font-size:.92rem;font-weight:500;z-index:99999;color:#fff;box-shadow:0 10px 40px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .3s}
+.toast.show{opacity:1}
+.toast.err{background:linear-gradient(135deg,#ef4444,#dc2626)}
+.toast.ok{background:linear-gradient(135deg,#22c55e,#16a34a)}
+
+/* Success view */
+.success-view{display:none;text-align:center;padding:3rem 2rem}
+.success-view.show{display:block}
+.success-ico{width:84px;height:84px;border-radius:50%;background:linear-gradient(135deg,rgba(34,197,94,.2),rgba(34,197,94,.05));border:2px solid rgba(34,197,94,.4);display:flex;align-items:center;justify-content:center;color:var(--ok);font-size:2.2rem;margin:0 auto 1.5rem;animation:pop .5s var(--ease)}
+@keyframes pop{from{transform:scale(.5);opacity:0}}
+.success-h{font-family:'Space Grotesk';font-size:1.8rem;font-weight:700;margin-bottom:.7rem}
+.success-p{color:var(--txt3);font-size:1rem;line-height:1.8;max-width:480px;margin:0 auto 2rem}
+
+@media (max-width:920px){
+  .info-bar{grid-template-columns:repeat(2,1fr)}
+  .layout{grid-template-columns:1fr}
+  .summary{position:relative;top:0}
+  .slots{grid-template-columns:repeat(2,1fr)}
+  .eb-info{grid-template-columns:1fr}
+  .nav-tabs{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-mesh"></div>
+
+<header class="topbar">
+  <a href="dashboard.html" class="brand">
+    <div class="brand-logo"><img src="glorex_bull_gold.png" alt="GLOREX"/></div>
+    <div class="brand-name">GLOREX</div>
+  </a>
+  <nav class="nav-tabs">
+    <a href="dashboard.html" class="nav-tab">الرئيسية</a>
+    <a href="checklist.html" class="nav-tab">القائمة</a>
+    <a href="journal.html" class="nav-tab">السجل</a>
+    <a href="calendar.html" class="nav-tab">التقويم</a>
+    <a href="lessons.html" class="nav-tab">الدروس</a>
+    <a href="chat.html" class="nav-tab">المحادثة</a>
+  </nav>
+  <div class="user-menu">
+    <span class="user-name" id="userName">...</span>
+    <div class="user-avatar" id="userAvatar">G</div>
+  </div>
+</header>
+
+<main class="main" id="mainContent">
+
+  <div class="page-head">
+    <div class="page-eyebrow">👑 Premium</div>
+    <h1 class="page-h1">احجز <em>مكالمة 1:1 معي</em></h1>
+    <p class="page-sub">جلسة شخصية شهرية لمناقشة استراتيجيتك، مراجعة صفقاتك، والإجابة على أسئلتك</p>
+  </div>
+
+  <!-- Info Cards -->
+  <div class="info-bar">
+    <div class="info-card">
+      <div class="info-ico"><i class="fas fa-clock"></i></div>
+      <div class="info-text"><strong>30 دقيقة</strong><span>مدة الجلسة</span></div>
+    </div>
+    <div class="info-card">
+      <div class="info-ico"><i class="fas fa-calendar-day"></i></div>
+      <div class="info-text"><strong>الأحد فقط</strong><span>أيام التوفر</span></div>
+    </div>
+    <div class="info-card">
+      <div class="info-ico"><i class="fas fa-moon"></i></div>
+      <div class="info-text"><strong>7:00م - 9:00م</strong><span>توقيت دمشق</span></div>
+    </div>
+    <div class="info-card">
+      <div class="info-ico"><i class="fab fa-google"></i></div>
+      <div class="info-text"><strong>Google Meet</strong><span>منصة المكالمة</span></div>
+    </div>
+  </div>
+
+  <!-- Existing Booking Banner (يظهر لو في حجز نشط) -->
+  <div id="existingBookingArea"></div>
+
+  <div class="layout" id="bookingLayout">
+    <!-- Left: Calendar -->
+    <div class="card">
+      <div class="card-h">
+        <i class="fas fa-calendar-check"></i>
+        <h2>اختر موعدك</h2>
+      </div>
+
+      <div class="weeks-nav">
+        <button class="week-btn" id="prevWeek" disabled><i class="fas fa-chevron-right"></i></button>
+        <div class="week-label" id="weekLabel">—</div>
+        <button class="week-btn" id="nextWeek"><i class="fas fa-chevron-left"></i></button>
+      </div>
+
+      <div class="days-grid" id="daysGrid"></div>
+    </div>
+
+    <!-- Right: Summary + Submit -->
+    <div class="summary">
+      <div class="card">
+        <div class="card-h">
+          <i class="fas fa-clipboard-check"></i>
+          <h2>تفاصيل الحجز</h2>
+        </div>
+
+        <div class="selected-box" id="selectedBox">
+          <div class="empty">اختر موعد من القائمة</div>
+        </div>
+
+        <div class="field">
+          <label class="field-lbl" for="notes">شو حابب نناقش؟ (اختياري)</label>
+          <textarea id="notes" placeholder="مثلاً: مراجعة صفقاتي الأخيرة، شرح استراتيجية معينة، حل مشكلة..."></textarea>
+        </div>
+
+        <button class="submit-btn" id="submitBtn" disabled>
+          <i class="fas fa-check"></i> تأكيد الحجز
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success View -->
+  <div class="card success-view" id="successView">
+    <div class="success-ico"><i class="fas fa-check"></i></div>
+    <h1 class="success-h">تم الحجز بنجاح! 🎉</h1>
+    <p class="success-p">
+      رح يوصلك رابط Google Meet على إيميلك المسجل بعد ما أأكد الموعد.
+      تأكد من فحص بريدك الإلكتروني.
+    </p>
+    <a href="dashboard.html" class="eb-link">
+      <i class="fas fa-arrow-right"></i> العودة للوحة التحكم
+    </a>
+  </div>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { supabase, requireAuth, getUser, getSubscriptionTier, showFeaturePaywall } from './supabase-client.js?v=20260610';
+import { setupUserMenu } from './user-menu.js?v=20260611';
+
+const session = await requireAuth();
+if(!session) throw new Error('not auth');
+
+const user = await getUser();
+const fullName = user.user_metadata?.full_name || user.user_metadata?.name || user.email.split('@')[0];
+document.getElementById('userName').textContent = fullName.split(' ')[0];
+document.getElementById('userAvatar').textContent = (fullName[0]||'G').toUpperCase();
+await setupUserMenu(user);
+
+// تحقق من باقة Premium
+const userTier = await getSubscriptionTier();
+if(userTier !== 'premium'){
+  showFeaturePaywall('premium', 'حجز جلسة 1:1');
+  document.getElementById('mainContent').style.opacity = '.4';
+  document.getElementById('mainContent').style.pointerEvents = 'none';
+}
+
+// إعدادات الجلسة
+const WORKING_DAYS = [0]; // الأحد فقط (0 = Sunday)
+const WORKING_HOURS = [19, 19.5, 20, 20.5]; // 7:00, 7:30, 8:00, 8:30 PM دمشق
+const TIMEZONE = 'Asia/Damascus';
+const SLOT_DURATION = 30;
+
+let currentWeekOffset = 0;
+let selectedSlot = null;
+let bookedSlots = new Set();
+
+// ── تحقق من حجز موجود ──
+async function checkExistingBooking(){
+  const { data: existing } = await supabase
+    .from('call_bookings')
+    .select('*')
+    .eq('user_id', user.id)
+    .in('status', ['pending','confirmed'])
+    .order('scheduled_at', { ascending: false })
+    .limit(1);
+
+  if(existing && existing.length > 0){
+    const b = existing[0];
+    const date = new Date(b.scheduled_at);
+    const isPending = b.status === 'pending';
+    const html = `
+      <div class="existing-booking ${b.status}">
+        <div class="eb-head ${b.status}">
+          <i class="fas fa-${isPending?'clock':'check-circle'}"></i>
+          <h3>${isPending ? 'حجزك قيد التأكيد' : 'حجزك مؤكد ✅'}</h3>
+        </div>
+        <div class="eb-info">
+          <div class="eb-info-item">
+            <span>التاريخ</span>
+            <strong>${date.toLocaleDateString('ar-EG-u-nu-latn',{weekday:'long', day:'numeric', month:'long'})}</strong>
+          </div>
+          <div class="eb-info-item">
+            <span>الوقت</span>
+            <strong>${date.toLocaleTimeString('ar-EG-u-nu-latn',{hour:'2-digit',minute:'2-digit'})}</strong>
+          </div>
+          <div class="eb-info-item">
+            <span>المدة</span>
+            <strong>${b.duration_min} دقيقة</strong>
+          </div>
+        </div>
+        ${isPending ?
+          `<p style="color:var(--txt3);font-size:.88rem;line-height:1.7">رح يوصلك رابط Google Meet على إيميلك المسجل بعد ما أأكد الحجز.</p>`
+          : `<a href="${b.meeting_url||'#'}" target="_blank" class="eb-link"><i class="fab fa-google"></i> انضم لـ Google Meet</a>`
+        }
+      </div>
+    `;
+    document.getElementById('existingBookingArea').innerHTML = html;
+    document.getElementById('bookingLayout').style.display = 'none';
+    return true;
+  }
+  return false;
+}
+
+// ── جيب الحجوزات الموجودة (عشان نعرف اللي محجوز) ──
+async function loadBookedSlots(){
+  const { data } = await supabase
+    .from('call_bookings')
+    .select('scheduled_at')
+    .in('status', ['pending','confirmed'])
+    .gte('scheduled_at', new Date().toISOString());
+  bookedSlots = new Set((data||[]).map(b => b.scheduled_at));
+}
+
+// ── ابني المواعيد المتاحة للأسبوع ──
+function getNextSundays(weeks = 4){
+  const sundays = [];
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  for(let i = 0; i < 30 && sundays.length < weeks; i++){
+    const d = new Date(today);
+    d.setDate(today.getDate() + i);
+    if(WORKING_DAYS.includes(d.getDay())) sundays.push(d);
+  }
+  return sundays;
+}
+
+function buildSlotDate(date, hour){
+  // Build slot in Asia/Damascus timezone
+  const h = Math.floor(hour);
+  const m = (hour - h) * 60;
+  // Damascus is UTC+3 (or +2 winter)
+  // For simplicity, we'll use local time but display in Damascus
+  const d = new Date(date);
+  d.setHours(h, m, 0, 0);
+  return d;
+}
+
+function renderWeek(){
+  const sundays = getNextSundays(4);
+  const sunday = sundays[currentWeekOffset];
+  if(!sunday){
+    document.getElementById('daysGrid').innerHTML = '<p style="text-align:center;color:var(--txt3);padding:2rem">لا توجد مواعيد متاحة</p>';
+    return;
+  }
+
+  document.getElementById('weekLabel').textContent = sunday.toLocaleDateString('ar-EG-u-nu-latn',{day:'numeric', month:'long', year:'numeric'});
+  document.getElementById('prevWeek').disabled = currentWeekOffset === 0;
+  document.getElementById('nextWeek').disabled = currentWeekOffset >= sundays.length - 1;
+
+  const grid = document.getElementById('daysGrid');
+  grid.innerHTML = '';
+
+  const block = document.createElement('div');
+  block.className = 'day-block';
+
+  const availableCount = WORKING_HOURS.filter(h => !bookedSlots.has(buildSlotDate(sunday, h).toISOString())).length;
+
+  block.innerHTML = `
+    <div class="day-head">
+      <div>
+        <div class="day-name">${sunday.toLocaleDateString('ar-EG-u-nu-latn',{weekday:'long'})}</div>
+        <div class="day-date">${sunday.toLocaleDateString('ar-EG-u-nu-latn',{day:'numeric', month:'long'})}</div>
+      </div>
+      <span class="day-pill"><i class="fas fa-circle" style="font-size:.5rem"></i> ${availableCount} مواعيد متاحة</span>
+    </div>
+    <div class="slots" id="slots-${currentWeekOffset}"></div>
+  `;
+  grid.appendChild(block);
+
+  const slotsContainer = block.querySelector('.slots');
+  WORKING_HOURS.forEach(hour => {
+    const slotDate = buildSlotDate(sunday, hour);
+    const iso = slotDate.toISOString();
+    const isTaken = bookedSlots.has(iso);
+    const isPast = slotDate < new Date();
+    const h = Math.floor(hour);
+    const m = (hour - h) * 60;
+    const timeStr = `${h > 12 ? h-12 : h}:${m.toString().padStart(2,'0')} ${h >= 12 ? 'م' : 'ص'}`;
+
+    const slot = document.createElement('button');
+    slot.className = 'slot' + ((isTaken||isPast) ? ' taken' : '');
+    slot.textContent = timeStr;
+    slot.dataset.iso = iso;
+    if(!isTaken && !isPast){
+      slot.addEventListener('click', () => selectSlot(slot, slotDate));
+    }
+    slotsContainer.appendChild(slot);
+  });
+}
+
+function selectSlot(el, date){
+  document.querySelectorAll('.slot').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedSlot = date;
+
+  const box = document.getElementById('selectedBox');
+  box.classList.add('has-sel');
+  box.innerHTML = `
+    <div class="sel-time">${date.toLocaleTimeString('ar-EG-u-nu-latn',{hour:'2-digit',minute:'2-digit'})}</div>
+    <div class="sel-date">${date.toLocaleDateString('ar-EG-u-nu-latn',{weekday:'long', day:'numeric', month:'long'})}</div>
+    <div class="sel-duration"><i class="fas fa-clock"></i> 30 دقيقة</div>
+  `;
+
+  document.getElementById('submitBtn').disabled = false;
+}
+
+// ── Submit ──
+document.getElementById('submitBtn').addEventListener('click', async () => {
+  if(!selectedSlot) return;
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> جاري الحجز...';
+
+  const notes = document.getElementById('notes').value.trim() || null;
+
+  const { data, error } = await supabase.rpc('book_call', {
+    p_scheduled_at: selectedSlot.toISOString(),
+    p_notes: notes
+  });
+
+  if(error || data?.error){
+    showToast(error?.message || data?.error || 'خطأ', 'err');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-check"></i> تأكيد الحجز';
+    return;
+  }
+
+  // Success
+  document.getElementById('mainContent').querySelectorAll('.page-head, .info-bar, .layout, #existingBookingArea').forEach(el => el.style.display = 'none');
+  document.getElementById('successView').classList.add('show');
+});
+
+// ── Nav buttons ──
+document.getElementById('prevWeek').addEventListener('click', () => {
+  if(currentWeekOffset > 0){ currentWeekOffset--; renderWeek(); }
+});
+document.getElementById('nextWeek').addEventListener('click', () => {
+  currentWeekOffset++; renderWeek();
+});
+
+// ── Toast ──
+function showToast(msg, type='ok'){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast show ${type}`;
+  setTimeout(()=>t.classList.remove('show'), 3500);
+}
+
+// ── Init ──
+async function init(){
+  const hasExisting = await checkExistingBooking();
+  if(!hasExisting){
+    await loadBookedSlots();
+    renderWeek();
+  }
+}
+init();
+</script>
+
+</body>
+</html>

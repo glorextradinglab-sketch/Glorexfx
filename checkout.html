@@ -1,0 +1,769 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>الدفع — GLOREX</title>
+<meta name="theme-color" content="#0a0a0a"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold:#D4A017;--gold-l:#F0C030;--gold-d:#A07810;
+  --bg:#080808;--surface:#0d0d0d;--card:#111111;
+  --border:rgba(255,255,255,0.08);
+  --txt:#fff;--txt2:#ccc;--txt3:#999;--txt4:#666;
+  --ease:cubic-bezier(.4,0,.2,1);--base:.3s;
+}
+body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;font-family:inherit;border:none;background:none;color:inherit}
+input{font-family:inherit;color:inherit}
+
+.bg-mesh{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 900px 700px at 80% 0%,rgba(212,160,23,.12),transparent 60%),radial-gradient(ellipse 600px 800px at 0% 100%,rgba(160,120,16,.1),transparent 60%)}
+
+.topbar{position:sticky;top:0;z-index:100;background:rgba(8,8,8,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:.95rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{display:flex;align-items:center;gap:.6rem}
+.brand-logo{width:40px;height:40px;border-radius:11px;background:#fff;border:1.5px solid rgba(212,160,23,.5);box-shadow:0 0 14px rgba(184,134,11,.45);display:flex;align-items:center;justify-content:center;padding:5px;overflow:hidden}
+.brand-logo img{width:100%;height:100%;object-fit:contain}
+.brand-name{font-family:'Space Grotesk';font-weight:700;font-size:1.25rem;letter-spacing:-.02em}
+.user-name{font-size:.92rem;color:var(--txt2)}
+.user-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-family:'Space Grotesk';font-size:.92rem}
+.user-menu{display:flex;align-items:center;gap:.7rem}
+.back-link{display:inline-flex;align-items:center;gap:.4rem;color:var(--txt3);font-size:.88rem;padding:.5rem .85rem;border-radius:8px;transition:all var(--base) var(--ease)}
+.back-link:hover{color:var(--gold);background:rgba(212,160,23,.06)}
+
+.main{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:2.5rem 2rem 5rem}
+
+/* Stepper */
+.stepper{display:flex;align-items:center;justify-content:center;gap:1rem;margin-bottom:2.5rem}
+.step{display:flex;align-items:center;gap:.6rem}
+.step-num{width:30px;height:30px;border-radius:50%;background:var(--card);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;color:var(--txt3)}
+.step.done .step-num{background:linear-gradient(135deg,var(--gold-l),var(--gold-d));border-color:transparent;color:#000}
+.step.active .step-num{background:rgba(212,160,23,.1);border-color:var(--gold);color:var(--gold)}
+.step-label{font-size:.88rem;color:var(--txt3)}
+.step.active .step-label,.step.done .step-label{color:var(--txt)}
+.step-line{width:50px;height:1.5px;background:var(--border)}
+.step-line.done{background:linear-gradient(90deg,var(--gold),transparent)}
+
+.layout{display:grid;grid-template-columns:1fr 360px;gap:1.6rem}
+
+/* Cards */
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.8rem}
+.card-h{display:flex;align-items:center;gap:.7rem;margin-bottom:1.4rem}
+.card-h i{width:36px;height:36px;border-radius:9px;background:rgba(212,160,23,.12);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:.95rem}
+.card-h h2{font-family:'Space Grotesk';font-size:1.15rem;font-weight:600}
+
+/* Order summary */
+.summary{position:sticky;top:90px;height:fit-content}
+.sum-row{display:flex;align-items:center;justify-content:space-between;padding:.65rem 0;font-size:.92rem;color:var(--txt2)}
+.sum-row.tot{border-top:1px solid var(--border);margin-top:.6rem;padding-top:1.2rem;font-size:1.1rem;font-weight:700;color:var(--txt)}
+.sum-row .gold-v{color:var(--gold);font-family:'Space Grotesk';font-weight:700}
+.sum-row.tot .v{font-family:'Space Grotesk';font-size:1.5rem}
+.sum-badge{display:inline-flex;align-items:center;gap:.4rem;background:rgba(34,197,94,.1);color:#22c55e;padding:.4rem .7rem;border-radius:8px;font-size:.78rem;font-weight:600;margin-top:1rem}
+
+/* Method tabs */
+.methods{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1.6rem}
+.method{padding:1rem;border-radius:11px;border:1.5px solid var(--border);background:var(--surface);text-align:right;display:flex;align-items:center;gap:.75rem;transition:all var(--base) var(--ease);cursor:pointer}
+.method:hover{border-color:rgba(255,255,255,.18)}
+.method.active{border-color:var(--gold);background:rgba(212,160,23,.06)}
+.method.disabled{opacity:.5;cursor:not-allowed}
+.method-ico{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+.method-ico.usdt{background:rgba(38,161,123,.15);color:#26a17b}
+.method-ico.paypal{background:rgba(0,123,234,.12);color:#0070ba}
+.method-name{font-weight:600;font-size:.95rem}
+.method-fee{font-size:.75rem;color:var(--txt3);margin-top:.1rem}
+
+/* USDT details */
+.usdt-amount{background:linear-gradient(135deg,rgba(212,160,23,.08),rgba(212,160,23,.02));border:1px solid rgba(212,160,23,.25);border-radius:12px;padding:1.3rem;margin-bottom:1.4rem;text-align:center}
+.usdt-amount .lbl{display:block;color:var(--txt3);font-size:.82rem;margin-bottom:.4rem}
+.usdt-amount .val{font-family:'Space Grotesk';font-size:2.3rem;font-weight:700;color:var(--gold);letter-spacing:-.02em}
+.usdt-amount .val span{font-size:1rem;color:var(--txt3);margin-right:.4rem}
+
+.qr-section{display:flex;gap:1.5rem;align-items:center;background:#fff;padding:1.2rem;border-radius:12px;margin-bottom:1.4rem}
+.qr-img{width:160px;height:160px;background:#fff;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.qr-img img{width:100%;height:100%}
+.qr-text{flex-grow:1;color:#000;text-align:right}
+.qr-text strong{display:block;font-size:1rem;margin-bottom:.4rem;color:#000}
+.qr-text p{font-size:.85rem;color:#555;line-height:1.7}
+
+.address-box{
+  display:flex;align-items:center;gap:.6rem;
+  background:var(--surface);border:1px solid var(--border);border-radius:11px;
+  padding:.85rem 1rem;margin-bottom:1.4rem
+}
+.address-box .lbl{font-size:.78rem;color:var(--txt3);min-width:fit-content}
+.address-box code{font-family:'Space Grotesk','SF Mono',Menlo,monospace;font-size:.85rem;color:var(--txt);word-break:break-all;flex-grow:1;direction:ltr;text-align:left}
+.copy-btn{background:rgba(212,160,23,.12);color:var(--gold);padding:.5rem .85rem;border-radius:8px;font-size:.8rem;font-weight:600;display:flex;align-items:center;gap:.35rem;transition:all var(--base) var(--ease);flex-shrink:0}
+.copy-btn:hover{background:rgba(212,160,23,.2)}
+.copy-btn.copied{background:rgba(34,197,94,.15);color:#22c55e}
+
+.warning-box{
+  background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.25);
+  border-radius:11px;padding:.95rem 1.1rem;margin-bottom:1.4rem;
+  display:flex;gap:.75rem;align-items:flex-start
+}
+.warning-box i{color:#f59e0b;font-size:1rem;margin-top:.2rem;flex-shrink:0}
+.warning-box .wt{font-size:.88rem;line-height:1.65;color:var(--txt2)}
+.warning-box .wt strong{color:#f59e0b;display:block;margin-bottom:.2rem}
+
+/* Steps list */
+.steps-list{counter-reset:s;margin-bottom:1.6rem}
+.steps-list li{
+  list-style:none;display:flex;gap:.85rem;padding:.65rem 0;
+  color:var(--txt2);font-size:.92rem;line-height:1.6
+}
+.steps-list li::before{
+  counter-increment:s;content:counter(s);
+  width:24px;height:24px;flex-shrink:0;border-radius:50%;
+  background:rgba(212,160,23,.12);color:var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Space Grotesk';font-size:.78rem;font-weight:700
+}
+
+/* Fields */
+.field{margin-bottom:1rem}
+.field-lbl{display:block;font-size:.88rem;color:var(--txt2);margin-bottom:.55rem;font-weight:500}
+.field-lbl .req{color:#ef4444;margin-right:.2rem}
+.field-lbl .opt{color:var(--txt4);font-size:.78rem;font-weight:400;margin-right:.3rem}
+.field-input{
+  width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:11px;
+  padding:.95rem 1.05rem;color:var(--txt);font-size:.94rem;
+  transition:all var(--base) var(--ease);direction:ltr;text-align:left
+}
+.field-input:focus{outline:none;border-color:var(--gold);background:rgba(212,160,23,.03)}
+.field-input::placeholder{color:var(--txt4)}
+.field-hint{font-size:.78rem;color:var(--txt4);margin-top:.4rem;line-height:1.5}
+
+/* Upload area */
+.upload-area{
+  position:relative;border:2px dashed var(--border);border-radius:14px;
+  padding:2rem 1.5rem;text-align:center;cursor:pointer;
+  background:var(--surface);transition:all var(--base) var(--ease);
+  min-height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.7rem
+}
+.upload-area:hover{border-color:var(--gold);background:rgba(212,160,23,.03)}
+.upload-area.drag{border-color:var(--gold);background:rgba(212,160,23,.06);transform:scale(1.01)}
+.upload-area.has-file{border-style:solid;border-color:rgba(34,197,94,.4);background:rgba(34,197,94,.04)}
+.upload-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.upload-icon{
+  width:54px;height:54px;border-radius:50%;
+  background:rgba(212,160,23,.1);color:var(--gold);
+  display:flex;align-items:center;justify-content:center;font-size:1.4rem
+}
+.upload-area.has-file .upload-icon{background:rgba(34,197,94,.12);color:#22c55e}
+.upload-title{font-size:.95rem;font-weight:600;color:var(--txt)}
+.upload-sub{font-size:.78rem;color:var(--txt3);line-height:1.6}
+.upload-preview{display:none;align-items:center;gap:.85rem;width:100%;text-align:right}
+.upload-area.has-file .upload-preview{display:flex}
+.upload-area.has-file .upload-default{display:none}
+.upload-default{display:flex;flex-direction:column;align-items:center;gap:.7rem}
+.preview-thumb{width:60px;height:60px;border-radius:10px;background:#fff;object-fit:cover;flex-shrink:0}
+.preview-info{flex-grow:1;text-align:right}
+.preview-info strong{display:block;font-size:.92rem;margin-bottom:.2rem;word-break:break-all}
+.preview-info span{color:var(--txt3);font-size:.78rem}
+.preview-remove{
+  background:rgba(239,68,68,.1);color:#ef4444;width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all var(--base) var(--ease)
+}
+.preview-remove:hover{background:rgba(239,68,68,.2)}
+
+/* Submit */
+.submit-btn{
+  width:100%;background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#000;
+  padding:1.05rem;border-radius:12px;font-size:1rem;font-weight:700;
+  display:flex;align-items:center;justify-content:center;gap:.5rem;
+  transition:all var(--base) var(--ease);
+  box-shadow:0 8px 28px rgba(212,160,23,.3);margin-top:.6rem
+}
+.submit-btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 12px 32px rgba(212,160,23,.45)}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* Success state */
+.success-card{text-align:center;padding:3rem 2rem}
+.success-ico{
+  width:84px;height:84px;border-radius:50%;
+  background:linear-gradient(135deg,rgba(34,197,94,.2),rgba(34,197,94,.05));
+  border:2px solid rgba(34,197,94,.4);
+  display:flex;align-items:center;justify-content:center;color:#22c55e;font-size:2.2rem;
+  margin:0 auto 1.5rem;
+  animation:pop .5s var(--ease)
+}
+@keyframes pop{from{transform:scale(.5);opacity:0}}
+.success-h{font-family:'Space Grotesk';font-size:1.8rem;font-weight:700;margin-bottom:.7rem}
+.success-p{color:var(--txt3);font-size:1rem;line-height:1.8;max-width:480px;margin:0 auto 2rem}
+.success-actions{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap}
+.btn-go{padding:.85rem 1.6rem;border-radius:11px;font-weight:600;font-size:.94rem;display:inline-flex;align-items:center;gap:.4rem}
+.btn-gold{background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#000}
+.btn-ghost{background:rgba(255,255,255,.05);color:var(--txt2);border:1px solid var(--border)}
+
+/* Toast */
+.toast{
+  position:fixed;top:1.5rem;right:50%;transform:translateX(50%);
+  padding:.85rem 1.5rem;border-radius:10px;font-size:.92rem;font-weight:500;
+  z-index:99999;color:#fff;box-shadow:0 10px 40px rgba(0,0,0,.5);
+  opacity:0;pointer-events:none;transition:opacity .3s
+}
+.toast.show{opacity:1}
+.toast.err{background:linear-gradient(135deg,#ef4444,#dc2626)}
+.toast.ok{background:linear-gradient(135deg,#22c55e,#16a34a)}
+
+@media (max-width:960px){
+  .layout{grid-template-columns:1fr}
+  .summary{position:relative;top:0;order:-1}
+  .qr-section{flex-direction:column;text-align:center}
+  .qr-text{text-align:center}
+  .main{padding:1.5rem 1rem 3rem}
+  .stepper{gap:.5rem}
+  .step-line{width:25px}
+  .step-label{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-mesh"></div>
+
+<header class="topbar">
+  <a href="glorex_landing.html" class="brand">
+    <div class="brand-logo"><img src="glorex_bull_gold.png" alt="GLOREX"/></div>
+    <div class="brand-name">GLOREX</div>
+  </a>
+  <a href="subscribe.html" class="back-link">
+    <i class="fas fa-arrow-right"></i> رجوع للباقات
+  </a>
+  <div class="user-menu">
+    <span class="user-name" id="userName">...</span>
+    <div class="user-avatar" id="userAvatar">G</div>
+  </div>
+</header>
+
+<main class="main" id="mainContent">
+
+  <!-- Stepper -->
+  <div class="stepper">
+    <div class="step done">
+      <div class="step-num"><i class="fas fa-check" style="font-size:.7rem"></i></div>
+      <div class="step-label">اختيار الباقة</div>
+    </div>
+    <div class="step-line done"></div>
+    <div class="step active">
+      <div class="step-num">2</div>
+      <div class="step-label">الدفع</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-label">التفعيل</div>
+    </div>
+  </div>
+
+  <div class="layout">
+
+    <!-- Left: Payment Details -->
+    <div>
+      <!-- Method selector -->
+      <div class="card">
+        <div class="card-h">
+          <i class="fas fa-wallet"></i>
+          <h2>اختر طريقة الدفع</h2>
+        </div>
+        <div class="methods">
+          <button class="method active" data-method="usdt">
+            <div class="method-ico usdt"><i class="fab fa-bitcoin"></i></div>
+            <div>
+              <div class="method-name">USDT (TRC20)</div>
+              <div class="method-fee">رسوم منخفضة جداً</div>
+            </div>
+          </button>
+          <button class="method disabled" title="قريباً">
+            <div class="method-ico paypal"><i class="fab fa-paypal"></i></div>
+            <div>
+              <div class="method-name">PayPal</div>
+              <div class="method-fee">قريباً</div>
+            </div>
+          </button>
+        </div>
+
+        <!-- USDT amount -->
+        <div class="usdt-amount">
+          <span class="lbl">المبلغ المطلوب تحويله بالضبط</span>
+          <span class="val" id="usdtAmount">— <span>USDT</span></span>
+        </div>
+
+        <!-- QR Code + Network -->
+        <div class="qr-section">
+          <div class="qr-img" id="qrImg">
+            <img src="" alt="QR Code" id="qrImgSrc"/>
+          </div>
+          <div class="qr-text">
+            <strong>امسح للدفع السريع</strong>
+            <p>استخدم محفظتك (Trust Wallet, Binance, OKX...) لمسح الكود وإرسال المبلغ تلقائياً.</p>
+          </div>
+        </div>
+
+        <!-- Wallet Address -->
+        <div class="address-box">
+          <span class="lbl">عنوان المحفظة:</span>
+          <code id="walletAddr">TMFcQiY8FVDVsynM2xAqd61soxVt6uWVZw</code>
+          <button class="copy-btn" id="copyBtn">
+            <i class="fas fa-copy"></i> نسخ
+          </button>
+        </div>
+
+        <!-- Warning -->
+        <div class="warning-box">
+          <i class="fas fa-exclamation-triangle"></i>
+          <div class="wt">
+            <strong>⚠️ شبكة TRC20 فقط</strong>
+            لا ترسل عبر ERC20 أو BEP20 أو غيرها — الأموال سترسل لمحفظة خاطئة ولن تسترد.
+          </div>
+        </div>
+
+        <!-- Steps -->
+        <div class="card-h" style="margin-top:1.5rem">
+          <i class="fas fa-list-ol"></i>
+          <h2>كيف تتم العملية</h2>
+        </div>
+        <ol class="steps-list">
+          <li>افتح محفظة USDT تبعك (Trust Wallet, Binance, OKX...)</li>
+          <li>اختار شبكة <strong>TRC20</strong> وأرسل المبلغ الموضح أعلاه للعنوان</li>
+          <li>خد <strong>سكرين شوت</strong> للعملية الناجحة من محفظتك</li>
+          <li>ارفع الصورة تحت واضغط "إرسال للمراجعة"</li>
+          <li>رح نأكد دفعتك خلال 24 ساعة ونفعّل اشتراكك</li>
+        </ol>
+
+        <!-- Screenshot Upload -->
+        <div class="field">
+          <label class="field-lbl">
+            <span class="req">*</span>
+            صورة (Screenshot) من عملية التحويل
+          </label>
+          <label class="upload-area" id="uploadArea">
+            <input type="file" id="proofFile" accept="image/*"/>
+            <div class="upload-default">
+              <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+              <div class="upload-title">اضغط هنا أو اسحب الصورة</div>
+              <div class="upload-sub">JPG, PNG, أو WEBP — الحد الأقصى 5 ميجا</div>
+            </div>
+            <div class="upload-preview">
+              <img class="preview-thumb" id="previewThumb" alt=""/>
+              <div class="preview-info">
+                <strong id="previewName"></strong>
+                <span id="previewSize"></span>
+              </div>
+              <button type="button" class="preview-remove" id="removeFile" title="إزالة">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </label>
+          <div class="field-hint">
+            تأكد إنو الصورة بتظهر: المبلغ، عنوان المحفظة، وحالة "Confirmed / تم"
+          </div>
+        </div>
+
+        <!-- TxID Optional -->
+        <div class="field">
+          <label class="field-lbl" for="txid">
+            رقم العملية (TxID)
+            <span class="opt">— اختياري، بسرّع المراجعة</span>
+          </label>
+          <input type="text" class="field-input" id="txid"
+            placeholder="مثال: 8a3f2c9b4d6e1f5a..."
+            autocomplete="off"/>
+          <div class="field-hint">
+            بتلاقيه بمحفظتك بقسم "History" — لو حطيتو رح نتأكد من العملية على الـ blockchain فوراً
+          </div>
+        </div>
+
+        <button class="submit-btn" id="submitBtn">
+          <i class="fas fa-paper-plane"></i> إرسال للمراجعة
+        </button>
+      </div>
+    </div>
+
+    <!-- Right: Summary -->
+    <div class="summary">
+      <div class="card">
+        <div class="card-h">
+          <i class="fas fa-receipt"></i>
+          <h2>ملخص الطلب</h2>
+        </div>
+        <div class="sum-row">
+          <span>الباقة</span>
+          <span id="sumPlan" class="gold-v">—</span>
+        </div>
+        <div class="sum-row">
+          <span>المدة</span>
+          <span>شهر واحد</span>
+        </div>
+        <div class="sum-row">
+          <span>السعر الأصلي</span>
+          <span id="sumOriginal" style="color:var(--txt4);text-decoration:line-through">—</span>
+        </div>
+        <div class="sum-row">
+          <span>الخصم</span>
+          <span style="color:#22c55e">−30%</span>
+        </div>
+
+        <!-- Referral Code -->
+        <div id="referralSection" style="margin:1rem 0;padding:1rem 0;border-top:1px dashed rgba(255,255,255,.06)">
+          <div id="refInputArea">
+            <div style="font-size:.82rem;color:var(--txt3);margin-bottom:.5rem">عندك كود إحالة؟ 🎁</div>
+            <div style="display:flex;gap:.4rem">
+              <input type="text" id="refCodeInput" placeholder="مثلاً: GHAITH7"
+                style="flex:1;background:var(--surface);border:1.5px solid var(--border);border-radius:9px;padding:.65rem .85rem;color:var(--txt);font-size:.88rem;text-transform:uppercase;direction:ltr;text-align:right"/>
+              <button id="refApplyBtn" style="background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#000;border-radius:9px;font-weight:700;padding:.65rem 1rem;font-size:.82rem">تطبيق</button>
+            </div>
+          </div>
+          <div id="refAppliedArea" style="display:none;background:linear-gradient(135deg,rgba(34,197,94,.08),rgba(34,197,94,.02));border:1px solid rgba(34,197,94,.25);border-radius:10px;padding:.85rem 1rem">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:.5rem">
+              <div style="display:flex;align-items:center;gap:.5rem">
+                <i class="fas fa-check-circle" style="color:#22c55e"></i>
+                <strong id="refCodeApplied" style="color:#22c55e;font-size:.88rem"></strong>
+              </div>
+              <button id="refRemoveBtn" style="color:var(--txt3);font-size:.78rem;text-decoration:underline">إزالة</button>
+            </div>
+            <div id="refDiscount" style="color:#22c55e;font-size:.82rem;margin-top:.3rem"></div>
+          </div>
+        </div>
+
+        <div class="sum-row" id="refDiscountRow" style="display:none;color:#22c55e">
+          <span>خصم الإحالة</span>
+          <span id="refDiscountAmount">−$0</span>
+        </div>
+        <div class="sum-row tot">
+          <span>الإجمالي</span>
+          <span class="v" id="sumTotal">—</span>
+        </div>
+        <div class="sum-badge">
+          <i class="fas fa-shield-alt"></i> دفع آمن — بدون رسوم خفية
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<!-- Success view (hidden initially) -->
+<main class="main" id="successView" style="display:none">
+  <div class="card success-card">
+    <div class="success-ico"><i class="fas fa-paper-plane"></i></div>
+    <h1 class="success-h">طلبك وصل بنجاح!</h1>
+    <p class="success-p">
+      رح نراجع دفعتك خلال <strong>24 ساعة</strong> ونفعّل اشتراكك تلقائياً.
+      بتوصلك رسالة تأكيد على إيميلك المسجل بمجرد التفعيل.
+    </p>
+    <div class="success-actions">
+      <a href="dashboard.html" class="btn-go btn-gold">
+        <i class="fas fa-arrow-right"></i> العودة للوحة التحكم
+      </a>
+      <a href="https://t.me/GLOREX_SUPPORT" target="_blank" rel="noopener" class="btn-go btn-ghost">
+        <i class="fab fa-telegram"></i> تواصل معنا على تلغرام
+      </a>
+    </div>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { supabase, requireAuth, getUser } from './supabase-client.js';
+import { setupUserMenu } from './user-menu.js?v=20260611';
+
+const WALLET_ADDRESS = 'TMFcQiY8FVDVsynM2xAqd61soxVt6uWVZw';
+
+const session = await requireAuth();
+if(!session) throw new Error('not authenticated');
+
+const user = await getUser();
+const fullName = user.user_metadata?.full_name || user.user_metadata?.name || user.email.split('@')[0];
+document.getElementById('userName').textContent = fullName.split(' ')[0];
+document.getElementById('userAvatar').textContent = (fullName[0]||'G').toUpperCase();
+await setupUserMenu(user);
+
+// ── Parse query params ──
+const params = new URLSearchParams(location.search);
+const plan = params.get('plan');
+const amount = parseFloat(params.get('amount'));
+const duration = parseInt(params.get('duration') || '1');
+const isRenew = params.get('renew') === '1';
+
+if(!plan || !amount || !['basic','premium'].includes(plan) || ![1,3,12].includes(duration)){
+  location.href = 'subscribe.html';
+}
+
+const planNames = { basic: 'Basic', premium: 'Premium' };
+const ORIGINAL_PRICES = {
+  basic: { 1: 39, 3: 81, 12: 324 },
+  premium: { 1: 129, 3: 267, 12: 1068 }
+};
+const DURATION_TEXT = { 1: 'شهر واحد', 3: '3 شهور', 12: 'سنة كاملة' };
+
+// Fill summary
+document.getElementById('sumPlan').textContent = planNames[plan];
+document.getElementById('sumOriginal').textContent = `$${ORIGINAL_PRICES[plan][duration]}`;
+
+// السعر الحالي (قابل للتعديل بكود الإحالة)
+let currentAmount = amount;
+let appliedRefCode = null;
+let refDiscount = 0;
+
+function refreshTotal(){
+  document.getElementById('sumTotal').textContent = `$${currentAmount.toFixed(2)}`;
+  document.getElementById('usdtAmount').innerHTML = `${currentAmount.toFixed(2)} <span>USDT</span>`;
+}
+refreshTotal();
+
+// ── كود الإحالة من URL (لما ييجي عبر رابط ?ref=) ──
+const urlRef = params.get('ref') || sessionStorage.getItem('pendingReferralCode');
+if(urlRef) document.getElementById('refCodeInput').value = urlRef.toUpperCase();
+
+// ── تطبيق كود الإحالة ──
+document.getElementById('refApplyBtn').addEventListener('click', applyReferralCode);
+document.getElementById('refCodeInput').addEventListener('input', e => {
+  e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9_]/g, '');
+});
+document.getElementById('refCodeInput').addEventListener('keypress', e => {
+  if(e.key === 'Enter'){ e.preventDefault(); applyReferralCode(); }
+});
+
+async function applyReferralCode(){
+  const code = document.getElementById('refCodeInput').value.trim();
+  if(!code) return;
+
+  const btn = document.getElementById('refApplyBtn');
+  btn.disabled = true;
+  btn.textContent = '...';
+
+  const { data, error } = await supabase.rpc('validate_referral_code', {
+    p_code: code,
+    p_amount: amount
+  });
+
+  btn.disabled = false;
+  btn.textContent = 'تطبيق';
+
+  if(error || data?.error){
+    showToast(data?.error || error?.message || 'الكود غير صحيح', 'err');
+    return;
+  }
+
+  // طبّق الخصم
+  appliedRefCode = code;
+  refDiscount = Number(data.discount_amount);
+  currentAmount = Number(data.new_amount);
+  refreshTotal();
+
+  document.getElementById('refInputArea').style.display = 'none';
+  document.getElementById('refAppliedArea').style.display = 'block';
+  document.getElementById('refCodeApplied').textContent = `كود ${code} مطبّق`;
+  document.getElementById('refDiscount').textContent = `🎉 خصم ${data.discount_pct}% — وفّرت $${refDiscount.toFixed(2)}`;
+
+  document.getElementById('refDiscountRow').style.display = 'flex';
+  document.getElementById('refDiscountAmount').textContent = `−$${refDiscount.toFixed(2)}`;
+
+  showToast(`خصم ${data.discount_pct}% مطبّق ✅`, 'ok');
+}
+
+document.getElementById('refRemoveBtn').addEventListener('click', () => {
+  appliedRefCode = null;
+  refDiscount = 0;
+  currentAmount = amount;
+  refreshTotal();
+  document.getElementById('refInputArea').style.display = 'block';
+  document.getElementById('refAppliedArea').style.display = 'none';
+  document.getElementById('refDiscountRow').style.display = 'none';
+  document.getElementById('refCodeInput').value = '';
+});
+
+// Update duration display in summary
+const durationEl = document.querySelector('.sum-row:nth-child(3) span:last-child');
+if(durationEl) durationEl.textContent = DURATION_TEXT[duration];
+
+// Renewal notice
+if(isRenew){
+  const renewBadge = document.createElement('div');
+  renewBadge.style.cssText = 'background:linear-gradient(135deg,rgba(34,197,94,.1),rgba(34,197,94,.04));border:1px solid rgba(34,197,94,.3);border-radius:11px;padding:.85rem 1.1rem;margin-bottom:1rem;display:flex;gap:.7rem;align-items:center;color:#22c55e;font-size:.9rem;font-weight:500';
+  renewBadge.innerHTML = `<i class="fas fa-redo" style="font-size:1rem"></i><div>تجديد اشتراك — رح يتم إضافة <strong>${DURATION_TEXT[duration]}</strong> على اشتراكك الحالي</div>`;
+  const mainContent = document.getElementById('mainContent');
+  const stepper = mainContent.querySelector('.stepper');
+  stepper.parentNode.insertBefore(renewBadge, stepper.nextSibling);
+}
+
+// QR Code (using qrserver.com — free service)
+const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(WALLET_ADDRESS)}&margin=4`;
+document.getElementById('qrImgSrc').src = qrUrl;
+
+// ── Copy wallet ──
+document.getElementById('copyBtn').addEventListener('click', async ()=>{
+  try {
+    await navigator.clipboard.writeText(WALLET_ADDRESS);
+    const btn = document.getElementById('copyBtn');
+    btn.classList.add('copied');
+    btn.innerHTML = '<i class="fas fa-check"></i> تم النسخ';
+    showToast('تم نسخ العنوان', 'ok');
+    setTimeout(()=>{
+      btn.classList.remove('copied');
+      btn.innerHTML = '<i class="fas fa-copy"></i> نسخ';
+    }, 2000);
+  } catch(e){
+    showToast('فشل النسخ — انسخه يدوياً', 'err');
+  }
+});
+
+// ── Screenshot Upload Handling ──
+const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+let selectedFile = null;
+
+const uploadArea = document.getElementById('uploadArea');
+const fileInput = document.getElementById('proofFile');
+const previewThumb = document.getElementById('previewThumb');
+const previewName = document.getElementById('previewName');
+const previewSize = document.getElementById('previewSize');
+const removeFileBtn = document.getElementById('removeFile');
+
+function handleFile(file){
+  if(!file) return;
+  if(!file.type.startsWith('image/')){
+    showToast('الملف لازم يكون صورة (JPG, PNG, WEBP)', 'err');
+    return;
+  }
+  if(file.size > MAX_SIZE){
+    showToast('حجم الصورة كبير جداً — الحد الأقصى 5 ميجا', 'err');
+    return;
+  }
+  selectedFile = file;
+  uploadArea.classList.add('has-file');
+  previewName.textContent = file.name;
+  previewSize.textContent = `${(file.size/1024).toFixed(0)} KB`;
+  const reader = new FileReader();
+  reader.onload = e => { previewThumb.src = e.target.result; };
+  reader.readAsDataURL(file);
+}
+
+fileInput.addEventListener('change', e => handleFile(e.target.files[0]));
+
+removeFileBtn.addEventListener('click', e => {
+  e.preventDefault(); e.stopPropagation();
+  selectedFile = null;
+  fileInput.value = '';
+  uploadArea.classList.remove('has-file');
+});
+
+// Drag & drop
+['dragenter','dragover'].forEach(ev => {
+  uploadArea.addEventListener(ev, e => {
+    e.preventDefault(); uploadArea.classList.add('drag');
+  });
+});
+['dragleave','drop'].forEach(ev => {
+  uploadArea.addEventListener(ev, e => {
+    e.preventDefault(); uploadArea.classList.remove('drag');
+  });
+});
+uploadArea.addEventListener('drop', e => {
+  const file = e.dataTransfer.files[0];
+  if(file) handleFile(file);
+});
+
+// ── Submit ──
+document.getElementById('submitBtn').addEventListener('click', async ()=>{
+  if(!selectedFile){
+    showToast('لازم ترفع صورة للعملية أولاً', 'err');
+    return;
+  }
+
+  const txid = document.getElementById('txid').value.trim();
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> جاري رفع الصورة...';
+
+  // 1. ارفع الصورة لـ Storage
+  const ext = selectedFile.name.split('.').pop().toLowerCase();
+  const fileName = `${Date.now()}-${plan}.${ext}`;
+  const filePath = `${user.id}/${fileName}`;
+
+  const { error: upErr } = await supabase.storage
+    .from('payment-proofs')
+    .upload(filePath, selectedFile, {
+      cacheControl: '3600',
+      upsert: false
+    });
+
+  if(upErr){
+    showToast('فشل رفع الصورة: ' + upErr.message, 'err');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال للمراجعة';
+    return;
+  }
+
+  btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> جاري حفظ الطلب...';
+
+  // 2. احفظ الـ payment_request
+  const { error } = await supabase.from('payment_requests').insert({
+    user_id: user.id,
+    user_email: user.email,
+    user_name: fullName,
+    plan: plan,
+    amount: currentAmount,
+    original_amount: amount,
+    duration_months: duration,
+    referral_code: appliedRefCode,
+    discount_amount: refDiscount,
+    method: 'usdt_trc20',
+    proof_url: filePath,
+    txid: txid || null,
+    status: 'pending'
+  });
+
+  // 3. سجّل الإحالة (لو في كود)
+  if(!error && appliedRefCode){
+    // جيب referrer_id
+    const { data: codeData } = await supabase
+      .from('referral_codes')
+      .select('user_id')
+      .ilike('code', appliedRefCode)
+      .maybeSingle();
+    if(codeData?.user_id){
+      await supabase.from('referrals').insert({
+        referrer_id: codeData.user_id,
+        referred_id: user.id,
+        code: appliedRefCode,
+        discount_amount: refDiscount,
+        status: 'pending'
+      });
+    }
+  }
+
+  if(error){
+    // امسح الصورة لو فشل الـ insert
+    await supabase.storage.from('payment-proofs').remove([filePath]);
+    showToast('حدث خطأ: ' + error.message, 'err');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال للمراجعة';
+    return;
+  }
+
+  // Show success view
+  document.getElementById('mainContent').style.display = 'none';
+  document.getElementById('successView').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// ── Toast ──
+function showToast(msg, type='ok'){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast show ${type}`;
+  setTimeout(()=>{ t.classList.remove('show'); }, 3500);
+}
+</script>
+
+</body>
+</html>

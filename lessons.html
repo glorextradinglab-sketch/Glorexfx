@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>الدروس — GLOREX</title>
+<meta name="theme-color" content="#0a0a0a"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold:#D4A017;--gold-l:#F0C030;--gold-d:#A07810;
+  --bg:#080808;--surface:#0d0d0d;--card:#111111;
+  --border:rgba(255,255,255,0.08);
+  --txt:#fff;--txt2:#ccc;--txt3:#999;--txt4:#666;
+  --ease:cubic-bezier(.4,0,.2,1);--base:.3s;
+}
+body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;font-family:inherit;border:none;background:none}
+
+.bg-mesh{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 900px 700px at 80% 0%,rgba(212,160,23,.12),transparent 60%),radial-gradient(ellipse 600px 800px at 0% 100%,rgba(160,120,16,.1),transparent 60%)}
+
+.topbar{position:sticky;top:0;z-index:100;background:rgba(8,8,8,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:.95rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{display:flex;align-items:center;gap:.6rem}
+.brand-logo{width:40px;height:40px;border-radius:11px;background:#fff;border:1.5px solid rgba(212,160,23,.5);box-shadow:0 0 14px rgba(184,134,11,.45);display:flex;align-items:center;justify-content:center;padding:5px;overflow:hidden}
+.brand-logo img{width:100%;height:100%;object-fit:contain}
+.brand-name{font-family:'Space Grotesk';font-weight:700;letter-spacing:2px;font-size:1.1rem}
+.nav-tabs{display:flex;gap:.4rem}
+.nav-tab{padding:.55rem 1.1rem;border-radius:10px;color:var(--txt3);font-size:.88rem;font-weight:500;transition:all var(--base) var(--ease)}
+.nav-tab:hover{color:var(--txt);background:rgba(255,255,255,.04)}
+.nav-tab.active{color:var(--gold);background:rgba(212,160,23,.1)}
+.user-name{font-size:.88rem;color:var(--txt3)}
+.user-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:.92rem;font-family:'Space Grotesk'}
+.user-menu{display:flex;align-items:center;gap:.7rem}
+
+.main{max-width:900px;margin:0 auto;padding:4rem 2rem;position:relative;z-index:1;text-align:center}
+
+.coming-icon{
+  width:120px;height:120px;border-radius:50%;
+  background:linear-gradient(135deg,rgba(212,160,23,.18),rgba(160,120,16,.08));
+  border:2px solid rgba(212,160,23,.3);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 2rem;color:var(--gold);font-size:3rem;
+  animation:pulse 2.5s ease-in-out infinite;
+  box-shadow:0 0 60px rgba(212,160,23,.2)
+}
+@keyframes pulse{50%{transform:scale(1.06);box-shadow:0 0 80px rgba(212,160,23,.4)}}
+
+.h1{font-family:'Space Grotesk';font-size:2.6rem;font-weight:700;margin-bottom:.8rem;line-height:1.2}
+.h1 em{font-style:normal;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.sub{color:var(--txt2);font-size:1.1rem;margin-bottom:.5rem;line-height:1.7}
+.sub2{color:var(--txt3);font-size:.95rem;margin-bottom:3rem;max-width:550px;margin-left:auto;margin-right:auto;line-height:1.8}
+
+.preview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem;margin:0 auto;max-width:800px;text-align:right}
+.preview{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.4rem;transition:all .3s ease;position:relative;overflow:hidden}
+.preview:hover{border-color:rgba(212,160,23,.3);transform:translateY(-2px)}
+.preview-icon{width:42px;height:42px;border-radius:10px;background:rgba(212,160,23,.12);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:.9rem}
+.preview h3{font-family:'Space Grotesk';font-size:1.05rem;font-weight:700;margin-bottom:.3rem;filter:blur(7px);user-select:none;transition:filter .3s ease}
+.preview p{font-size:.85rem;color:var(--txt3);line-height:1.6;filter:blur(5px);user-select:none;transition:filter .3s ease}
+.preview:hover h3,.preview:hover p{filter:blur(4px)}
+.preview .lock-tag{position:absolute;top:1rem;left:1rem;padding:.2rem .55rem;background:rgba(212,160,23,.12);color:var(--gold);font-size:.65rem;font-weight:700;border-radius:6px;text-transform:uppercase;letter-spacing:1px}
+
+.notify{margin-top:3rem;background:var(--card);border:1px dashed rgba(212,160,23,.3);border-radius:14px;padding:1.5rem;display:inline-flex;align-items:center;gap:1rem}
+.notify i{color:var(--gold);font-size:1.5rem}
+.notify-text{text-align:right}
+.notify-text strong{display:block;font-family:'Space Grotesk';font-size:1rem;margin-bottom:.2rem}
+.notify-text span{color:var(--txt3);font-size:.85rem}
+
+@media (max-width:768px){
+  .topbar{padding:.8rem 1rem}
+  .nav-tabs{display:none}
+  .main{padding:2.5rem 1rem}
+  .h1{font-size:2rem}
+  .coming-icon{width:90px;height:90px;font-size:2.2rem}
+  .notify{flex-direction:column;text-align:center;gap:.6rem}
+  .notify-text{text-align:center}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-mesh"></div>
+
+<header class="topbar">
+  <a href="glorex_landing.html" class="brand">
+    <div class="brand-logo"><img src="glorex_bull_gold.png" alt="GLOREX"/></div>
+    <div class="brand-name">GLOREX</div>
+  </a>
+  <nav class="nav-tabs">
+    <a href="dashboard.html" class="nav-tab">الرئيسية</a>
+    <a href="checklist.html" class="nav-tab">القائمة</a>
+    <a href="journal.html" class="nav-tab">السجل</a>
+    <a href="calendar.html" class="nav-tab">التقويم</a>
+    <a href="lessons.html" class="nav-tab active">الدروس</a> <a href="chat.html" class="nav-tab">المحادثة</a>
+  </nav>
+  <div class="user-menu">
+    <span class="user-name" id="userName">...</span>
+    <div class="user-avatar" id="userAvatar">G</div>
+  </div>
+</header>
+
+<main class="main">
+
+  <div class="coming-icon"><i class="fas fa-graduation-cap"></i></div>
+
+  <h1 class="h1">الدروس <em>قريباً</em> 🎬</h1>
+  <p class="sub">عم نجهز منهج كامل بالعربي خطوة بخطوة</p>
+  <p class="sub2">
+    منهج احترافي يشرح <strong>Supply & Demand</strong> و <strong>Fair Value Gap</strong>
+    و <strong>Smart Money Concepts</strong> على مؤشر Nasdaq —
+    مع أمثلة حية وتمارين تطبيقية
+  </p>
+
+  <div class="preview-grid">
+    <div class="preview">
+      <span class="lock-tag"><i class="fas fa-lock"></i> قريباً</span>
+      <div class="preview-icon"><i class="fas fa-play"></i></div>
+      <h3>مقدمة في التداول</h3>
+      <p>أساسيات السوق، الفريمات، وكيف تقرأ الشارت</p>
+    </div>
+    <div class="preview">
+      <span class="lock-tag"><i class="fas fa-lock"></i> قريباً</span>
+      <div class="preview-icon"><i class="fas fa-chart-area"></i></div>
+      <h3>Supply & Demand</h3>
+      <p>كيف ترسم مناطق العرض والطلب الحقيقية</p>
+    </div>
+    <div class="preview">
+      <span class="lock-tag"><i class="fas fa-lock"></i> قريباً</span>
+      <div class="preview-icon"><i class="fas fa-bolt"></i></div>
+      <h3>Fair Value Gap</h3>
+      <p>الـ FVG والـ IFVG وكيف تستخدمهم للدخول</p>
+    </div>
+    <div class="preview">
+      <span class="lock-tag"><i class="fas fa-lock"></i> قريباً</span>
+      <div class="preview-icon"><i class="fas fa-crosshairs"></i></div>
+      <h3>Smart Money</h3>
+      <p>كيف تتعامل مع سحب السيولة و BOS و CHOCH</p>
+    </div>
+    <div class="preview">
+      <span class="lock-tag"><i class="fas fa-lock"></i> قريباً</span>
+      <div class="preview-icon"><i class="fas fa-shield-halved"></i></div>
+      <h3>إدارة المخاطرة</h3>
+      <p>قواعد ذهبية لحماية رأس مالك مدى الحياة</p>
+    </div>
+    <div class="preview">
+      <span class="lock-tag"><i class="fas fa-lock"></i> قريباً</span>
+      <div class="preview-icon"><i class="fas fa-trophy"></i></div>
+      <h3>صفقات حقيقية</h3>
+      <p>تحليل لايف لصفقات ربحت وصفقات خسرت — تعلم من الاثنين</p>
+    </div>
+  </div>
+
+  <div class="notify">
+    <i class="fas fa-bell"></i>
+    <div class="notify-text">
+      <strong>أنت من أوائل المسجلين 🎉</strong>
+      <span>رح يوصلك إيميل أول ما الدروس تصير جاهزة</span>
+    </div>
+  </div>
+
+</main>
+
+<script type="module">
+import { supabase } from './supabase-client.js';
+import { setupUserMenu } from './user-menu.js?v=20260611';
+
+async function init(){
+  try{
+    const { data:{session} } = await supabase.auth.getSession();
+    if(session){
+      const fn = session.user.user_metadata?.first_name || session.user.email.split('@')[0];
+      document.getElementById('userName').textContent = fn;
+      document.getElementById('userAvatar').textContent = (fn[0]||'G').toUpperCase();
+      await setupUserMenu(session.user);
+    } else {
+      document.getElementById('userName').textContent = 'زائر';
+    }
+  }catch(e){ document.getElementById('userName').textContent = 'زائر'; }
+}
+init();
+</script>
+
+</body>
+</html>

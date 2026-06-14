@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>اختر باقتك — GLOREX</title>
+<meta name="theme-color" content="#0a0a0a"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold:#D4A017;--gold-l:#F0C030;--gold-d:#A07810;
+  --bg:#080808;--surface:#0d0d0d;--card:#111111;
+  --border:rgba(255,255,255,0.08);
+  --txt:#fff;--txt2:#ccc;--txt3:#999;--txt4:#666;
+  --ease:cubic-bezier(.4,0,.2,1);--base:.3s;
+}
+body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;font-family:inherit;border:none;background:none;color:inherit}
+
+.bg-mesh{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 900px 700px at 80% 0%,rgba(212,160,23,.12),transparent 60%),radial-gradient(ellipse 600px 800px at 0% 100%,rgba(160,120,16,.1),transparent 60%)}
+
+.topbar{position:sticky;top:0;z-index:100;background:rgba(8,8,8,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:.95rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{display:flex;align-items:center;gap:.6rem}
+.brand-logo{width:40px;height:40px;border-radius:11px;background:#fff;border:1.5px solid rgba(212,160,23,.5);box-shadow:0 0 14px rgba(184,134,11,.45);display:flex;align-items:center;justify-content:center;padding:5px;overflow:hidden}
+.brand-logo img{width:100%;height:100%;object-fit:contain}
+.brand-name{font-family:'Space Grotesk';font-weight:700;font-size:1.25rem;letter-spacing:-.02em}
+.nav-tabs{display:flex;gap:.4rem}
+.nav-tab{padding:.55rem 1.1rem;border-radius:10px;color:var(--txt3);font-size:.88rem;font-weight:500;transition:all var(--base) var(--ease)}
+.nav-tab:hover{color:var(--txt);background:rgba(255,255,255,.04)}
+.user-name{font-size:.92rem;color:var(--txt2)}
+.user-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-family:'Space Grotesk';font-size:.92rem;user-select:none}
+.user-menu{display:flex;align-items:center;gap:.7rem}
+
+.main{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:3.5rem 2rem 5rem}
+
+.page-head{text-align:center;margin-bottom:3.5rem}
+.page-eyebrow{display:inline-flex;align-items:center;gap:.5rem;padding:.4rem 1rem;background:rgba(212,160,23,.1);border:1px solid rgba(212,160,23,.25);border-radius:999px;color:var(--gold);font-size:.82rem;font-weight:600;margin-bottom:1.2rem}
+.page-h1{font-family:'Space Grotesk';font-size:clamp(2rem,5vw,3.2rem);font-weight:700;line-height:1.15;margin-bottom:.7rem;letter-spacing:-.02em}
+.page-h1 em{font-style:normal;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.page-sub{color:var(--txt3);font-size:1.05rem;line-height:1.7;max-width:550px;margin:0 auto}
+
+/* Current subscription banner */
+.current-sub{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.2rem 1.5rem;display:flex;align-items:center;justify-content:space-between;margin-bottom:2.5rem;flex-wrap:wrap;gap:1rem}
+.current-sub.active{border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.04)}
+.current-sub.pending{border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.04)}
+.cs-left{display:flex;align-items:center;gap:1rem}
+.cs-ico{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;background:rgba(212,160,23,.12);color:var(--gold)}
+.cs-ico.active{background:rgba(34,197,94,.12);color:#22c55e}
+.cs-ico.pending{background:rgba(245,158,11,.12);color:#f59e0b}
+.cs-text strong{display:block;font-size:.98rem;margin-bottom:.15rem}
+.cs-text span{color:var(--txt3);font-size:.85rem}
+
+/* Plans Grid */
+/* Duration Tabs */
+.duration-tabs{display:inline-flex;gap:.3rem;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:.4rem;margin:0 auto 2.5rem;position:relative;flex-wrap:wrap;justify-content:center}
+.duration-tab{position:relative;padding:.85rem 1.6rem;border-radius:10px;font-size:.95rem;font-weight:600;color:var(--txt3);transition:all var(--base) var(--ease);border:none;background:transparent;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:.5rem;white-space:nowrap}
+.duration-tab:hover{color:var(--txt)}
+.duration-tab.active{background:linear-gradient(135deg,var(--gold-l),var(--gold-d));color:#000;box-shadow:0 4px 14px rgba(212,160,23,.3)}
+.duration-tab .save-pill{font-size:.7rem;font-weight:700;background:rgba(34,197,94,.15);color:#22c55e;padding:.15rem .45rem;border-radius:5px;letter-spacing:.3px}
+.duration-tab.active .save-pill{background:rgba(0,0,0,.15);color:#000}
+.duration-tabs-wrap{text-align:center;margin-bottom:1rem}
+
+/* Effective monthly + save badge */
+.effective-monthly{color:var(--txt3);font-size:.85rem;margin-top:.3rem;display:none}
+.save-amount{display:none;color:#22c55e;font-size:.82rem;font-weight:700;background:rgba(34,197,94,.08);padding:.4rem .8rem;border-radius:8px;margin:.5rem 0 .9rem;border:1px solid rgba(34,197,94,.2)}
+.plan.show-save .effective-monthly,.plan.show-save .save-amount{display:block}
+
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem}
+
+.plan{
+  position:relative;background:var(--card);border:1px solid var(--border);
+  border-radius:18px;padding:2rem 1.8rem;
+  transition:all var(--base) var(--ease);
+  display:flex;flex-direction:column;
+}
+.plan:hover{border-color:rgba(255,255,255,.15);transform:translateY(-3px)}
+.plan.featured{
+  border-color:rgba(212,160,23,.4);
+  background:linear-gradient(160deg,rgba(212,160,23,.06),var(--card) 40%);
+  box-shadow:0 0 60px rgba(212,160,23,.08)
+}
+.plan.featured:hover{border-color:rgba(212,160,23,.6);box-shadow:0 0 80px rgba(212,160,23,.15)}
+
+.plan-badge{
+  position:absolute;top:-12px;right:1.5rem;
+  background:linear-gradient(135deg,var(--gold-l),var(--gold-d));
+  color:#000;font-size:.72rem;font-weight:700;
+  padding:.35rem .85rem;border-radius:999px;
+  letter-spacing:.5px;
+  box-shadow:0 4px 14px rgba(212,160,23,.4)
+}
+.discount-tag{
+  position:absolute;top:-12px;right:50%;transform:translateX(50%);
+  background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;
+  padding:.4rem 1.05rem;border-radius:30px;
+  font-size:.72rem;font-weight:700;letter-spacing:.4px;
+  white-space:nowrap;z-index:2;
+  box-shadow:0 4px 16px rgba(239,68,68,.4);
+  animation:discount-pulse 2.5s ease-in-out infinite
+}
+.plan.featured .discount-tag{top:-32px}
+@keyframes discount-pulse{
+  0%,100%{box-shadow:0 4px 16px rgba(239,68,68,.4)}
+  50%{box-shadow:0 6px 24px rgba(239,68,68,.7)}
+}
+
+.plan-name{font-family:'Space Grotesk';font-size:1.15rem;font-weight:600;color:var(--txt2);margin-bottom:.4rem}
+.plan-price{display:flex;align-items:baseline;gap:.4rem;margin-bottom:.3rem}
+.price-amt{font-family:'Space Grotesk';font-size:3rem;font-weight:700;letter-spacing:-.04em;color:var(--txt)}
+.plan.featured .price-amt{background:linear-gradient(135deg,var(--gold-l),var(--gold-d));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.price-period{color:var(--txt3);font-size:.95rem;font-weight:500}
+.old-price{color:var(--txt4);text-decoration:line-through;font-size:1.1rem;font-weight:500;margin-right:.5rem}
+.plan-desc{color:var(--txt3);font-size:.9rem;line-height:1.6;margin-bottom:1.5rem;min-height:42px}
+
+.plan-features{list-style:none;margin-bottom:1.8rem;flex-grow:1}
+.plan-features li{
+  display:flex;align-items:flex-start;gap:.65rem;
+  padding:.55rem 0;font-size:.92rem;color:var(--txt2);line-height:1.5
+}
+.plan-features li i{color:var(--gold);font-size:.85rem;margin-top:.3rem;flex-shrink:0}
+.plan-features li.off{color:var(--txt4)}
+.plan-features li.off i{color:var(--txt4)}
+
+.plan-btn{
+  width:100%;padding:.95rem;border-radius:12px;
+  font-size:.98rem;font-weight:600;
+  transition:all var(--base) var(--ease);
+  display:flex;align-items:center;justify-content:center;gap:.5rem
+}
+.btn-secondary{background:rgba(255,255,255,.06);color:var(--txt);border:1px solid var(--border)}
+.btn-secondary:hover{background:rgba(255,255,255,.1)}
+.btn-primary{background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#000;box-shadow:0 8px 28px rgba(212,160,23,.3)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 12px 32px rgba(212,160,23,.45)}
+.btn-disabled{background:rgba(34,197,94,.1);color:#22c55e;border:1px solid rgba(34,197,94,.25);cursor:default}
+.btn-disabled:hover{transform:none}
+
+.faq-mini{margin-top:4rem;text-align:center;color:var(--txt3);font-size:.92rem;line-height:1.8}
+.faq-mini a{color:var(--gold);text-decoration:underline;text-underline-offset:3px}
+
+@media (max-width:960px){
+  .plans{grid-template-columns:1fr;max-width:480px;margin:0 auto}
+  .nav-tabs{display:none}
+  .main{padding:2rem 1rem 3rem}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-mesh"></div>
+
+<header class="topbar">
+  <a href="glorex_landing.html" class="brand">
+    <div class="brand-logo"><img src="glorex_bull_gold.png" alt="GLOREX"/></div>
+    <div class="brand-name">GLOREX</div>
+  </a>
+  <nav class="nav-tabs">
+    <a href="dashboard.html" class="nav-tab">الرئيسية</a>
+    <a href="checklist.html" class="nav-tab">القائمة</a>
+    <a href="journal.html" class="nav-tab">السجل</a>
+    <a href="calendar.html" class="nav-tab">التقويم</a>
+    <a href="lessons.html" class="nav-tab">الدروس</a>
+    <a href="chat.html" class="nav-tab">المحادثة</a>
+  </nav>
+  <div class="user-menu">
+    <span class="user-name" id="userName">...</span>
+    <div class="user-avatar" id="userAvatar">G</div>
+  </div>
+</header>
+
+<main class="main">
+
+  <div class="page-head">
+    <div class="page-eyebrow"><i class="fas fa-bolt"></i> خصم 30% — لفترة محدودة</div>
+    <h1 class="page-h1">اختر الباقة <em>المناسبة لك</em></h1>
+    <p class="page-sub">ألغِ في أي وقت — بدون قيود. ادفع عبر USDT (TRC20) لتنخفض الرسوم لأقل حد.</p>
+  </div>
+
+  <!-- Current Subscription Status -->
+  <div class="current-sub" id="currentSub" style="display:none">
+    <div class="cs-left">
+      <div class="cs-ico" id="csIco"><i class="fas fa-user"></i></div>
+      <div class="cs-text">
+        <strong id="csTitle">جاري التحميل...</strong>
+        <span id="csSub"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Duration Tabs -->
+  <div class="duration-tabs-wrap">
+    <div class="duration-tabs" role="tablist">
+      <button class="duration-tab active" data-duration="1">شهري</button>
+      <button class="duration-tab" data-duration="3">3 شهور <span class="save-pill">وفّر 15%</span></button>
+      <button class="duration-tab" data-duration="12">سنوي <span class="save-pill">وفّر 25%</span></button>
+    </div>
+  </div>
+
+  <!-- Plans -->
+  <div class="plans">
+
+    <!-- FREE -->
+    <div class="plan">
+      <div class="plan-name">Free</div>
+      <div class="plan-price">
+        <span class="price-amt">$0</span>
+        <span class="price-period">/شهر</span>
+      </div>
+      <p class="plan-desc">جربها واشتغل بأدوات أساسية مجاناً للأبد</p>
+      <ul class="plan-features">
+        <li><i class="fas fa-check"></i> حاسبة المخاطر</li>
+        <li><i class="fas fa-check"></i> التقويم الاقتصادي العام</li>
+        <li><i class="fas fa-check"></i> قراءة المحادثة الجماعية</li>
+        <li class="off"><i class="fas fa-times"></i> قائمة الفحص قبل الصفقة</li>
+        <li class="off"><i class="fas fa-times"></i> سجل الصفقات</li>
+        <li class="off"><i class="fas fa-times"></i> تنبيهات الأخبار القوية (FOMC وغيرها)</li>
+        <li class="off"><i class="fas fa-times"></i> الدروس الاحترافية</li>
+      </ul>
+      <button class="plan-btn btn-secondary" id="freeBtn">الباقة الحالية</button>
+    </div>
+
+    <!-- BASIC -->
+    <div class="plan featured" id="basicCard">
+      <div class="plan-badge">الأكثر شيوعاً</div>
+      <div class="discount-tag">خصم 30% — لفترة محدودة</div>
+      <div class="plan-name">Basic</div>
+      <div class="plan-price">
+        <span class="old-price" id="basicOldPrice">$39</span>
+        <span class="price-amt" id="basicPrice">$27</span>
+        <span class="price-period" id="basicPeriod">/شهر</span>
+      </div>
+      <div class="effective-monthly" id="basicMonthly">~$23/شهر فعلياً</div>
+      <div class="save-amount" id="basicSave">💰 وفّر $12 مقارنة بالشهري</div>
+      <p class="plan-desc">كل اللي تحتاجه للتداول بنظام واضح</p>
+      <ul class="plan-features">
+        <li><i class="fas fa-check"></i> كل ميزات Free</li>
+        <li><i class="fas fa-check"></i> قائمة الفحص + سجل صفقات غير محدود</li>
+        <li><i class="fas fa-check"></i> تنبيهات الأخبار القوية (FOMC، NFP، CPI)</li>
+        <li><i class="fas fa-check"></i> 50 تقرير AI شهرياً</li>
+        <li><i class="fas fa-check"></i> الدروس الاحترافية كاملة</li>
+        <li><i class="fas fa-check"></i> فيديوهات صفقاتي اليومية</li>
+        <li class="off"><i class="fas fa-times"></i> جلسة 1:1 شهرياً معي</li>
+      </ul>
+      <button class="plan-btn btn-primary" data-plan="basic" data-amount="27">
+        اشترك الآن <i class="fas fa-arrow-left"></i>
+      </button>
+    </div>
+
+    <!-- PREMIUM -->
+    <div class="plan" id="premiumCard">
+      <div class="discount-tag">خصم 30% — لفترة محدودة</div>
+      <div class="plan-name">Premium</div>
+      <div class="plan-price">
+        <span class="old-price" id="premiumOldPrice">$129</span>
+        <span class="price-amt" id="premiumPrice">$89</span>
+        <span class="price-period" id="premiumPeriod">/شهر</span>
+      </div>
+      <div class="effective-monthly" id="premiumMonthly">~$76/شهر فعلياً</div>
+      <div class="save-amount" id="premiumSave">💰 وفّر $38 مقارنة بالشهري</div>
+      <p class="plan-desc">للمتداول الجاد اللي بدو كلشي</p>
+      <ul class="plan-features">
+        <li><i class="fas fa-check"></i> كل ميزات Basic</li>
+        <li><i class="fas fa-check"></i> أخبار AI — 200 طلب شهرياً</li>
+        <li><i class="fas fa-check"></i> <strong style="color:var(--gold)">جلسة 1:1 شهرياً معي للتطوير</strong></li>
+        <li><i class="fas fa-check"></i> تحليل خبير لصفقاتك</li>
+        <li><i class="fas fa-check"></i> أولوية الدعم الفني</li>
+      </ul>
+      <button class="plan-btn btn-primary" data-plan="premium" data-amount="89">
+        اشترك الآن <i class="fas fa-arrow-left"></i>
+      </button>
+    </div>
+
+  </div>
+
+  <p class="faq-mini">
+    💡 الدفع عبر USDT (TRC20) — رسوم منخفضة، تحويل سريع.
+    <br>عندك سؤال؟ <a href="https://t.me/GLOREX_SUPPORT" target="_blank" rel="noopener"><i class="fab fa-telegram"></i> تواصل معنا على تلغرام</a>
+  </p>
+
+</main>
+
+<script type="module">
+import { supabase, getSession, getUser } from './supabase-client.js';
+import { setupUserMenu } from './user-menu.js?v=20260611';
+
+// اشترك متاح للزوار — مش لازم تسجيل دخول لعرض الباقات
+const session = await getSession();
+const user = session ? await getUser() : null;
+
+if(user){
+  const fn = user.user_metadata?.full_name || user.user_metadata?.name || user.email.split('@')[0];
+  document.getElementById('userName').textContent = fn.split(' ')[0];
+  document.getElementById('userAvatar').textContent = (fn[0]||'G').toUpperCase();
+  await setupUserMenu(user);
+} else {
+  // زائر — أخفي user menu، اعرض زر دخول
+  document.querySelector('.user-menu').innerHTML = `
+    <a href="signin.html" class="user-name" style="color:var(--gold);font-weight:600;padding:.5rem 1rem;border:1px solid rgba(212,160,23,.3);border-radius:9px;text-decoration:none">
+      تسجيل الدخول
+    </a>
+  `;
+}
+
+// ── جيب الاشتراك الحالي ──
+async function loadCurrentSubscription(){
+  if(!user) return; // زائر — تخطّى
+
+  const { data: profile, error } = await supabase
+    .from('profiles')
+    .select('subscription_tier, subscription_expires_at')
+    .eq('id', user.id)
+    .single();
+
+  // طلب دفع معلق؟
+  const { data: pending } = await supabase
+    .from('payment_requests')
+    .select('plan, created_at')
+    .eq('user_id', user.id)
+    .eq('status', 'pending')
+    .order('created_at', { ascending: false })
+    .limit(1);
+
+  const banner = document.getElementById('currentSub');
+  const ico = document.getElementById('csIco');
+  const title = document.getElementById('csTitle');
+  const sub = document.getElementById('csSub');
+
+  if(pending && pending.length > 0){
+    banner.style.display = 'flex';
+    banner.classList.add('pending');
+    ico.className = 'cs-ico pending';
+    ico.innerHTML = '<i class="fas fa-clock"></i>';
+    const planName = pending[0].plan === 'basic' ? 'Basic' : 'Premium';
+    title.textContent = `طلبك قيد المراجعة — باقة ${planName}`;
+    sub.textContent = 'رح نأكد دفعتك خلال 24 ساعة عبر الإيميل';
+    return;
+  }
+
+  const tier = profile?.subscription_tier || 'free';
+  if(tier !== 'free'){
+    banner.style.display = 'flex';
+    banner.classList.add('active');
+    ico.className = 'cs-ico active';
+    ico.innerHTML = '<i class="fas fa-crown"></i>';
+    const planName = tier === 'basic' ? 'Basic' : 'Premium';
+    title.textContent = `أنت مشترك في باقة ${planName}`;
+    if(profile.subscription_expires_at){
+      const expDate = new Date(profile.subscription_expires_at);
+      const days = Math.ceil((expDate - Date.now())/(86400000));
+      sub.innerHTML = days > 0
+        ? `يتبقى <strong style="color:var(--gold)">${days} يوم</strong> — جدد الآن لإضافة 30 يوم`
+        : 'انتهى الاشتراك — جدد الآن';
+    }
+
+    // الباقة الحالية → زر "تجديد الاشتراك" (قابل للضغط)
+    document.querySelectorAll(`[data-plan="${tier}"]`).forEach(b=>{
+      b.innerHTML = '<i class="fas fa-redo"></i> تجديد الاشتراك';
+    });
+
+    // ضيف زر "تجديد" بالـ banner كمان
+    const amount = tier === 'basic' ? 27 : 89;
+    banner.style.cursor = 'pointer';
+    banner.addEventListener('click', () => {
+      location.href = `checkout.html?plan=${tier}&amount=${amount}&renew=1`;
+    });
+
+    // الباقات الثانية → عطّل الأزرار وغيّر النص
+    const freeBtn = document.getElementById('freeBtn');
+    freeBtn.className = 'plan-btn btn-disabled';
+    freeBtn.innerHTML = '<i class="fas fa-lock"></i> متاحة عند انتهاء اشتراكك';
+    freeBtn.disabled = true;
+
+    if(tier === 'premium'){
+      // مشترك بـ Premium → خفّض زر Basic
+      document.querySelectorAll('[data-plan="basic"]').forEach(b => {
+        b.className = 'plan-btn btn-disabled';
+        b.innerHTML = '<i class="fas fa-lock"></i> متاحة عند انتهاء اشتراكك';
+        b.disabled = true;
+      });
+    } else if(tier === 'basic'){
+      // مشترك بـ Basic → أبرز Premium كترقية
+      document.querySelectorAll('[data-plan="premium"]').forEach(b => {
+        b.innerHTML = '<i class="fas fa-arrow-up"></i> ترقية إلى Premium';
+      });
+    }
+  } else {
+    // مستخدم مسجل دخول على باقة free → الزر يقول "الباقة الحالية" disabled
+    const freeBtn = document.getElementById('freeBtn');
+    freeBtn.className = 'plan-btn btn-disabled';
+    freeBtn.innerHTML = '<i class="fas fa-check-circle"></i> الباقة الحالية';
+    freeBtn.disabled = true;
+  }
+}
+
+loadCurrentSubscription();
+
+// ── جدول الأسعار حسب المدة ──
+const PRICING = {
+  basic: {
+    1:  { price: 27,  original: 39,  monthly: 27, save: 0 },
+    3:  { price: 69,  original: 81,  monthly: 23, save: 12 },
+    12: { price: 239, original: 324, monthly: 20, save: 85 }
+  },
+  premium: {
+    1:  { price: 89,  original: 129,  monthly: 89, save: 0 },
+    3:  { price: 229, original: 267,  monthly: 76, save: 38 },
+    12: { price: 799, original: 1068, monthly: 67, save: 269 }
+  }
+};
+
+const PERIOD_TEXT = { 1: '/شهر', 3: '/3 شهور', 12: '/سنة' };
+let currentDuration = 1;
+
+function updatePricing(duration){
+  currentDuration = duration;
+  const d = parseInt(duration);
+
+  ['basic', 'premium'].forEach(plan => {
+    const p = PRICING[plan][d];
+    document.getElementById(`${plan}Price`).textContent = `$${p.price}`;
+    document.getElementById(`${plan}OldPrice`).textContent = `$${p.original}`;
+    document.getElementById(`${plan}Period`).textContent = PERIOD_TEXT[d];
+    document.getElementById(`${plan}Monthly`).textContent = `~$${p.monthly}/شهر فعلياً`;
+    document.getElementById(`${plan}Save`).textContent = `💰 وفّر $${p.save} مقارنة بالشهري`;
+
+    const card = document.getElementById(`${plan}Card`);
+    if(d === 1) card.classList.remove('show-save');
+    else card.classList.add('show-save');
+
+    // حدّث الـ data-amount بالزر
+    const btn = card.querySelector('[data-plan]');
+    if(btn){
+      btn.dataset.amount = p.price;
+      btn.dataset.duration = d;
+    }
+  });
+}
+
+// Tab handlers
+document.querySelectorAll('.duration-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.duration-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    updatePricing(tab.dataset.duration);
+  });
+});
+
+// ── أزرار الاشتراك (Basic / Premium) ──
+document.querySelectorAll('[data-plan]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const plan = btn.dataset.plan;
+    const amount = btn.dataset.amount;
+    const duration = btn.dataset.duration || currentDuration;
+    const next = `checkout.html?plan=${plan}&amount=${amount}&duration=${duration}`;
+    if(user){
+      location.href = next;
+    } else {
+      // زائر → اطلب تسجيل، بعدها يرجع للـ checkout
+      location.href = `signup.html?next=${encodeURIComponent(next)}`;
+    }
+  });
+});
+
+// ── زر Free — زائر يروح لـ signin ──
+document.getElementById('freeBtn').addEventListener('click', ()=>{
+  if(!user){
+    location.href = 'signin.html?next=dashboard.html';
+  }
+  // لو مسجل دخول → ما يعمل شي (الزر معطّل)
+});
+</script>
+
+</body>
+</html>

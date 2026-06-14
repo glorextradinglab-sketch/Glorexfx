@@ -1,0 +1,789 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>السجل — GLOREX</title>
+<meta name="theme-color" content="#0a0a0a"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold:#D4A017;--gold-l:#F0C030;--gold-d:#A07810;
+  --bg:#080808;--surface:#0d0d0d;--card:#111111;
+  --border:rgba(255,255,255,0.08);
+  --txt:#fff;--txt2:#ccc;--txt3:#999;--txt4:#666;
+  --success:#10b981;--danger:#ef4444;--warning:#f59e0b;--neutral:#6b7280;
+  --ease:cubic-bezier(.4,0,.2,1);--base:.3s;
+}
+body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;font-family:inherit;border:none;background:none;color:inherit}
+
+.boot{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg);z-index:9999;flex-direction:column;gap:1rem}
+.boot.hide{opacity:0;pointer-events:none;transition:opacity .4s}
+.boot-logo{width:60px;height:60px;border-radius:15px;background:#fff;border:1.5px solid rgba(212,160,23,.5);padding:8px;display:flex;align-items:center;justify-content:center;animation:logo-pulse 1.4s ease-in-out infinite;box-shadow:0 8px 30px rgba(212,160,23,.4)}
+.boot-logo img{width:100%;height:100%;object-fit:contain}
+@keyframes logo-pulse{50%{transform:scale(1.08);box-shadow:0 8px 50px rgba(212,160,23,.7)}}
+.boot-txt{color:var(--txt3);font-size:.9rem}
+
+.bg-mesh{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 900px 700px at 80% 0%,rgba(212,160,23,.12),transparent 60%),radial-gradient(ellipse 600px 800px at 0% 100%,rgba(160,120,16,.1),transparent 60%)}
+
+.topbar{position:sticky;top:0;z-index:100;background:rgba(8,8,8,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:.95rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{display:flex;align-items:center;gap:.6rem}
+.brand-logo{width:40px;height:40px;border-radius:11px;background:#fff;border:1.5px solid rgba(212,160,23,.5);box-shadow:0 0 14px rgba(184,134,11,.45);display:flex;align-items:center;justify-content:center;padding:5px;overflow:hidden}
+.brand-logo img{width:100%;height:100%;object-fit:contain}
+.brand-name{font-family:'Space Grotesk';font-weight:700;letter-spacing:2px;font-size:1.1rem}
+.nav-tabs{display:flex;gap:.4rem}
+.nav-tab{padding:.55rem 1.1rem;border-radius:10px;color:var(--txt3);font-size:.88rem;font-weight:500;transition:all var(--base) var(--ease)}
+.nav-tab:hover{color:var(--txt);background:rgba(255,255,255,.04)}
+.nav-tab.active{color:var(--gold);background:rgba(212,160,23,.1)}
+.user-name{font-size:.88rem;color:var(--txt3)}
+.user-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:.92rem}
+.user-menu{display:flex;align-items:center;gap:.7rem}
+
+.main{max-width:1100px;margin:0 auto;padding:2rem;position:relative;z-index:1}
+
+/* Header */
+.page-head{margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:flex-end;gap:1rem;flex-wrap:wrap}
+.page-h1{font-family:'Space Grotesk';font-size:1.9rem;font-weight:700;margin-bottom:.35rem}
+.page-h1 em{font-style:normal;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.page-sub{color:var(--txt3);font-size:.92rem}
+.btn{padding:.7rem 1.4rem;border-radius:12px;font-weight:600;font-size:.88rem;transition:all var(--base) var(--ease);display:inline-flex;align-items:center;gap:.5rem;justify-content:center;white-space:nowrap}
+.btn-p{background:linear-gradient(135deg,var(--gold),var(--gold-d));color:#000;box-shadow:0 4px 16px rgba(212,160,23,.3)}
+.btn-p:hover{background:linear-gradient(135deg,var(--gold-l),var(--gold));box-shadow:0 8px 28px rgba(212,160,23,.5);transform:translateY(-2px)}
+.btn-g{background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--txt2)}
+.btn-g:hover{background:rgba(255,255,255,.08);color:var(--txt)}
+.btn-success{background:rgba(16,185,129,.15);color:#10b981;border:1px solid rgba(16,185,129,.3)}
+.btn-success:hover{background:rgba(16,185,129,.25)}
+.btn-danger{background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3)}
+.btn-danger:hover{background:rgba(239,68,68,.25)}
+.btn-warning{background:rgba(245,158,11,.15);color:#f59e0b;border:1px solid rgba(245,158,11,.3)}
+.btn-warning:hover{background:rgba(245,158,11,.25)}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.2rem;display:flex;flex-direction:column;gap:.3rem}
+.stat-lbl{color:var(--txt4);font-size:.78rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;display:flex;align-items:center;gap:.4rem}
+.stat-lbl i{color:var(--gold)}
+.stat-val{font-family:'Space Grotesk';font-size:1.7rem;font-weight:700}
+.stat-val.success{color:var(--success)}
+.stat-val.danger{color:var(--danger)}
+.stat-meta{font-size:.75rem;color:var(--txt4)}
+
+/* Filters */
+.filters{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.2rem;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:.5rem}
+.fbtn{padding:.55rem 1.1rem;border-radius:10px;color:var(--txt3);font-size:.85rem;font-weight:500;transition:all .2s ease;display:inline-flex;align-items:center;gap:.4rem}
+.fbtn:hover{background:rgba(255,255,255,.04);color:var(--txt)}
+.fbtn.active{background:rgba(212,160,23,.15);color:var(--gold)}
+.fbtn .badge{background:rgba(255,255,255,.08);padding:.1rem .55rem;border-radius:10px;font-size:.7rem;font-weight:600}
+.fbtn.active .badge{background:rgba(212,160,23,.3);color:var(--gold)}
+
+/* Trade card */
+.trades{display:flex;flex-direction:column;gap:.7rem}
+.trade{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:all .2s ease}
+.trade:hover{border-color:rgba(212,160,23,.3)}
+.trade-row{padding:1rem 1.2rem;display:grid;grid-template-columns:auto 1fr auto auto auto;gap:1.2rem;align-items:center;cursor:pointer}
+
+/* Side badge */
+.side-badge{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-weight:700;font-size:.78rem;flex-shrink:0}
+.side-buy {background:rgba(16,185,129,.15);color:var(--success)}
+.side-sell{background:rgba(239,68,68,.15);color:var(--danger)}
+
+.trade-info{display:flex;flex-direction:column;gap:.2rem}
+.trade-pair{font-family:'Space Grotesk';font-weight:700;font-size:1.05rem;display:flex;align-items:center;gap:.5rem}
+.trade-date{font-size:.78rem;color:var(--txt4)}
+
+.confluence-tag{padding:.3rem .7rem;border-radius:8px;font-family:'Space Grotesk';font-weight:700;font-size:.8rem;background:rgba(212,160,23,.12);color:var(--gold)}
+.confluence-tag.premium{background:rgba(16,185,129,.15);color:#10b981}
+.confluence-tag.strong{background:rgba(52,211,153,.15);color:#34d399}
+.confluence-tag.good{background:rgba(250,204,21,.15);color:#facc15}
+.confluence-tag.weak{background:rgba(251,146,60,.15);color:#fb923c}
+.confluence-tag.skip{background:rgba(239,68,68,.15);color:#ef4444}
+
+.status-tag{padding:.3rem .7rem;border-radius:8px;font-size:.78rem;font-weight:600;display:inline-flex;align-items:center;gap:.35rem}
+.s-planned{background:rgba(99,102,241,.12);color:#818cf8}
+.s-open    {background:rgba(212,160,23,.12);color:var(--gold)}
+.s-win     {background:rgba(16,185,129,.15);color:var(--success)}
+.s-loss    {background:rgba(239,68,68,.15);color:var(--danger)}
+.s-breakeven{background:rgba(107,114,128,.2);color:#9ca3af}
+
+.pnl{font-family:'Space Grotesk';font-weight:700;font-size:.95rem;min-width:80px;text-align:left}
+.pnl.pos{color:var(--success)}
+.pnl.neg{color:var(--danger)}
+.pnl.neut{color:var(--txt4)}
+
+.chevron{color:var(--txt4);transition:transform .2s ease}
+.trade.open .chevron{transform:rotate(180deg)}
+
+/* Trade detail (expand) */
+.trade-detail{display:none;padding:1.2rem;border-top:1px solid var(--border);background:rgba(0,0,0,.2)}
+.trade.open .trade-detail{display:block}
+.detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;margin-bottom:1rem}
+.dcard{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:10px;padding:.8rem}
+.dcard-h{font-size:.72rem;color:var(--txt4);text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-bottom:.5rem;display:flex;align-items:center;gap:.4rem}
+.dcard-h i{color:var(--gold)}
+.dcard-row{display:flex;justify-content:space-between;align-items:center;padding:.3rem 0;font-size:.82rem;color:var(--txt2)}
+.dcard-row strong{color:var(--txt);font-weight:600}
+.dcard-row .yes{color:var(--success)}
+.dcard-row .no{color:var(--txt4)}
+
+.note-box{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:10px;padding:.9rem;font-size:.88rem;color:var(--txt2);line-height:1.7;margin-bottom:1rem}
+
+.actions{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+.actions .input,.actions .select{padding:.55rem .9rem;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;color:var(--txt);font-family:inherit;font-size:.88rem;width:130px}
+.actions .input:focus,.actions .select:focus{outline:none;border-color:var(--gold)}
+.actions .select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3e%3cpath d='M6 9l6 6 6-6'/%3e%3c/svg%3e");background-repeat:no-repeat;background-position:left .6rem center;background-size:14px;padding-left:1.8rem}
+.actions .select option{background:#111;color:#fff}
+.input-label{display:flex;flex-direction:column;gap:.2rem}
+.input-label small{font-size:.7rem;color:var(--txt4);font-weight:500;padding:0 .3rem}
+
+/* Results row in expanded detail */
+.result-info{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:1rem;padding:.7rem .9rem;background:rgba(212,160,23,.05);border:1px solid rgba(212,160,23,.15);border-radius:10px;align-items:center}
+.ri-item{display:flex;flex-direction:column;gap:.2rem}
+.ri-lbl{font-size:.68rem;color:var(--txt4);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.ri-val{font-family:'Space Grotesk';font-weight:700;font-size:.95rem}
+.ri-val.pos{color:var(--success)}
+.ri-val.neg{color:var(--danger)}
+.ri-sep{width:1px;height:24px;background:var(--border)}
+
+/* Empty state */
+.empty{background:var(--card);border:1px dashed var(--border);border-radius:18px;padding:4rem 2rem;text-align:center}
+.empty-icon{width:80px;height:80px;border-radius:50%;background:rgba(212,160,23,.1);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 1.2rem}
+.empty-h{font-family:'Space Grotesk';font-size:1.3rem;font-weight:700;margin-bottom:.4rem}
+.empty-sub{color:var(--txt3);font-size:.92rem;margin-bottom:1.5rem;max-width:400px;margin-left:auto;margin-right:auto}
+
+/* Loading */
+.spin{display:flex;justify-content:center;padding:3rem}
+.spin i{color:var(--gold);font-size:1.5rem}
+
+/* Media gallery */
+.media-section{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:1rem}
+.media-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem}
+.media-title{font-size:.85rem;font-weight:600;color:var(--txt2);display:flex;align-items:center;gap:.4rem}
+.media-title i{color:var(--gold)}
+.upload-btn{padding:.55rem 1rem;background:rgba(212,160,23,.12);border:1px solid rgba(212,160,23,.3);color:var(--gold);border-radius:8px;font-size:.82rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;transition:all .2s ease}
+.upload-btn:hover{background:rgba(212,160,23,.2)}
+.upload-btn input{display:none}
+.media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:.5rem}
+.media-item{position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;background:rgba(255,255,255,.04);border:1px solid var(--border);cursor:pointer;transition:all .2s ease}
+.media-item:hover{transform:scale(1.03);border-color:rgba(212,160,23,.4)}
+.media-item img,.media-item video{width:100%;height:100%;object-fit:cover}
+.media-item .play-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.3);color:#fff;font-size:1.5rem;pointer-events:none}
+.media-item .del-btn{position:absolute;top:4px;right:4px;width:24px;height:24px;border-radius:50%;background:rgba(239,68,68,.85);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.7rem;opacity:0;transition:all .2s ease;border:none;cursor:pointer}
+.media-item:hover .del-btn{opacity:1}
+.media-item .del-btn:hover{background:#ef4444;transform:scale(1.1)}
+.media-empty{padding:1.5rem;text-align:center;color:var(--txt4);font-size:.82rem;border:1px dashed var(--border);border-radius:10px}
+.media-empty i{display:block;font-size:1.5rem;color:var(--gold);opacity:.5;margin-bottom:.3rem}
+
+/* Lightbox */
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.94);z-index:1000;display:none;align-items:center;justify-content:center;padding:2rem;flex-direction:column}
+.lightbox.show{display:flex}
+.lightbox img,.lightbox video{max-width:92vw;max-height:84vh;border-radius:12px;box-shadow:0 20px 80px rgba(0,0,0,.6)}
+.lightbox video{background:#000}
+.lightbox-close{position:absolute;top:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.1);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer;border:none;transition:all .2s ease;z-index:2}
+.lightbox-close:hover{background:rgba(239,68,68,.6)}
+.lb-nav{position:absolute;top:50%;transform:translateY(-50%);width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.1);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.4rem;cursor:pointer;border:none;transition:all .2s ease;z-index:2}
+.lb-nav:hover{background:rgba(212,160,23,.6);transform:translateY(-50%) scale(1.08)}
+.lb-nav:disabled{opacity:.3;cursor:not-allowed}
+.lb-nav.prev{right:2rem}
+.lb-nav.next{left:2rem}
+.lb-counter{position:absolute;top:1.5rem;left:50%;transform:translateX(-50%);padding:.5rem 1rem;background:rgba(255,255,255,.08);border-radius:30px;color:#fff;font-family:'Space Grotesk';font-weight:600;font-size:.85rem}
+@media (max-width:600px){
+  .lb-nav{width:44px;height:44px;font-size:1.1rem}
+  .lb-nav.prev{right:.7rem}
+  .lb-nav.next{left:.7rem}
+}
+.upload-progress{display:none;align-items:center;gap:.5rem;color:var(--gold);font-size:.82rem}
+.upload-progress.show{display:inline-flex}
+
+/* Toast */
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(20px);background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.8rem 1.4rem;color:var(--txt);font-size:.9rem;box-shadow:0 10px 40px rgba(0,0,0,.5);z-index:200;opacity:0;transition:all .3s ease;display:flex;align-items:center;gap:.5rem}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.success{border-color:rgba(16,185,129,.5)}
+.toast.error{border-color:rgba(239,68,68,.5)}
+.toast i{color:var(--gold)}
+.toast.success i{color:var(--success)}
+.toast.error i{color:var(--danger)}
+
+@media (max-width:768px){
+  .topbar{padding:.8rem 1rem}
+  .nav-tabs{display:none}
+  .main{padding:1.2rem}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .trade-row{grid-template-columns:auto 1fr auto;gap:.7rem}
+  .trade-row .confluence-tag,.trade-row .pnl{display:none}
+  .detail-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="boot" id="boot">
+  <div class="boot-logo"><img src="glorex_bull_gold.png" alt="GLOREX"/></div>
+  <div class="boot-txt">جاري التحميل...</div>
+</div>
+
+<div class="bg-mesh"></div>
+
+<header class="topbar">
+  <a href="glorex_landing.html" class="brand">
+    <div class="brand-logo"><img src="glorex_bull_gold.png" alt="GLOREX"/></div>
+    <div class="brand-name">GLOREX</div>
+  </a>
+  <nav class="nav-tabs">
+    <a href="dashboard.html" class="nav-tab">الرئيسية</a>
+    <a href="checklist.html" class="nav-tab">القائمة</a>
+    <a href="journal.html" class="nav-tab active">السجل</a>
+    <a href="calendar.html" class="nav-tab">التقويم</a>
+    <a href="lessons.html" class="nav-tab">الدروس</a> <a href="chat.html" class="nav-tab">المحادثة</a>
+  </nav>
+  <div class="user-menu">
+    <span class="user-name" id="userName">...</span>
+    <div class="user-avatar" id="userAvatar">G</div>
+  </div>
+</header>
+
+<main class="main">
+
+  <div class="page-head">
+    <div>
+      <h1 class="page-h1">سجل <em>الصفقات</em></h1>
+      <p class="page-sub">كل صفقاتك بمكان واحد — راجع، حلّل، وطوّر</p>
+    </div>
+    <a href="checklist.html" class="btn btn-p"><i class="fas fa-plus"></i> صفقة جديدة</a>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats" id="stats">
+    <div class="stat">
+      <div class="stat-lbl"><i class="fas fa-chart-line"></i> إجمالي الصفقات</div>
+      <div class="stat-val" id="s-total">0</div>
+      <div class="stat-meta" id="s-total-meta">صفقة مسجلة</div>
+    </div>
+    <div class="stat">
+      <div class="stat-lbl"><i class="fas fa-bullseye"></i> نسبة النجاح</div>
+      <div class="stat-val" id="s-winrate">0%</div>
+      <div class="stat-meta" id="s-winrate-meta">من إجمالي المُغلقة</div>
+    </div>
+    <div class="stat">
+      <div class="stat-lbl"><i class="fas fa-dollar-sign"></i> إجمالي الربح</div>
+      <div class="stat-val" id="s-pnl">$0</div>
+      <div class="stat-meta" id="s-pnl-meta">صافي بعد الخسائر</div>
+    </div>
+    <div class="stat">
+      <div class="stat-lbl"><i class="fas fa-percent"></i> متوسط القائمة</div>
+      <div class="stat-val" id="s-avg">0%</div>
+      <div class="stat-meta">متوسط Confluence</div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters" id="filters">
+    <button class="fbtn active" data-f="all">الكل <span class="badge" id="c-all">0</span></button>
+    <button class="fbtn" data-f="planned">مخططة <span class="badge" id="c-planned">0</span></button>
+    <button class="fbtn" data-f="win">رابحة <span class="badge" id="c-win">0</span></button>
+    <button class="fbtn" data-f="loss">خاسرة <span class="badge" id="c-loss">0</span></button>
+    <button class="fbtn" data-f="breakeven">متعادلة <span class="badge" id="c-breakeven">0</span></button>
+  </div>
+
+  <!-- Trades list -->
+  <div id="content">
+    <div class="spin"><i class="fas fa-spinner fa-spin"></i></div>
+  </div>
+
+</main>
+
+<div class="toast" id="toast"><i class="fas fa-info-circle"></i><span id="toastMsg"></span></div>
+
+<script type="module">
+import { supabase } from './supabase-client.js';
+import { setupUserMenu } from './user-menu.js?v=20260611';
+
+let allTrades = [];
+let currentFilter = 'all';
+
+/* ============ Toast ============ */
+function toast(msg, type='info'){
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.className = 'toast show ' + type;
+  const icon = t.querySelector('i');
+  icon.className = type==='success'?'fas fa-check-circle':type==='error'?'fas fa-exclamation-circle':'fas fa-info-circle';
+  setTimeout(()=>t.classList.remove('show'), 2500);
+}
+
+/* ============ Format helpers ============ */
+const fmtDate = d => new Intl.DateTimeFormat('ar-EG-u-nu-latn',{year:'numeric',month:'short',day:'numeric'}).format(new Date(d));
+const fmtMoney = n => {
+  const v = Number(n||0);
+  const sign = v > 0 ? '+' : v < 0 ? '-' : '';
+  return sign + '$' + Math.abs(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+};
+function confluenceTier(p){
+  if(p>=90) return 'premium';
+  if(p>=75) return 'strong';
+  if(p>=60) return 'good';
+  if(p>=40) return 'weak';
+  return 'skip';
+}
+function statusLabel(s){
+  return {planned:'مخططة',open:'مفتوحة',win:'رابحة',loss:'خاسرة',breakeven:'متعادلة'}[s] || s;
+}
+function statusIcon(s){
+  return {planned:'<i class="far fa-clock"></i>',open:'<i class="fas fa-circle"></i>',win:'<i class="fas fa-check"></i>',loss:'<i class="fas fa-times"></i>',breakeven:'<i class="fas fa-minus"></i>'}[s] || '';
+}
+function sessionAr(s){
+  return {NY:'نيويورك',London:'لندن',Asia:'آسيا',Other:'أخرى'}[s] || s || '—';
+}
+function dirAr(d){
+  if(d==='Bullish') return '<span style="color:#10b981">صاعد ↑</span>';
+  if(d==='Bearish') return '<span style="color:#ef4444">هابط ↓</span>';
+  return '<span style="color:#666">—</span>';
+}
+function yn(v){
+  return v && v !== 'NON' ? '<span class="yes"><i class="fas fa-check"></i> نعم</span>' : '<span class="no">—</span>';
+}
+
+/* ============ Stats ============ */
+function updateStats(){
+  const total = allTrades.length;
+  const closed = allTrades.filter(t=>['win','loss','breakeven'].includes(t.status));
+  const wins = allTrades.filter(t=>t.status==='win').length;
+  const losses = allTrades.filter(t=>t.status==='loss').length;
+  const planned = allTrades.filter(t=>t.status==='planned').length;
+  const be = allTrades.filter(t=>t.status==='breakeven').length;
+  const winRate = closed.length ? Math.round(wins/closed.length*100) : 0;
+  const totalPnl = allTrades.reduce((sum,t)=>sum+Number(t.pnl||0), 0);
+  const avgConf = total ? Math.round(allTrades.reduce((sum,t)=>sum+(t.confluence_pct||0),0)/total) : 0;
+
+  document.getElementById('s-total').textContent = total;
+  document.getElementById('s-winrate').textContent = winRate + '%';
+  const pnlEl = document.getElementById('s-pnl');
+  pnlEl.textContent = fmtMoney(totalPnl);
+  pnlEl.className = 'stat-val ' + (totalPnl > 0 ? 'success' : totalPnl < 0 ? 'danger' : '');
+  document.getElementById('s-avg').textContent = avgConf + '%';
+
+  document.getElementById('c-all').textContent = total;
+  document.getElementById('c-planned').textContent = planned;
+  document.getElementById('c-win').textContent = wins;
+  document.getElementById('c-loss').textContent = losses;
+  document.getElementById('c-breakeven').textContent = be;
+}
+
+/* ============ Render ============ */
+function render(){
+  const content = document.getElementById('content');
+  let trades = allTrades;
+  if(currentFilter !== 'all'){
+    trades = trades.filter(t=>t.status === currentFilter);
+  }
+
+  if(trades.length === 0){
+    content.innerHTML = `
+      <div class="empty">
+        <div class="empty-icon"><i class="far fa-folder-open"></i></div>
+        <div class="empty-h">لا توجد صفقات بعد</div>
+        <div class="empty-sub">${currentFilter==='all' ? 'ابدأ بإنشاء أول صفقة من قائمة التحقق' : 'لا توجد صفقات بهذا التصنيف'}</div>
+        ${currentFilter==='all' ? '<a href="checklist.html" class="btn btn-p"><i class="fas fa-plus"></i> صفقة جديدة</a>' : ''}
+      </div>`;
+    return;
+  }
+
+  content.innerHTML = '<div class="trades">' + trades.map(t=>{
+    const tier = confluenceTier(t.confluence_pct||0);
+    const pnlClass = (t.pnl>0)?'pos':(t.pnl<0)?'neg':'neut';
+    return `
+    <div class="trade" data-id="${t.id}">
+      <div class="trade-row" onclick="toggleTrade('${t.id}')">
+        <div class="side-badge side-${t.side}">${t.side==='buy'?'شراء':'بيع'}</div>
+        <div class="trade-info">
+          <div class="trade-pair">
+            ${t.pair||'NQ'}
+            <span class="status-tag s-${t.status}">${statusIcon(t.status)} ${statusLabel(t.status)}</span>
+          </div>
+          <div class="trade-date">${fmtDate(t.date)} • ${sessionAr(t.session)}</div>
+        </div>
+        <div class="confluence-tag ${tier}">${t.confluence_pct||0}%</div>
+        <div class="pnl ${pnlClass}">${t.status==='planned' ? '—' : fmtMoney(t.pnl)}</div>
+        <i class="fas fa-chevron-down chevron"></i>
+      </div>
+
+      <div class="trade-detail">
+        <div class="detail-grid">
+
+          <div class="dcard">
+            <div class="dcard-h"><i class="fas fa-compass"></i> الاتجاه</div>
+            <div class="dcard-row"><span>يومي</span><strong>${dirAr(t.direction_d)}</strong></div>
+            <div class="dcard-row"><span>4 ساعات</span><strong>${dirAr(t.direction_h4)}</strong></div>
+            <div class="dcard-row"><span>ساعة</span><strong>${dirAr(t.direction_h1)}</strong></div>
+          </div>
+
+          <div class="dcard">
+            <div class="dcard-h"><i class="fas fa-map-marker-alt"></i> منطقة ${t.side==='buy'?'Demand':'Supply'}</div>
+            <div class="dcard-row"><span>يومي</span>${yn(t.aoi_d)}</div>
+            <div class="dcard-row"><span>4 ساعات</span>${yn(t.aoi_h4)}</div>
+            <div class="dcard-row"><span>ساعة</span>${yn(t.aoi_h1)}</div>
+          </div>
+
+          <div class="dcard">
+            <div class="dcard-h"><i class="fas fa-bolt"></i> سحب + دخول</div>
+            <div class="dcard-row"><span>سحب 15 دقيقة</span>${t.entry_5m==='sweep'?'<span class="yes"><i class="fas fa-check"></i> تم</span>':'<span class="no">—</span>'}</div>
+            <div class="dcard-row"><span>IFVG دقيقة</span>${t.entry_1m==='IFVG'?'<span class="yes"><i class="fas fa-check"></i> نعم</span>':'<span class="no">—</span>'}</div>
+            <div class="dcard-row"><span>الحالة</span><strong>${statusLabel(t.status)}</strong></div>
+          </div>
+
+        </div>
+
+        ${(t.rr_actual || t.pnl || t.risk_pct) ? `
+        <div class="result-info">
+          ${t.rr_actual ? `<div class="ri-item"><div class="ri-lbl">نسبة المخاطرة/الربح</div><div class="ri-val">${t.rr_actual}</div></div><div class="ri-sep"></div>` : ''}
+          ${t.pnl ? `<div class="ri-item"><div class="ri-lbl">الربح/الخسارة</div><div class="ri-val ${t.pnl>0?'pos':'neg'}">${t.pnl>0?'+':'-'}$${Math.abs(t.pnl).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</div></div><div class="ri-sep"></div>` : ''}
+          ${t.risk_pct ? `<div class="ri-item"><div class="ri-lbl">المخاطرة</div><div class="ri-val">${t.risk_pct}%</div></div>` : ''}
+        </div>` : ''}
+
+        ${t.note ? `<div class="note-box"><strong style="color:var(--gold)">📝 ملاحظات:</strong><br>${escapeHtml(t.note)}</div>` : ''}
+
+        <div class="media-section">
+          <div class="media-head">
+            <div class="media-title"><i class="fas fa-images"></i> الصور والفيديوهات</div>
+            <label class="upload-btn">
+              <i class="fas fa-cloud-upload-alt"></i> رفع
+              <input type="file" accept="image/*,video/*" multiple onchange="uploadMedia('${t.id}', this)"/>
+            </label>
+          </div>
+          <span class="upload-progress" id="up-${t.id}"><i class="fas fa-spinner fa-spin"></i> جاري الرفع...</span>
+          <div id="media-${t.id}">${renderMedia(t.screenshots||[], t.id)}</div>
+        </div>
+
+        <div class="actions">
+          <span style="color:var(--txt3);font-size:.85rem;margin-left:.5rem;width:100%">تحديث النتيجة:</span>
+
+          <div class="input-label">
+            <small>R:R</small>
+            <select class="select" id="rr-${t.id}" onchange="autoSave('${t.id}')">
+              <option value="">—</option>
+              <option ${t.rr_actual==='1:1'?'selected':''}>1:1</option>
+              <option ${t.rr_actual==='1:2'?'selected':''}>1:2</option>
+              <option ${t.rr_actual==='1:3'?'selected':''}>1:3</option>
+              <option ${t.rr_actual==='1:4'?'selected':''}>1:4</option>
+              <option ${t.rr_actual==='1:5'?'selected':''}>1:5</option>
+            </select>
+          </div>
+
+          <div class="input-label">
+            <small>الربح ($)</small>
+            <input class="input" type="number" placeholder="200" id="pnl-${t.id}" value="${t.pnl||''}" step="0.01" onchange="autoSave('${t.id}')"/>
+          </div>
+
+          <div class="input-label">
+            <small>المخاطرة (%)</small>
+            <input class="input" type="number" placeholder="0.5" id="risk-${t.id}" value="${t.risk_pct||''}" step="0.01" style="width:100px" onchange="autoSave('${t.id}')"/>
+          </div>
+
+          <button class="btn btn-success" onclick="updateStatus('${t.id}','win')">
+            <i class="fas fa-check"></i> رابحة
+          </button>
+          <button class="btn btn-danger" onclick="updateStatus('${t.id}','loss')">
+            <i class="fas fa-times"></i> خاسرة
+          </button>
+          <button class="btn btn-warning" onclick="updateStatus('${t.id}','breakeven')">
+            <i class="fas fa-minus"></i> متعادلة
+          </button>
+          <button class="btn btn-g" onclick="deleteTrade('${t.id}')" style="margin-right:auto">
+            <i class="far fa-trash-alt"></i> حذف
+          </button>
+        </div>
+      </div>
+    </div>`;
+  }).join('') + '</div>';
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* ============ Media helpers ============ */
+function renderMedia(urls, tradeId){
+  if(!urls || urls.length === 0){
+    return `<div class="media-empty"><i class="far fa-image"></i>لا توجد صور بعد — ارفع صور أو فيديوهات للصفقة</div>`;
+  }
+  return `<div class="media-grid">${urls.map((url, i) => {
+    const isVideo = /\.(mp4|mov|webm)$/i.test(url);
+    return `
+      <div class="media-item" onclick="openLightbox('${tradeId}', ${i})">
+        ${isVideo
+          ? `<video src="${url}" preload="metadata" muted></video><div class="play-overlay"><i class="fas fa-play"></i></div>`
+          : `<img src="${url}" loading="lazy" alt="trade media"/>`
+        }
+        <button class="del-btn" onclick="event.stopPropagation();deleteMedia('${tradeId}', ${i})"><i class="fas fa-times"></i></button>
+      </div>`;
+  }).join('')}</div>`;
+}
+
+window.uploadMedia = async (tradeId, input) => {
+  const files = Array.from(input.files);
+  if(!files.length) return;
+
+  const { data:{session} } = await supabase.auth.getSession();
+  if(!session){ toast('سجل دخول أولاً', 'error'); return; }
+
+  const progEl = document.getElementById('up-'+tradeId);
+  progEl.classList.add('show');
+
+  const trade = allTrades.find(t => t.id === tradeId);
+  const existing = trade.screenshots || [];
+  const newUrls = [];
+
+  for(const file of files){
+    // Limit: 50MB per file
+    if(file.size > 50*1024*1024){
+      toast(`${file.name} كبير جداً (max 50MB)`, 'error');
+      continue;
+    }
+    const ext = file.name.split('.').pop();
+    const fileName = `${session.user.id}/${tradeId}/${Date.now()}-${Math.random().toString(36).slice(2,8)}.${ext}`;
+
+    const { error } = await supabase.storage.from('trade-media').upload(fileName, file, {
+      cacheControl: '3600',
+      upsert: false,
+    });
+
+    if(error){
+      console.error(error);
+      toast('فشل رفع ' + file.name, 'error');
+      continue;
+    }
+
+    const { data:{publicUrl} } = supabase.storage.from('trade-media').getPublicUrl(fileName);
+    newUrls.push(publicUrl);
+  }
+
+  if(newUrls.length){
+    const allUrls = [...existing, ...newUrls];
+    const { error } = await supabase.from('trades').update({ screenshots: allUrls }).eq('id', tradeId);
+    if(error){ toast('فشل حفظ الروابط', 'error'); }
+    else {
+      trade.screenshots = allUrls;
+      document.getElementById('media-'+tradeId).innerHTML = renderMedia(allUrls, tradeId);
+      toast(`✅ تم رفع ${newUrls.length} ${newUrls.length===1?'ملف':'ملفات'}`, 'success');
+    }
+  }
+
+  progEl.classList.remove('show');
+  input.value = '';
+};
+
+window.deleteMedia = async (tradeId, index) => {
+  if(!confirm('حذف هذه الصورة/الفيديو؟')) return;
+  const trade = allTrades.find(t => t.id === tradeId);
+  const url = trade.screenshots[index];
+
+  // Extract storage path from public URL
+  const match = url.match(/\/trade-media\/(.+)$/);
+  if(match){
+    await supabase.storage.from('trade-media').remove([match[1]]);
+  }
+
+  const newList = trade.screenshots.filter((_, i) => i !== index);
+  const { error } = await supabase.from('trades').update({ screenshots: newList }).eq('id', tradeId);
+  if(error){ toast('فشل الحذف', 'error'); return; }
+  trade.screenshots = newList;
+  document.getElementById('media-'+tradeId).innerHTML = renderMedia(newList, tradeId);
+  toast('🗑️ تم الحذف', 'success');
+};
+
+/* Lightbox with navigation */
+let lbState = { items: [], index: 0 };
+
+function ensureLightbox(){
+  let lb = document.getElementById('lightbox');
+  if(lb) return lb;
+  lb = document.createElement('div');
+  lb.id = 'lightbox';
+  lb.className = 'lightbox';
+  lb.innerHTML = `
+    <button class="lightbox-close" onclick="closeLightbox()" title="إغلاق (Esc)"><i class="fas fa-times"></i></button>
+    <div class="lb-counter" id="lb-counter">1 / 1</div>
+    <button class="lb-nav prev" id="lb-prev" onclick="lbNav(-1)" title="السابق (→)"><i class="fas fa-chevron-right"></i></button>
+    <div id="lightbox-content"></div>
+    <button class="lb-nav next" id="lb-next" onclick="lbNav(1)" title="التالي (←)"><i class="fas fa-chevron-left"></i></button>`;
+  lb.addEventListener('click', e => { if(e.target.id === 'lightbox') closeLightbox(); });
+  document.body.appendChild(lb);
+  return lb;
+}
+
+function renderLbItem(){
+  const url = lbState.items[lbState.index];
+  if(!url) return;
+  const isVideo = /\.(mp4|mov|webm)$/i.test(url);
+  document.getElementById('lightbox-content').innerHTML = isVideo
+    ? `<video src="${url}" controls autoplay playsinline></video>`
+    : `<img src="${url}" alt="trade media"/>`;
+  document.getElementById('lb-counter').textContent = `${lbState.index+1} / ${lbState.items.length}`;
+  document.getElementById('lb-prev').disabled = lbState.index === 0;
+  document.getElementById('lb-next').disabled = lbState.index === lbState.items.length - 1;
+}
+
+window.openLightbox = (tradeId, index) => {
+  const trade = allTrades.find(t => t.id === tradeId);
+  if(!trade || !trade.screenshots || trade.screenshots.length === 0) return;
+  lbState.items = trade.screenshots;
+  lbState.index = index || 0;
+  ensureLightbox();
+  renderLbItem();
+  document.getElementById('lightbox').classList.add('show');
+};
+
+window.lbNav = (dir) => {
+  const next = lbState.index + dir;
+  if(next < 0 || next >= lbState.items.length) return;
+  lbState.index = next;
+  renderLbItem();
+};
+
+window.closeLightbox = () => {
+  const lb = document.getElementById('lightbox');
+  if(lb){
+    lb.classList.remove('show');
+    document.getElementById('lightbox-content').innerHTML = '';
+  }
+};
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  const lb = document.getElementById('lightbox');
+  if(!lb || !lb.classList.contains('show')) return;
+  if(e.key === 'Escape') closeLightbox();
+  else if(e.key === 'ArrowRight') lbNav(-1); // RTL: right = previous
+  else if(e.key === 'ArrowLeft') lbNav(1);   // RTL: left = next
+});
+
+/* ============ Actions ============ */
+window.toggleTrade = (id)=>{
+  document.querySelector(`.trade[data-id="${id}"]`)?.classList.toggle('open');
+};
+
+window.updateStatus = async (id, status)=>{
+  const pnl = parseFloat(document.getElementById('pnl-'+id).value || '0') || 0;
+  const rr_actual = document.getElementById('rr-'+id).value || null;
+  const risk_pct = parseFloat(document.getElementById('risk-'+id).value || '0') || null;
+
+  const payload = { status, pnl, rr_actual, risk_pct, updated_at: new Date().toISOString() };
+  const { error } = await supabase.from('trades').update(payload).eq('id', id);
+  if(error){ toast('فشل التحديث: '+error.message, 'error'); return; }
+
+  const t = allTrades.find(x=>x.id===id);
+  if(t){ t.status = status; t.pnl = pnl; t.rr_actual = rr_actual; t.risk_pct = risk_pct; }
+  updateStats();
+  render();
+  // Re-open the same trade card after re-render
+  setTimeout(()=>document.querySelector(`.trade[data-id="${id}"]`)?.classList.add('open'), 50);
+  toast('✅ تم تحديث الصفقة', 'success');
+};
+
+/* Auto-save R:R, profit, risk without changing status */
+window.autoSave = async (id)=>{
+  const rrEl   = document.getElementById('rr-'+id);
+  const pnlEl  = document.getElementById('pnl-'+id);
+  const riskEl = document.getElementById('risk-'+id);
+  if(!rrEl || !pnlEl || !riskEl) return;
+
+  const rr_actual = rrEl.value || null;
+  const pnl  = parseFloat(pnlEl.value  || '0') || 0;
+  const risk_pct = parseFloat(riskEl.value || '0') || null;
+
+  const t = allTrades.find(x=>x.id===id);
+  if(!t) return;
+
+  const payload = { pnl, rr_actual, risk_pct, updated_at: new Date().toISOString() };
+  const { error } = await supabase.from('trades').update(payload).eq('id', id);
+  if(error){ toast('فشل الحفظ: '+error.message, 'error'); return; }
+
+  t.pnl = pnl; t.rr_actual = rr_actual; t.risk_pct = risk_pct;
+  updateStats();
+  // Update inline UI (without full re-render to keep focus)
+  const tradeEl = document.querySelector(`.trade[data-id="${id}"]`);
+  if(tradeEl){
+    // Update the PnL in the row
+    const pnlBox = tradeEl.querySelector('.pnl');
+    if(pnlBox){
+      pnlBox.textContent = t.status==='planned' ? '—' : (pnl>0?'+':'-')+'$'+Math.abs(pnl).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+      pnlBox.className = 'pnl ' + (pnl>0?'pos':pnl<0?'neg':'neut');
+    }
+  }
+  toast('💾 تم الحفظ', 'success');
+};
+
+window.deleteTrade = async (id)=>{
+  if(!confirm('هل أنت متأكد من حذف هذه الصفقة؟')) return;
+  const { error } = await supabase.from('trades').delete().eq('id', id);
+  if(error){ toast('فشل الحذف: '+error.message, 'error'); return; }
+  allTrades = allTrades.filter(t=>t.id !== id);
+  updateStats();
+  render();
+  toast('🗑️ تم الحذف', 'success');
+};
+
+/* Filter clicks */
+document.querySelectorAll('.fbtn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.f;
+    render();
+  });
+});
+
+/* ============ Load ============ */
+async function load(){
+  const { data:{session} } = await supabase.auth.getSession();
+  if(!session){
+    document.getElementById('content').innerHTML = `
+      <div class="empty">
+        <div class="empty-icon"><i class="fas fa-lock"></i></div>
+        <div class="empty-h">سجل دخول لعرض صفقاتك</div>
+        <div class="empty-sub">احفظ كل صفقاتك بأمان وراجع تطورك مع الوقت</div>
+        <a href="signin.html" class="btn btn-p">تسجيل الدخول</a>
+      </div>`;
+    return;
+  }
+  const fn = session.user.user_metadata?.first_name || session.user.email.split('@')[0];
+  document.getElementById('userName').textContent = fn;
+  document.getElementById('userAvatar').textContent = (fn[0]||'G').toUpperCase();
+  await setupUserMenu(session.user);
+
+  const { data, error } = await supabase
+    .from('trades')
+    .select('*')
+    .order('date',{ascending:false})
+    .order('created_at',{ascending:false});
+
+  if(error){
+    console.error(error);
+    document.getElementById('content').innerHTML = `
+      <div class="empty">
+        <div class="empty-icon"><i class="fas fa-exclamation-triangle"></i></div>
+        <div class="empty-h">حدث خطأ</div>
+        <div class="empty-sub">${error.message}<br><br>إذا الجدول مش موجود، شغّل الـ SQL في Supabase</div>
+      </div>`;
+    return;
+  }
+  allTrades = data || [];
+  updateStats();
+  render();
+}
+
+async function init(){
+  await load();
+  document.getElementById('boot').classList.add('hide');
+}
+init();
+setTimeout(()=>document.getElementById('boot')?.classList.add('hide'), 3000);
+</script>
+
+</body>
+</html>

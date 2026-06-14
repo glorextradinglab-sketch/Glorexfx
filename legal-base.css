@@ -1,0 +1,69 @@
+/* Shared styles for legal pages */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold:#D4A017;--gold-l:#F0C030;--gold-d:#A07810;
+  --bg:#080808;--surface:#0d0d0d;--card:#111111;
+  --border:rgba(255,255,255,0.08);
+  --txt:#fff;--txt2:#ccc;--txt3:#999;--txt4:#666;
+  --ease:cubic-bezier(.4,0,.2,1);--base:.3s;
+  --warn:#f59e0b;--err:#ef4444;
+}
+body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;line-height:1.85}
+a{color:var(--gold);text-decoration:underline;text-underline-offset:3px}
+a:hover{color:var(--gold-l)}
+
+.bg-mesh{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 900px 700px at 80% 0%,rgba(212,160,23,.06),transparent 60%)}
+
+.topbar{position:sticky;top:0;z-index:100;background:rgba(8,8,8,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:.95rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{display:flex;align-items:center;gap:.6rem;text-decoration:none}
+.brand-logo{width:40px;height:40px;border-radius:11px;background:#fff;border:1.5px solid rgba(212,160,23,.5);box-shadow:0 0 14px rgba(184,134,11,.45);display:flex;align-items:center;justify-content:center;padding:5px;overflow:hidden}
+.brand-logo img{width:100%;height:100%;object-fit:contain}
+.brand-name{font-family:'Space Grotesk';font-weight:700;font-size:1.25rem;letter-spacing:-.02em;background:linear-gradient(135deg,var(--gold-l),var(--gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+.back-btn{display:inline-flex;align-items:center;gap:.4rem;color:var(--txt3);font-size:.88rem;padding:.5rem .85rem;border-radius:8px;text-decoration:none;transition:all var(--base) var(--ease)}
+.back-btn:hover{color:var(--gold);background:rgba(212,160,23,.06)}
+
+.main{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:3rem 2rem 5rem}
+
+.doc-head{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border)}
+.doc-eyebrow{display:inline-flex;align-items:center;gap:.4rem;padding:.35rem .9rem;background:rgba(212,160,23,.1);border:1px solid rgba(212,160,23,.25);border-radius:999px;color:var(--gold);font-size:.78rem;font-weight:600;margin-bottom:1.2rem}
+.doc-h1{font-family:'Space Grotesk';font-size:clamp(2rem,5vw,2.8rem);font-weight:700;line-height:1.2;margin-bottom:.6rem;letter-spacing:-.02em}
+.doc-meta{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;color:var(--txt3);font-size:.88rem}
+.doc-meta i{color:var(--gold);margin-left:.3rem}
+
+.toc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.4rem 1.6rem;margin-bottom:2.5rem}
+.toc-h{font-family:'Space Grotesk';font-size:.92rem;font-weight:700;color:var(--gold);margin-bottom:.8rem;letter-spacing:.5px;text-transform:uppercase}
+.toc ul{list-style:none}
+.toc li{padding:.35rem 0}
+.toc a{color:var(--txt2);text-decoration:none;font-size:.92rem;display:inline-flex;align-items:center;gap:.5rem}
+.toc a:hover{color:var(--gold)}
+.toc a::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--txt4);transition:all var(--base) var(--ease)}
+.toc a:hover::before{background:var(--gold);width:6px;height:6px}
+
+section{margin-bottom:2.5rem;scroll-margin-top:80px}
+section h2{font-family:'Space Grotesk';font-size:1.5rem;font-weight:700;margin-bottom:1rem;letter-spacing:-.01em;color:#fff;display:flex;align-items:center;gap:.7rem}
+section h2 span{color:var(--gold);font-family:'Space Grotesk';font-size:1.1rem;font-weight:700;background:rgba(212,160,23,.1);width:36px;height:36px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center}
+section h3{font-size:1.1rem;font-weight:600;margin:1.4rem 0 .6rem;color:#eee}
+section p{color:var(--txt2);margin-bottom:.9rem;font-size:.97rem}
+section ul,section ol{margin:.5rem 0 1rem 0;padding-right:1.5rem;color:var(--txt2)}
+section li{margin-bottom:.4rem;font-size:.95rem}
+section strong{color:#fff;font-weight:700}
+
+.callout{background:linear-gradient(135deg,rgba(245,158,11,.07),rgba(245,158,11,.03));border:1px solid rgba(245,158,11,.3);border-right:3px solid var(--warn);border-radius:11px;padding:1.2rem 1.4rem;margin:1.2rem 0;display:flex;gap:.9rem;align-items:flex-start}
+.callout.danger{background:linear-gradient(135deg,rgba(239,68,68,.07),rgba(239,68,68,.03));border-color:rgba(239,68,68,.3);border-right-color:var(--err)}
+.callout.danger i{color:var(--err)}
+.callout i{color:var(--warn);font-size:1.1rem;margin-top:.25rem;flex-shrink:0}
+.callout-text{flex-grow:1}
+.callout-text strong{display:block;margin-bottom:.3rem;color:#fff}
+.callout-text p{color:var(--txt2);margin:0;font-size:.9rem;line-height:1.75}
+
+.contact-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.8rem;margin-top:3rem;text-align:center}
+.contact-box h3{font-family:'Space Grotesk';font-size:1.15rem;margin-bottom:.6rem}
+.contact-box p{color:var(--txt3);font-size:.92rem;margin-bottom:1rem}
+.contact-box a{display:inline-flex;align-items:center;gap:.5rem;background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#000;padding:.7rem 1.4rem;border-radius:10px;font-weight:600;text-decoration:none;transition:all var(--base) var(--ease)}
+.contact-box a:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(212,160,23,.3)}
+
+@media (max-width:720px){
+  .main{padding:2rem 1rem 3rem}
+  .topbar{padding:.8rem 1rem}
+  .doc-meta{gap:.8rem}
+}

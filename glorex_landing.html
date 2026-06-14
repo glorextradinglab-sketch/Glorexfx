@@ -215,6 +215,8 @@ button{cursor:pointer;font-family:inherit;border:none;background:none}
   position:relative;overflow:hidden;display:flex;align-items:center;background:var(--bg)
 }
 .hero-bg{position:absolute;inset:0;pointer-events:none}
+/* Hide Built with Spline watermark — cover overlay */
+.spline-cover{position:absolute;bottom:0;left:0;width:240px;height:80px;background:#080808;z-index:10;pointer-events:none;border-radius:0 12px 0 0}
 .hero-glow{
   position:absolute;top:-10%;left:50%;transform:translateX(-50%);
   width:860px;height:680px;
@@ -253,8 +255,8 @@ button{cursor:pointer;font-family:inherit;border:none;background:none}
 .blink{width:6px;height:6px;background:var(--r4);border-radius:50%;animation:blink 1.6s ease-in-out infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 .hero-h1{
-  font-size:clamp(2.7rem,6vw,var(--t7x));font-weight:900;line-height:1.1;
-  margin-bottom:var(--s4);
+  font-size:clamp(2.7rem,6vw,var(--t7x));font-weight:900;line-height:1.18;
+  margin-bottom:var(--s4);padding-bottom:.15em;
   background:linear-gradient(160deg,#fff 25%,rgba(255,255,255,.72) 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text
 }
@@ -421,6 +423,10 @@ button{cursor:pointer;font-family:inherit;border:none;background:none}
    PRICING
 ============================================================ */
 .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s4);align-items:center}
+.discount-tag{position:absolute;top:-12px;right:50%;transform:translateX(50%);background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;padding:.35rem 1rem;border-radius:30px;font-size:.72rem;font-weight:700;letter-spacing:.5px;white-space:nowrap;z-index:2;box-shadow:0 4px 16px rgba(239,68,68,.4);animation:discount-pulse 2.5s ease-in-out infinite}
+.price-card.feat .discount-tag{top:-32px}
+@keyframes discount-pulse{0%,100%{box-shadow:0 4px 16px rgba(239,68,68,.4)}50%{box-shadow:0 6px 24px rgba(239,68,68,.7)}}
+.old-price{text-decoration:line-through;color:var(--txt4);font-size:1.2rem;margin-left:.5rem;font-weight:500;opacity:.6}
 .price-card{
   background:var(--card);border:1px solid var(--border);
   border-radius:var(--r2x);padding:var(--s5);position:relative;
@@ -428,12 +434,12 @@ button{cursor:pointer;font-family:inherit;border:none;background:none}
 }
 .price-card:not(.feat):hover{border-color:var(--border-r);transform:translateY(-5px);box-shadow:0 20px 55px var(--glow)}
 .price-card.feat{
-  background:linear-gradient(160deg,#170000,#0e0000);
-  border:1px solid rgba(184,134,11,.52);
+  background:linear-gradient(160deg,#161106,#0d0a04);
+  border:1px solid rgba(212,160,23,.38);
   transform:scale(1.04);
-  box-shadow:0 28px 80px rgba(184,134,11,.22)
+  box-shadow:0 22px 60px rgba(184,134,11,.14)
 }
-.price-card.feat:hover{transform:scale(1.04) translateY(-5px);box-shadow:0 34px 90px rgba(184,134,11,.3)}
+.price-card.feat:hover{transform:scale(1.04) translateY(-5px);box-shadow:0 28px 70px rgba(184,134,11,.22)}
 .pop-tag{
   position:absolute;top:-14px;left:50%;transform:translateX(-50%);
   background:linear-gradient(90deg,var(--r7),var(--r5));color:var(--n0);
@@ -560,9 +566,11 @@ button{cursor:pointer;font-family:inherit;border:none;background:none}
 ============================================================ */
 .cta-sec{
   padding:var(--s16) 0;text-align:center;position:relative;overflow:hidden;
-  background:linear-gradient(160deg,#1a0000 0%,#0e0000 50%,#150000 100%)
+  background:linear-gradient(160deg,#0a0a0a 0%,#080808 50%,#0d0d0d 100%);
+  border-top:1px solid rgba(212,160,23,.15);
+  border-bottom:1px solid rgba(212,160,23,.15)
 }
-.cta-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 100% 100% at 50% 50%,rgba(184,134,11,.22),transparent 64%)}
+.cta-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 80% at 50% 50%,rgba(212,160,23,.08),transparent 70%)}
 .cta-grid-bg{
   position:absolute;inset:0;
   background-image:linear-gradient(rgba(184,134,11,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(184,134,11,.05) 1px,transparent 1px);
@@ -571,6 +579,7 @@ button{cursor:pointer;font-family:inherit;border:none;background:none}
 }
 .cta-inner{position:relative;z-index:1}
 .cta-sec h2{font-size:clamp(var(--t3x),5vw,var(--t6x));font-weight:900;line-height:1.12;margin-bottom:var(--s3)}
+.cta-sec h2 em{font-style:normal;background:linear-gradient(135deg,#F0C030,#D4A017);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .cta-sec>div>p{font-size:var(--tlg);color:rgba(255,255,255,.62);max-width:510px;margin:0 auto var(--s6);line-height:1.88}
 .cta-note{margin-top:var(--s4);font-size:var(--tsm);color:rgba(255,255,255,.28)}
 
@@ -665,16 +674,16 @@ body{font-family:'IBM Plex Sans Arabic','Cairo',system-ui,sans-serif;-webkit-fon
   box-shadow:0 20px 60px -20px rgba(212,160,23,.25)
 }
 
-/* Premium pricing card glow */
+/* Premium pricing card glow — subtle */
 .price-card.feat{
   position:relative;overflow:visible
 }
 .price-card.feat::before{
-  content:'';position:absolute;inset:-2px;border-radius:inherit;z-index:-1;
-  background:linear-gradient(135deg,#F0C030,#D4A017,#A07810,#D4A017,#F0C030);
+  content:'';position:absolute;inset:-1px;border-radius:inherit;z-index:-1;
+  background:linear-gradient(135deg,#D4A017,#A07810,#D4A017);
   background-size:300% 300%;
-  animation:gradient-shift 6s ease infinite;
-  opacity:.7;filter:blur(10px)
+  animation:gradient-shift 8s ease infinite;
+  opacity:.28;filter:blur(20px)
 }
 @keyframes gradient-shift{
   0%,100%{background-position:0% 50%}
@@ -837,7 +846,6 @@ body,body *{
       <li><a href="#cta">انضم الآن</a></li>
     </ul>
     <div class="nav-cta-d">
-      <button class="nav-theme" id="themeToggle" aria-label="تبديل الوضع"><i class="fas fa-moon"></i></button>
       <a href="signin.html" class="nav-signin">تسجيل الدخول</a>
       <a href="signup.html" class="btn btn-p" style="padding:.65rem 1.5rem;font-size:var(--tsm)">ابدأ الآن</a>
     </div>
@@ -864,6 +872,8 @@ body,body *{
       url="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
       style="position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:auto">
     </spline-viewer>
+    <!-- Cover Built with Spline watermark -->
+    <div class="spline-cover"></div>
     <!-- Gradient overlay — readability layer -->
     <div class="hero-overlay"></div>
     <!-- Spotlight SVG (Aceternity) -->
@@ -905,7 +915,6 @@ body,body *{
           <a href="#how"     class="btn btn-g btn-lg"><i class="fas fa-play-circle"></i> شاهد كيف يعمل</a>
         </div>
         <div class="hero-trust" data-aos="fade-up" data-aos-delay="280">
-          <div class="trust-i"><i class="fas fa-shield-alt"></i> بدون التزامات</div>
           <div class="trust-i"><i class="fas fa-rotate-left"></i> إلغاء في أي وقت</div>
           <div class="trust-i"><i class="fas fa-lock"></i> دفع آمن</div>
         </div>
@@ -916,20 +925,20 @@ body,body *{
     <!-- Stats -->
     <div class="hero-stats" data-aos="fade-up" data-aos-delay="400">
       <div class="stat">
-        <span class="stat-v" data-count="500">0</span>
-        <span class="stat-l">+500 متداول</span>
+        <span class="stat-v" data-count="500">500+</span>
+        <span class="stat-l">متداول نشط</span>
       </div>
       <div class="stat">
         <span class="stat-v">9</span>
         <span class="stat-l">دروس احترافية</span>
       </div>
       <div class="stat">
-        <span class="stat-v">1:2</span>
-        <span class="stat-l">نسبة المخاطرة</span>
+        <span class="stat-v">AI</span>
+        <span class="stat-l">تداول بالذكاء الاصطناعي</span>
       </div>
       <div class="stat">
-        <span class="stat-v">NQ</span>
-        <span class="stat-l">Nasdaq Futures</span>
+        <span class="stat-v">Plan</span>
+        <span class="stat-l">نظام يخليك تلتزم</span>
       </div>
     </div>
   </div>
@@ -1003,43 +1012,81 @@ body,body *{
       <p class="sec-sub">GLOREX يعطيك كل الأدوات لتتحول من متداول عشوائي إلى متداول يعمل بنظام</p>
     </div>
     <div class="sol-grid">
-      <div class="sol-card" data-aos="fade-up" data-aos-delay="80">
-        <div class="sol-badge">📚 9 دروس فيديو</div>
-        <span class="sol-icon">📚</span>
-        <h3>استراتيجية كاملة — مش قطع ناقصة</h3>
-        <p>شفت مئات الفيديوهات بس ما حصلت الصورة الكاملة؟ هنا الـ 9 دروس تغطي كل شيء من الاتجاه للدخول للخروج — بالعربي، بصوت وصورة المدرب</p>
+      <div class="sol-card" data-aos="fade-up" data-aos-delay="60">
+        <div class="sol-badge">قائمة التحقق الذكية</div>
+        <span class="sol-icon"><i class="fas fa-tasks"></i></span>
+        <h3>قبل كل صفقة — قرار مبني على نظام</h3>
+        <p>عوضاً عن الدخول بإحساس، نظام Confluence ذكي يحسب نسبة قوة الصفقة من 0-100% بناءً على الاتجاه، المناطق، وتأكيد الدخول.</p>
         <ul class="feat-list">
-          <li><span class="ck"><i class="fas fa-check"></i></span>تحديد الاتجاه: Higher Highs & Higher Lows</li>
-          <li><span class="ck"><i class="fas fa-check"></i></span>مناطق العرض والطلب: Supply & Demand</li>
-          <li><span class="ck"><i class="fas fa-check"></i></span>تأكيد الدخول: Fair Value Gap</li>
-          <li><span class="ck"><i class="fas fa-check"></i></span>Top-Down: دمج الإطارات الزمنية</li>
-          <li><span class="ck"><i class="fas fa-check"></i></span>Liquidity Sweeps — ليش السوق يأخذ الـ SL؟</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>تأكيد الاتجاه على عدة فريمات</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>تقييم آلي لجودة الصفقة</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>تحديد المخاطرة قبل الدخول</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>توصية ذكية: ادخل أو تجنب</li>
         </ul>
       </div>
+
+      <div class="sol-card" data-aos="fade-up" data-aos-delay="120">
+        <div class="sol-badge">سجل الصفقات</div>
+        <span class="sol-icon"><i class="fas fa-book-open"></i></span>
+        <h3>كل صفقة موثّقة — ما يضيع منك شيء</h3>
+        <p>سجّل كل تفاصيل صفقاتك مع الصور والفيديوهات. راجع، حلّل، وحدّد الأنماط في أدائك لتطوّر استراتيجيتك مع الوقت.</p>
+        <ul class="feat-list">
+          <li><span class="ck"><i class="fas fa-check"></i></span>رفع صور وفيديوهات لكل صفقة</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>تتبع الـ R:R والمخاطرة الفعلية</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>فلترة: رابحة / خاسرة / متعادلة</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>إحصائيات أداء شاملة</li>
+        </ul>
+      </div>
+
       <div class="sol-card" data-aos="fade-up" data-aos-delay="180">
-        <div class="sol-badge">✅ Pre-Trade Checklist</div>
-        <span class="sol-icon">✅</span>
-        <h3>7 خطوات قبل ما تضغط Buy أو Sell</h3>
-        <p>بدل ما تدخل الصفقة بإحساس، اتبع نظام من 7 نقاط يحكم كل دخول. إذا مو كل الشروط موجودة — ما تدخل</p>
+        <div class="sol-badge">تقويم الصفقات</div>
+        <span class="sol-icon"><i class="fas fa-calendar-day"></i></span>
+        <h3>أداؤك بنظرة واحدة شاملة</h3>
+        <p>تقويم شهري ملوّن يعرض ربح وخسارة كل يوم. شوف أسابيعك القوية والضعيفة، واكتشف توجهك بصرياً.</p>
         <ul class="feat-list">
-          <li><span class="ck"><i class="fas fa-check"></i></span>تأكيد الاتجاه على Daily, H4, H1</li>
-          <li><span class="ck"><i class="fas fa-check"></i></span>التحقق من منطقة Supply أو Demand</li>
-          <li><span class="ck"><i class="fas fa-check"></i></span>تأكيد FVG على الـ 1 دقيقة</li>
-          <li><span class="ck"><i class="fas fa-check"></i></span>حساب Risk/Reward 1:2 قبل الدخول</li>
-          <li><span class="ck"><i class="fas fa-check"></i></span>تحديد SL و TP بدقة</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>عرض شهري بالألوان</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>ملخص أسبوعي + شهري</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>تفاصيل صفقات كل يوم</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>نسبة نجاح حقيقية</li>
         </ul>
       </div>
-      <div class="sol-card" data-aos="fade-up" data-aos-delay="280">
-        <div class="sol-badge">📓 Trade Journal</div>
-        <span class="sol-icon">📓</span>
-        <h3>أول ما بدأت أسجل — كل شيء تغير</h3>
-        <p>90% من المتداولين يكررون نفس الأخطاء لأنهم ما يسجلون. الـ Journal هو الأداة #1 للتحسن — بدونه أنت تتداول بعمى</p>
+
+      <div class="sol-card" data-aos="fade-up" data-aos-delay="60">
+        <div class="sol-badge">حاسبة المخاطر</div>
+        <span class="sol-icon"><i class="fas fa-calculator"></i></span>
+        <h3>احسب حجم العقد بدقة</h3>
+        <p>أدخل رأس مالك ونسبة المخاطرة ومسافة الستوب — تحصل على حجم العقد المظبوط فوراً. تدعم كل الأدوات: المؤشرات، الفوركس، الذهب، الكريبتو.</p>
         <ul class="feat-list">
-          <li><span class="ck"><i class="fas fa-check"></i></span>تسجيل كل صفقة بالتفاصيل الكاملة</li>
-          <li><span class="ck"><i class="fas fa-check"></i></span>اكتشاف الأنماط في أخطاءك</li>
-          <li><span class="ck"><i class="fas fa-check"></i></span>إحصائيات الأداء الشهري</li>
-          <li><span class="ck"><i class="fas fa-check"></i></span>ملاحظات ما بعد الصفقة</li>
-          <li><span class="ck"><i class="fas fa-check"></i></span>مخطط تطور الأداء بمرور الوقت</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>أكثر من 20 أداة مالية</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>حساب فوري وآمن</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>توصيات إدارة مخاطر</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>دعم كل البروكرز (CFD، Futures)</li>
+        </ul>
+      </div>
+
+      <div class="sol-card" data-aos="fade-up" data-aos-delay="120">
+        <div class="sol-badge">تقارير الـ AI</div>
+        <span class="sol-icon"><i class="fas fa-newspaper"></i></span>
+        <h3>تقارير ذكية مخصصة لك</h3>
+        <p>اطلب من الذكاء الاصطناعي تقارير يومية أو لحظية عن أي زوج عملة — يبحث في الإنترنت ويعطيك التحليل بالعربي مع توقع الجلسة.</p>
+        <ul class="feat-list">
+          <li><span class="ck"><i class="fas fa-check"></i></span>تحديث تلقائي بمواعيدك</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>تحليل بالعربي + المصادر</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>توقع للجلسة المناسبة</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>اختيار الفترة (1-5 أيام)</li>
+        </ul>
+      </div>
+
+      <div class="sol-card" data-aos="fade-up" data-aos-delay="180">
+        <div class="sol-badge">المجتمع</div>
+        <span class="sol-icon"><i class="fas fa-comments"></i></span>
+        <h3>محادثة حية مع المتداولين</h3>
+        <p>تواصل مع مئات المتداولين العرب لحظياً، شارك صفقاتك، اطلب رأي، وكوّن شبكتك في عالم التداول.</p>
+        <ul class="feat-list">
+          <li><span class="ck"><i class="fas fa-check"></i></span>محادثة فورية (Real-time)</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>مشاركة صور التحليلات</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>غرفة VIP للمشتركين</li>
+          <li><span class="ck"><i class="fas fa-check"></i></span>دعم من المدرب مباشرة</li>
         </ul>
       </div>
     </div>
@@ -1059,20 +1106,26 @@ body,body *{
     <div class="steps" data-aos="fade-up" data-aos-delay="100">
       <div class="step">
         <div class="step-n">١</div>
-        <h3>اشترك واختر باقتك</h3>
-        <p>سجل وادفع خلال دقيقة وابدأ فوراً</p>
+        <h3>سجّل واختر باقتك</h3>
+        <p>التسجيل مجاني، ادفع لاحقاً عند الترقية</p>
       </div>
       <div class="step-con"></div>
       <div class="step">
         <div class="step-n">٢</div>
-        <h3>تعلم الاستراتيجية</h3>
-        <p>شاهد الدروس بالترتيب وافهم كل خطوة</p>
+        <h3>تعلّم الاستراتيجية</h3>
+        <p>منهج كامل بالعربي خطوة بخطوة</p>
       </div>
       <div class="step-con"></div>
       <div class="step">
         <div class="step-n">٣</div>
-        <h3>طبق وسجل</h3>
-        <p>استخدم الـ Checklist والـ Journal يومياً</p>
+        <h3>طبّق بأدواتنا</h3>
+        <p>قائمة التحقق، السجل، التقويم، والذكاء الاصطناعي</p>
+      </div>
+      <div class="step-con"></div>
+      <div class="step">
+        <div class="step-n">٤</div>
+        <h3>طوّر باستمرار</h3>
+        <p>راجع أداءك وحسّن استراتيجيتك يومياً</p>
       </div>
     </div>
   </div>
@@ -1088,46 +1141,54 @@ body,body *{
     </div>
     <div class="price-grid">
       <div class="price-card" data-aos="fade-up" data-aos-delay="80">
-        <p class="price-tier">الأساسي</p>
+        <p class="price-tier">Free</p>
         <div class="price-num">
-          <span class="cur">$</span><span class="amt">15</span>
-          <span class="per">/ شهرياً</span>
+          <span class="cur">$</span><span class="amt">0</span>
+          <span class="per">للأبد</span>
         </div>
         <ul class="price-feats">
-          <li><i class="fas fa-check"></i>Checklist التفاعلية</li>
-          <li><i class="fas fa-check"></i>Trade Journal</li>
-          <li><i class="fas fa-check"></i>وصول للمجتمع</li>
+          <li><i class="fas fa-check"></i>حاسبة المخاطر</li>
+          <li><i class="fas fa-check"></i>التقويم الاقتصادي العام</li>
+          <li><i class="fas fa-check"></i>قراءة المحادثة الجماعية</li>
         </ul>
-        <a href="#" class="btn btn-g btn-w">اشترك</a>
+        <a href="signup.html" class="btn btn-g btn-w">ابدأ مجاناً</a>
       </div>
+
       <div class="price-card feat" data-aos="fade-up" data-aos-delay="160">
         <div class="pop-tag">⭐ الأكثر شعبية</div>
-        <p class="price-tier">الاحترافي</p>
+        <div class="discount-tag">خصم 30% — لفترة محدودة</div>
+        <p class="price-tier">Basic</p>
         <div class="price-num">
-          <span class="cur">$</span><span class="amt">29</span>
+          <span class="old-price">$39</span>
+          <span class="cur">$</span><span class="amt">27</span>
           <span class="per">/ شهرياً</span>
         </div>
         <ul class="price-feats">
-          <li><i class="fas fa-check"></i>كل ما في الأساسي</li>
-          <li><i class="fas fa-check"></i>9 دروس فيديو كاملة</li>
-          <li><i class="fas fa-check"></i>Ebook PDF</li>
-          <li><i class="fas fa-check"></i>دعم مباشر</li>
+          <li><i class="fas fa-check"></i>كل ميزات Free</li>
+          <li><i class="fas fa-check"></i>قائمة الفحص + سجل صفقات لا محدود</li>
+          <li><i class="fas fa-check"></i>تنبيهات الأخبار القوية (FOMC، NFP)</li>
+          <li><i class="fas fa-check"></i>50 تقرير AI شهرياً</li>
+          <li><i class="fas fa-check"></i>الدروس + فيديوهات صفقاتي اليومية</li>
         </ul>
-        <a href="#" class="btn btn-p btn-w">اشترك الآن</a>
+        <a href="subscribe.html" class="btn btn-p btn-w">اشترك الآن</a>
       </div>
+
       <div class="price-card" data-aos="fade-up" data-aos-delay="240">
-        <p class="price-tier">الكامل</p>
+        <div class="discount-tag">خصم 30% — لفترة محدودة</div>
+        <p class="price-tier">Premium</p>
         <div class="price-num">
-          <span class="cur">$</span><span class="amt">49</span>
+          <span class="old-price">$129</span>
+          <span class="cur">$</span><span class="amt">89</span>
           <span class="per">/ شهرياً</span>
         </div>
         <ul class="price-feats">
-          <li><i class="fas fa-check"></i>كل ما في الاحترافي</li>
-          <li><i class="fas fa-check"></i>محتوى حصري شهري</li>
-          <li><i class="fas fa-check"></i>نظام Affiliate 30%</li>
-          <li><i class="fas fa-check"></i>أولوية الدعم</li>
+          <li><i class="fas fa-check"></i>كل ميزات Basic</li>
+          <li><i class="fas fa-check"></i>200 تقرير AI شهرياً</li>
+          <li><i class="fas fa-check"></i><strong style="color:var(--gold)">جلسة 1:1 شهرياً معي</strong></li>
+          <li><i class="fas fa-check"></i>تحليل خبير لصفقاتك</li>
+          <li><i class="fas fa-check"></i>أولوية الدعم الفني</li>
         </ul>
-        <a href="#" class="btn btn-g btn-w">اشترك</a>
+        <a href="subscribe.html" class="btn btn-g btn-w">اشترك الآن</a>
       </div>
     </div>
   </div>
@@ -1149,12 +1210,11 @@ body,body *{
   <div class="testi-cols">
 
     <!-- Column 1 -->
-    <div class="testi-col" style="--dur:16s">
+    <div class="testi-col" style="--dur:22s">
       <div class="testi-col-inner">
-        <!-- original set -->
         <div class="testi-card">
           <div class="testi-stars">★★★★★</div>
-          <p class="testi-txt">كنت أغير الاستراتيجية كل أسبوع. بعد GLOREX صار عندي نظام واحد أفهمه وأثق فيه. الـ Checklist منعتني من أكثر من 10 صفقات خاسرة في الشهر الأول</p>
+          <p class="testi-txt">كنت أغير الاستراتيجية كل أسبوع. بعد GLOREX صار عندي نظام واحد أفهمه وأثق فيه. القائمة الذكية منعتني من أكثر من 10 صفقات خاسرة في الشهر الأول</p>
           <div class="testi-author">
             <div class="testi-av">أ</div>
             <div><p class="testi-name">أحمد م. — السعودية</p><p class="testi-role">Prop Firm Trader · 6 أشهر</p></div>
@@ -1162,7 +1222,7 @@ body,body *{
         </div>
         <div class="testi-card">
           <div class="testi-stars">★★★★★</div>
-          <p class="testi-txt">ما صدقت إنو بـ $29 بالشهر تحصل على محتوى أعمق من كورسات بمئات الدولارات. NQ صار منطقياً عندي بعد أسبوعين بس</p>
+          <p class="testi-txt">تقارير الـ AI اليومية صارت أول شي أشوفه قبل ما أفتح الشارت. وفّرت علي ساعات بحث وأعطتني صورة كاملة عن السوق</p>
           <div class="testi-author">
             <div class="testi-av">خ</div>
             <div><p class="testi-name">خالد ر. — السعودية</p><p class="testi-role">Retail Trader · 3 أشهر</p></div>
@@ -1170,16 +1230,32 @@ body,body *{
         </div>
         <div class="testi-card">
           <div class="testi-stars">★★★★★</div>
-          <p class="testi-txt">أول مرة في حياتي أدخل صفقة وأنا فاهم ليش بالضبط. الـ Supply & Demand مع الـ FVG صار منطقي تماماً بعد الدروس</p>
+          <p class="testi-txt">سجل الصفقات بالصور والفيديوهات غيّر طريقة مراجعتي. صرت أكتشف أخطائي بنفسي وأطورها لوحدي</p>
           <div class="testi-author">
             <div class="testi-av">ن</div>
             <div><p class="testi-name">نورا س. — الكويت</p><p class="testi-role">مبتدئة · شهرين مع GLOREX</p></div>
           </div>
         </div>
-        <!-- duplicate for seamless loop -->
         <div class="testi-card">
           <div class="testi-stars">★★★★★</div>
-          <p class="testi-txt">كنت أغير الاستراتيجية كل أسبوع. بعد GLOREX صار عندي نظام واحد أفهمه وأثق فيه. الـ Checklist منعتني من أكثر من 10 صفقات خاسرة في الشهر الأول</p>
+          <p class="testi-txt">جربت كذا منصة عربي وأجنبي، GLOREX الوحيد اللي حسسني إنه مصمم من متداول لمتداول. كل أداة فيه ليها معنى</p>
+          <div class="testi-author">
+            <div class="testi-av">ي</div>
+            <div><p class="testi-name">ياسر ع. — البحرين</p><p class="testi-role">Day Trader · سنة</p></div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-txt">حاسبة المخاطر وفّرت علي خسائر كبيرة. كنت أحسب يدوياً وأغلط أحياناً، الحاسبة دقيقة لأي زوج عملة</p>
+          <div class="testi-author">
+            <div class="testi-av">ر</div>
+            <div><p class="testi-name">رامي د. — لبنان</p><p class="testi-role">Forex Trader · 5 أشهر</p></div>
+          </div>
+        </div>
+        <!-- Duplicates for seamless loop -->
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-txt">كنت أغير الاستراتيجية كل أسبوع. بعد GLOREX صار عندي نظام واحد أفهمه وأثق فيه. القائمة الذكية منعتني من أكثر من 10 صفقات خاسرة في الشهر الأول</p>
           <div class="testi-author">
             <div class="testi-av">أ</div>
             <div><p class="testi-name">أحمد م. — السعودية</p><p class="testi-role">Prop Firm Trader · 6 أشهر</p></div>
@@ -1187,29 +1263,21 @@ body,body *{
         </div>
         <div class="testi-card">
           <div class="testi-stars">★★★★★</div>
-          <p class="testi-txt">ما صدقت إنو بـ $29 بالشهر تحصل على محتوى أعمق من كورسات بمئات الدولارات. NQ صار منطقياً عندي بعد أسبوعين بس</p>
+          <p class="testi-txt">تقارير الـ AI اليومية صارت أول شي أشوفه قبل ما أفتح الشارت. وفّرت علي ساعات بحث وأعطتني صورة كاملة عن السوق</p>
           <div class="testi-author">
             <div class="testi-av">خ</div>
             <div><p class="testi-name">خالد ر. — السعودية</p><p class="testi-role">Retail Trader · 3 أشهر</p></div>
           </div>
         </div>
-        <div class="testi-card">
-          <div class="testi-stars">★★★★★</div>
-          <p class="testi-txt">أول مرة في حياتي أدخل صفقة وأنا فاهم ليش بالضبط. الـ Supply & Demand مع الـ FVG صار منطقي تماماً بعد الدروس</p>
-          <div class="testi-author">
-            <div class="testi-av">ن</div>
-            <div><p class="testi-name">نورا س. — الكويت</p><p class="testi-role">مبتدئة · شهرين مع GLOREX</p></div>
-          </div>
-        </div>
       </div>
     </div>
 
-    <!-- Column 2 (hidden on mobile) -->
-    <div class="testi-col testi-col--md" style="--dur:20s">
+    <!-- Column 2 -->
+    <div class="testi-col testi-col--md" style="--dur:26s">
       <div class="testi-col-inner">
         <div class="testi-card">
           <div class="testi-stars">★★★★★</div>
-          <p class="testi-txt">فهمت أخيراً ليش السوق كان يأخذ الـ Stop Loss تبعي كل مرة. درس الـ Liquidity Sweeps وحده يساوي ثمن الاشتراك كله</p>
+          <p class="testi-txt">فهمت أخيراً ليش السوق كان يأخذ الـ Stop Loss تبعي كل مرة. دروس السيولة وحدها تساوي ثمن الاشتراك السنوي</p>
           <div class="testi-author">
             <div class="testi-av">م</div>
             <div><p class="testi-name">محمد خ. — الإمارات</p><p class="testi-role">NQ Trader · 4 أشهر</p></div>
@@ -1217,7 +1285,7 @@ body,body *{
         </div>
         <div class="testi-card">
           <div class="testi-stars">★★★★★</div>
-          <p class="testi-txt">جربت Forex والـ Crypto وكل مرة نفس النتيجة. بعد ما بدأت NQ مع GLOREX فهمت إن المشكلة كانت في الأداة مو في التركيز</p>
+          <p class="testi-txt">المحادثة الجماعية لاحظت فيها فرق كبير. متداولين يتبادلون التحليلات لحظياً، تعلّمت من تجارب الآخرين أكثر من أي كورس</p>
           <div class="testi-author">
             <div class="testi-av">ع</div>
             <div><p class="testi-name">عبدالله ف. — قطر</p><p class="testi-role">Full-Time Trader · 5 أشهر</p></div>
@@ -1225,16 +1293,32 @@ body,body *{
         </div>
         <div class="testi-card">
           <div class="testi-stars">★★★★★</div>
-          <p class="testi-txt">الـ Pre-Trade Checklist غيّر طريقة تفكيري كلياً. ما قدرت أدخل صفقة عشوائية بعد ما صرت أمشي على النظام خطوة خطوة</p>
+          <p class="testi-txt">قائمة التحقق غيّرت طريقة تفكيري كلياً. ما قدرت أدخل صفقة عشوائية بعد ما صرت أمشي على النظام خطوة بخطوة</p>
           <div class="testi-author">
             <div class="testi-av">س</div>
             <div><p class="testi-name">سلمى ح. — الأردن</p><p class="testi-role">Part-Time Trader · 4 أشهر</p></div>
           </div>
         </div>
-        <!-- duplicate -->
         <div class="testi-card">
           <div class="testi-stars">★★★★★</div>
-          <p class="testi-txt">فهمت أخيراً ليش السوق كان يأخذ الـ Stop Loss تبعي كل مرة. درس الـ Liquidity Sweeps وحده يساوي ثمن الاشتراك كله</p>
+          <p class="testi-txt">التقويم يفتحلي عيني كل أسبوع. أشوف صفقاتي بصرياً وأعرف وين أنا قوي ووين أنا ضعيف. أداة بسيطة بس بتفرق كتير</p>
+          <div class="testi-author">
+            <div class="testi-av">ف</div>
+            <div><p class="testi-name">فاطمة ز. — عُمان</p><p class="testi-role">Swing Trader · 4 أشهر</p></div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-txt">جلسة الـ 1-on-1 الشهرية مع المدرب من أهم أسباب اشتراكي في الباقة الشاملة. أسئلة مخصصة لحالتي وحلول عملية</p>
+          <div class="testi-author">
+            <div class="testi-av">ز</div>
+            <div><p class="testi-name">زياد ك. — السعودية</p><p class="testi-role">VIP Member · 6 أشهر</p></div>
+          </div>
+        </div>
+        <!-- Duplicates -->
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-txt">فهمت أخيراً ليش السوق كان يأخذ الـ Stop Loss تبعي كل مرة. دروس السيولة وحدها تساوي ثمن الاشتراك السنوي</p>
           <div class="testi-author">
             <div class="testi-av">م</div>
             <div><p class="testi-name">محمد خ. — الإمارات</p><p class="testi-role">NQ Trader · 4 أشهر</p></div>
@@ -1242,29 +1326,21 @@ body,body *{
         </div>
         <div class="testi-card">
           <div class="testi-stars">★★★★★</div>
-          <p class="testi-txt">جربت Forex والـ Crypto وكل مرة نفس النتيجة. بعد ما بدأت NQ مع GLOREX فهمت إن المشكلة كانت في الأداة مو في التركيز</p>
+          <p class="testi-txt">المحادثة الجماعية لاحظت فيها فرق كبير. متداولين يتبادلون التحليلات لحظياً، تعلّمت من تجارب الآخرين أكثر من أي كورس</p>
           <div class="testi-author">
             <div class="testi-av">ع</div>
             <div><p class="testi-name">عبدالله ف. — قطر</p><p class="testi-role">Full-Time Trader · 5 أشهر</p></div>
           </div>
         </div>
-        <div class="testi-card">
-          <div class="testi-stars">★★★★★</div>
-          <p class="testi-txt">الـ Pre-Trade Checklist غيّر طريقة تفكيري كلياً. ما قدرت أدخل صفقة عشوائية بعد ما صرت أمشي على النظام خطوة خطوة</p>
-          <div class="testi-author">
-            <div class="testi-av">س</div>
-            <div><p class="testi-name">سلمى ح. — الأردن</p><p class="testi-role">Part-Time Trader · 4 أشهر</p></div>
-          </div>
-        </div>
       </div>
     </div>
 
-    <!-- Column 3 (hidden on mobile + tablet) -->
-    <div class="testi-col testi-col--lg" style="--dur:18s">
+    <!-- Column 3 -->
+    <div class="testi-col testi-col--lg" style="--dur:30s">
       <div class="testi-col-inner">
         <div class="testi-card">
           <div class="testi-stars">★★★★★</div>
-          <p class="testi-txt">بدأت أسجل صفقاتي بالـ Journal وبعد شهر اكتشفت إني كنت أخسر في نفس الوقت كل يوم. غيرت سلوك واحد وتحسنت النتائج بشكل واضح</p>
+          <p class="testi-txt">بدأت أسجل صفقاتي بالسجل وبعد شهر اكتشفت إني كنت أخسر في نفس الوقت كل يوم. غيرت سلوك واحد وتحسنت النتائج بشكل واضح</p>
           <div class="testi-author">
             <div class="testi-av">ي</div>
             <div><p class="testi-name">يوسف ع. — الأردن</p><p class="testi-role">Full-Time Trader · 8 أشهر</p></div>
@@ -1272,7 +1348,7 @@ body,body *{
         </div>
         <div class="testi-card">
           <div class="testi-stars">★★★★★</div>
-          <p class="testi-txt">كنت خايف من الـ Prop Firm. بعد ما فهمت كيف أشتغل على NQ بالنظام، نجحت في أول Evaluation خلال 3 أسابيع</p>
+          <p class="testi-txt">كنت خايف من الـ Prop Firm. بعد ما فهمت كيف أشتغل بنظام محكم، نجحت في أول Evaluation خلال 3 أسابيع فقط</p>
           <div class="testi-author">
             <div class="testi-av">ر</div>
             <div><p class="testi-name">رامي ب. — لبنان</p><p class="testi-role">Prop Firm Trader · 7 أشهر</p></div>
@@ -1280,16 +1356,40 @@ body,body *{
         </div>
         <div class="testi-card">
           <div class="testi-stars">★★★★★</div>
-          <p class="testi-txt">المحتوى بالعربي مو مجرد ترجمة — في فهم حقيقي للسوق وللسيكولوجي. أحس إنهم يعرفون وين نحن بالضبط كمتداولين عرب</p>
+          <p class="testi-txt">المحتوى بالعربي مو مجرد ترجمة — في فهم حقيقي للسوق وللسيكولوجي. حسّيت إنهم يعرفون وين أنا بالضبط كمتداول عربي</p>
           <div class="testi-author">
             <div class="testi-av">ل</div>
             <div><p class="testi-name">لينا م. — مصر</p><p class="testi-role">مبتدئة · 3 أشهر مع GLOREX</p></div>
           </div>
         </div>
-        <!-- duplicate -->
         <div class="testi-card">
           <div class="testi-stars">★★★★★</div>
-          <p class="testi-txt">بدأت أسجل صفقاتي بالـ Journal وبعد شهر اكتشفت إني كنت أخسر في نفس الوقت كل يوم. غيرت سلوك واحد وتحسنت النتائج بشكل واضح</p>
+          <p class="testi-txt">فيديوهات الصفقات اليومية في الباقة الشاملة قيمتها لا تقدر بثمن. تشوف المدرب يدخل ويخرج لحظياً ويشرح ليش</p>
+          <div class="testi-author">
+            <div class="testi-av">و</div>
+            <div><p class="testi-name">وليد ن. — الإمارات</p><p class="testi-role">Premium Member · 4 أشهر</p></div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-txt">حلمت كتير بمنصة عربية احترافية بهذا المستوى. GLOREX سدّ فجوة كبيرة في عالم التداول العربي، شكراً للقائمين عليه</p>
+          <div class="testi-author">
+            <div class="testi-av">ه</div>
+            <div><p class="testi-name">هاني ج. — المغرب</p><p class="testi-role">Day Trader · 5 أشهر</p></div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-txt">بعد سنتين خسائر، أول مرة أشوف رصيدي يكبر باستمرار. السر؟ نظام محكم + مراقبة دقيقة + مجتمع داعم. كله موجود هون</p>
+          <div class="testi-author">
+            <div class="testi-av">ك</div>
+            <div><p class="testi-name">كريم ط. — السعودية</p><p class="testi-role">Full-Time Trader · سنة</p></div>
+          </div>
+        </div>
+        <!-- Duplicates -->
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-txt">بدأت أسجل صفقاتي بالسجل وبعد شهر اكتشفت إني كنت أخسر في نفس الوقت كل يوم. غيرت سلوك واحد وتحسنت النتائج بشكل واضح</p>
           <div class="testi-author">
             <div class="testi-av">ي</div>
             <div><p class="testi-name">يوسف ع. — الأردن</p><p class="testi-role">Full-Time Trader · 8 أشهر</p></div>
@@ -1354,17 +1454,17 @@ body,body *{
       </div>
       <div class="faq-item" data-aos="fade-up" data-aos-delay="110">
         <button class="faq-q">
-          <span>ليش NQ تحديداً وليس Forex أو Bitcoin؟</span>
+          <span>هل المنصة تدعم كل الأسواق؟</span>
           <div class="faq-tog"><i class="fas fa-plus"></i></div>
         </button>
-        <div class="faq-a"><p>NQ Futures في جلسة نيويورك يتحرك بشكل واضح ومتوقع مع استراتيجية Supply & Demand. السيولة عالية، التلاعب أقل، والحركة أنظف — وهذا بالضبط اللي يحتاجه المتداول المبتدئ</p></div>
+        <div class="faq-a"><p>نعم، المنصة تدعم كل الأسواق: المؤشرات (Nasdaq, S&P, Dow)، الفوركس بكل أزواجه، المعادن (الذهب والفضة)، النفط، والكريبتو (BTC, ETH). كل الأدوات (الحاسبة، السجل، تقارير الـ AI) تشتغل على أي زوج عملة تختاره</p></div>
       </div>
       <div class="faq-item" data-aos="fade-up" data-aos-delay="160">
         <button class="faq-q">
-          <span>هل تنفع الاستراتيجية لـ Prop Firms مثل FTMO؟</span>
+          <span>هل تنفع المنصة لشركات التمويل (مثل FTMO)؟</span>
           <div class="faq-tog"><i class="fas fa-plus"></i></div>
         </button>
-        <div class="faq-a"><p>نعم، الاستراتيجية مبنية على risk management محكم (1:2 RR) وعدد صفقات منخفض وانتقائي — وهذا بالضبط ما تحتاجه لتجتاز Challenge الـ Prop Firm بدون ضغط</p></div>
+        <div class="faq-a"><p>نعم بقوة. أدوات إدارة المخاطر، حاسبة العقد، وقائمة التحقق الذكية مصممة بالضبط لمتطلبات شركات التمويل. كثير من مشتركينا اجتازوا اختبارات شركات مثل FTMO و MyForexFunds و The5%ers باستخدام نظامنا</p></div>
       </div>
       <div class="faq-item" data-aos="fade-up" data-aos-delay="210">
         <button class="faq-q">
@@ -1384,12 +1484,12 @@ body,body *{
   <div class="cta-grid-bg"></div>
   <div class="wrap">
     <div class="cta-inner" data-aos="fade-up">
-      <h2>بدك نظام واضح<br>تثق فيه؟</h2>
-      <p>انضم لمئات المتداولين اللي قرروا يوقفوا اللخبطة ويبدأوا يتداولون بنظام — باللغة العربية، بأدوات حقيقية، بنتائج قابلة للقياس</p>
-      <a href="#pricing" class="btn btn-p btn-lg">
-        اشترك الآن بـ 29$/شهر <i class="fas fa-arrow-left"></i>
+      <h2>جاهز <em>تبدأ</em>؟</h2>
+      <p>انضم لمئات المتداولين العرب اللي قرروا يتداولون بنظام واضح — أدوات احترافية، محتوى عربي، ونتائج قابلة للقياس</p>
+      <a href="subscribe.html" class="btn btn-p btn-lg">
+        ابدأ الآن <i class="fas fa-arrow-left"></i>
       </a>
-      <p class="cta-note">بدون التزامات · إلغاء في أي وقت · دفع آمن 🔒</p>
+      <p class="cta-note">اختار الباقة اللي تناسبك · ألغ في أي وقت · دفع آمن</p>
     </div>
   </div>
 </section>
@@ -1417,9 +1517,10 @@ body,body *{
       <div class="footer-col">
         <h4>قانوني</h4>
         <ul>
-          <li><a href="#">سياسة الخصوصية</a></li>
-          <li><a href="#">شروط الاستخدام</a></li>
-          <li><a href="#">تواصل معنا</a></li>
+          <li><a href="terms.html">الشروط والأحكام</a></li>
+          <li><a href="privacy.html">سياسة الخصوصية</a></li>
+          <li><a href="risk.html">إفصاح المخاطر</a></li>
+          <li><a href="https://t.me/GLOREX_SUPPORT" target="_blank" rel="noopener">تواصل معنا</a></li>
         </ul>
       </div>
     </div>
@@ -1435,18 +1536,9 @@ body,body *{
 AOS.init({duration:780,once:true,offset:65,easing:'ease-out-cubic'});
 
 /* ── Theme Toggle (Light/Dark) ── */
-(()=>{
-  const tt=document.getElementById('themeToggle');
-  if(!tt)return;
-  const saved=localStorage.getItem('glorex-theme');
-  if(saved==='light'){document.body.classList.add('light');tt.innerHTML='<i class="fas fa-sun"></i>'}
-  tt.addEventListener('click',()=>{
-    document.body.classList.toggle('light');
-    const isLight=document.body.classList.contains('light');
-    localStorage.setItem('glorex-theme',isLight?'light':'dark');
-    tt.innerHTML=isLight?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>';
-  });
-})();
+// theme toggle removed — always dark
+document.body.classList.remove('light');
+localStorage.removeItem('glorex-theme');
 
 /* Navbar scroll */
 const nav=document.getElementById('nav');
@@ -1497,83 +1589,45 @@ if('serviceWorker' in navigator){
   if(window.caches) caches.keys().then(ks=>ks.forEach(k=>caches.delete(k)));
 }
 
-/* ── Auth state: show user info if logged in ── */
+/* ── Auth state: مسجل دخول → حول لـ Dashboard مباشرة ── */
 (async()=>{
   try{
     const mod = await import('./supabase-client.js');
     const session = await mod.getSession();
     if(session){
-      const user = session.user;
-      const meta = user.user_metadata || {};
-      const firstName = meta.first_name || (meta.full_name||user.email.split('@')[0]).split(' ')[0];
-      const initial = (firstName[0]||'G').toUpperCase();
-
-      const cta = document.querySelector('.nav-cta-d');
-      if(cta){
-        cta.innerHTML = `
-          <button class="nav-theme" id="themeToggle" aria-label="تبديل الوضع"><i class="fas fa-moon"></i></button>
-          <a href="dashboard.html" class="nav-signin" style="display:flex;align-items:center;gap:.5rem">
-            <span style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#F0C030,#A07810);display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:.82rem">${initial}</span>
-            ${firstName}
-          </a>
-          <a href="dashboard.html" class="btn btn-p" style="padding:.65rem 1.5rem;font-size:var(--tsm)">لوحة التحكم <i class="fas fa-arrow-left"></i></a>`;
-        /* Re-bind theme toggle (was replaced) */
-        const tt=document.getElementById('themeToggle');
-        const saved=localStorage.getItem('glorex-theme');
-        if(saved==='light'){document.body.classList.add('light');tt.innerHTML='<i class="fas fa-sun"></i>'}
-        tt.addEventListener('click',()=>{
-          document.body.classList.toggle('light');
-          const isLight=document.body.classList.contains('light');
-          localStorage.setItem('glorex-theme',isLight?'light':'dark');
-          tt.innerHTML=isLight?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>';
-        });
-      }
-
-      /* Update hero CTA: change "ابدأ الآن" to "ادخل للوحة التحكم" */
-      const heroCta = document.querySelector('.hero-ctas .btn-p');
-      if(heroCta){heroCta.textContent='لوحة التحكم'; heroCta.href='dashboard.html';
-        const i=document.createElement('i'); i.className='fas fa-arrow-left'; heroCta.appendChild(i);}
+      // المستخدم مسجل دخول — ما يشوف الصفحة العامة، يروح للـ Dashboard
+      location.replace('dashboard.html');
     }
   }catch(e){/* Supabase not configured yet, silent */}
 })();
 
-/* ── Gold Dot Cursor ── */
-(()=>{
-  const dot = document.createElement('div');
-  dot.style.cssText = [
-    'position:fixed',
-    'width:10px',
-    'height:10px',
-    'border-radius:50%',
-    'background:radial-gradient(circle at 35% 35%,#F0C030,#D4A017)',
-    'box-shadow:0 0 10px rgba(212,160,23,0.9),0 0 22px rgba(212,160,23,0.5)',
-    'pointer-events:none',
-    'z-index:99999',
-    'transform:translate(-50%,-50%)',
-    'will-change:left,top',
-    'transition:width .15s,height .15s,opacity .2s'
-  ].join(';');
-  document.body.appendChild(dot);
+/* Cursor effect removed */
 
-  let tx=window.innerWidth/2, ty=window.innerHeight/2;
-  let cx=tx, cy=ty;
-
-  document.addEventListener('mousemove', e=>{ tx=e.clientX; ty=e.clientY; });
-
-  /* shrink dot on click */
-  document.addEventListener('mousedown', ()=>{ dot.style.width='7px'; dot.style.height='7px'; });
-  document.addEventListener('mouseup',   ()=>{ dot.style.width='10px'; dot.style.height='10px'; });
-
-  (function loop(){
-    cx += (tx-cx)*0.18;
-    cy += (ty-cy)*0.18;
-    dot.style.left = cx+'px';
-    dot.style.top  = cy+'px';
-    requestAnimationFrame(loop);
-  })();
+/* Hide "Built with Spline" watermark from shadow DOM */
+(function hideSplineLogo(){
+  const viewer = document.getElementById('heroSpline');
+  if(!viewer) return;
+  const tryHide = () => {
+    if(viewer.shadowRoot){
+      // remove logo element
+      const logo = viewer.shadowRoot.getElementById('logo')
+        || viewer.shadowRoot.querySelector('a[href*="spline"]')
+        || viewer.shadowRoot.querySelector('[part="logo"]');
+      if(logo) logo.style.display = 'none';
+      // inject CSS as well
+      const s = document.createElement('style');
+      s.textContent = '#logo,a[href*="spline"],[part="logo"]{display:none!important;visibility:hidden!important;opacity:0!important}';
+      viewer.shadowRoot.appendChild(s);
+    }
+  };
+  tryHide();
+  // Retry several times until Spline finishes loading
+  let tries = 0;
+  const id = setInterval(()=>{
+    tryHide();
+    if(++tries > 30) clearInterval(id);
+  }, 300);
 })();
-
-
 </script>
 </body>
 </html>

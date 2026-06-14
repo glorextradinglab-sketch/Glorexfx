@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>حاسبة المخاطر — GLOREX</title>
+<meta name="theme-color" content="#0a0a0a"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold:#D4A017;--gold-l:#F0C030;--gold-d:#A07810;
+  --bg:#080808;--surface:#0d0d0d;--card:#111111;
+  --border:rgba(255,255,255,0.08);
+  --txt:#fff;--txt2:#ccc;--txt3:#999;--txt4:#666;
+  --success:#10b981;--danger:#ef4444;--warning:#f59e0b;
+  --ease:cubic-bezier(.4,0,.2,1);--base:.3s;
+}
+body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;font-family:inherit;border:none;background:none;color:inherit}
+
+.bg-mesh{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 900px 700px at 80% 0%,rgba(212,160,23,.12),transparent 60%),radial-gradient(ellipse 600px 800px at 0% 100%,rgba(160,120,16,.1),transparent 60%)}
+
+.topbar{position:sticky;top:0;z-index:100;background:rgba(8,8,8,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:.95rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{display:flex;align-items:center;gap:.6rem}
+.brand-logo{width:40px;height:40px;border-radius:11px;background:#fff;border:1.5px solid rgba(212,160,23,.5);box-shadow:0 0 14px rgba(184,134,11,.45);display:flex;align-items:center;justify-content:center;padding:5px;overflow:hidden}
+.brand-logo img{width:100%;height:100%;object-fit:contain}
+.brand-name{font-family:'Space Grotesk';font-weight:700;letter-spacing:2px;font-size:1.1rem}
+.nav-tabs{display:flex;gap:.4rem}
+.nav-tab{padding:.55rem 1.1rem;border-radius:10px;color:var(--txt3);font-size:.88rem;font-weight:500;transition:all var(--base) var(--ease)}
+.nav-tab:hover{color:var(--txt);background:rgba(255,255,255,.04)}
+.nav-tab.active{color:var(--gold);background:rgba(212,160,23,.1)}
+.user-name{font-size:.88rem;color:var(--txt3)}
+.user-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:.92rem;font-family:'Space Grotesk'}
+.user-menu{display:flex;align-items:center;gap:.7rem}
+
+.main{max-width:980px;margin:0 auto;padding:2rem;position:relative;z-index:1}
+
+.page-head{margin-bottom:1.5rem}
+.page-h1{font-family:'Space Grotesk';font-size:1.9rem;font-weight:700;margin-bottom:.35rem}
+.page-h1 em{font-style:normal;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.page-sub{color:var(--txt3);font-size:.92rem}
+
+.grid{display:grid;grid-template-columns:1fr 380px;gap:1.5rem;align-items:flex-start}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:1.4rem 1.6rem}
+.card-h{font-family:'Space Grotesk';font-weight:600;font-size:1rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:.5rem}
+.card-h i{color:var(--gold)}
+
+.field{display:flex;flex-direction:column;gap:.4rem;margin-bottom:1rem}
+.field-label{font-size:.85rem;color:var(--txt2);font-weight:500;display:flex;align-items:center;gap:.4rem}
+.field-label i{color:var(--gold);font-size:.7rem}
+.field-hint{font-size:.72rem;color:var(--txt4);margin-top:.1rem}
+.input,.select{padding:.75rem 1rem;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;color:var(--txt);font-family:inherit;font-size:.95rem;transition:all .2s ease;width:100%}
+.input:focus,.select:focus{outline:none;border-color:var(--gold);background:rgba(212,160,23,.04)}
+
+.input-suffix{position:relative}
+.input-suffix .input{padding-left:3rem}
+.input-suffix .suffix{position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--txt4);font-size:.85rem;font-family:'Space Grotesk';font-weight:600;pointer-events:none}
+
+.row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+
+/* Category tabs */
+.cat-tabs{display:flex;gap:.4rem;margin-bottom:.6rem;flex-wrap:wrap;background:rgba(255,255,255,.02);padding:.35rem;border-radius:12px;border:1px solid var(--border)}
+.cat-tab{padding:.4rem .9rem;border-radius:8px;color:var(--txt3);font-size:.78rem;font-weight:500;transition:all .2s ease}
+.cat-tab:hover{background:rgba(255,255,255,.04);color:var(--txt2)}
+.cat-tab.active{background:rgba(212,160,23,.18);color:var(--gold)}
+
+.pills{display:flex;gap:.4rem;flex-wrap:wrap;max-height:160px;overflow-y:auto}
+.pill{padding:.5rem 1rem;border-radius:9px;border:1px solid var(--border);background:rgba(255,255,255,.02);color:var(--txt3);font-size:.83rem;font-weight:500;transition:all .2s ease}
+.pill:hover{background:rgba(255,255,255,.05);color:var(--txt2)}
+.pill.active{background:rgba(212,160,23,.15);border-color:var(--gold);color:var(--gold)}
+
+.results{position:sticky;top:90px}
+.result-main{background:linear-gradient(135deg,rgba(212,160,23,.08),rgba(160,120,16,.03));border:1px solid rgba(212,160,23,.25);border-radius:18px;padding:1.5rem;text-align:center;margin-bottom:1rem}
+.result-lbl{font-size:.75rem;color:var(--txt4);text-transform:uppercase;letter-spacing:1.5px;font-weight:600;margin-bottom:.5rem}
+.result-val{font-family:'Space Grotesk';font-size:2.4rem;font-weight:800;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;line-height:1.1}
+.result-unit{color:var(--txt3);font-size:.85rem;margin-top:.3rem}
+.result-hint{display:flex;align-items:flex-start;gap:.5rem;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;padding:.55rem .75rem;margin-top:.85rem;font-size:.78rem;color:var(--txt2);text-align:right;line-height:1.55}
+.result-hint i{color:var(--gold);margin-top:.15rem;font-size:.75rem}
+.rounded-tip{display:inline-flex;align-items:center;gap:.3rem;background:rgba(212,160,23,.15);color:var(--gold);padding:.15rem .55rem;border-radius:6px;font-size:.72rem;font-weight:600;margin-right:.4rem}
+
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:1rem}
+.res-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.85rem 1rem}
+.res-lbl{font-size:.7rem;color:var(--txt4);text-transform:uppercase;letter-spacing:.5px;font-weight:600;margin-bottom:.35rem}
+.res-val{font-family:'Space Grotesk';font-weight:700;font-size:1.05rem}
+.res-val.pos{color:var(--success)}
+.res-val.neg{color:var(--danger)}
+
+.warning{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);color:#ef4444;border-radius:10px;padding:.75rem 1rem;font-size:.82rem;display:flex;gap:.5rem;align-items:flex-start}
+.warning i{font-size:1rem;margin-top:.15rem}
+
+.success-note{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.25);color:#10b981;border-radius:10px;padding:.75rem 1rem;font-size:.82rem;display:flex;gap:.5rem;align-items:flex-start}
+.success-note i{font-size:1rem;margin-top:.15rem}
+
+@media (max-width:900px){
+  .grid{grid-template-columns:1fr}
+  .results{position:relative;top:0}
+}
+@media (max-width:768px){
+  .topbar{padding:.8rem 1rem}
+  .nav-tabs{display:none}
+  .main{padding:1.2rem}
+  .row{grid-template-columns:1fr}
+  .result-grid{grid-template-columns:1fr}
+}
+
+.instrument-info{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:10px;padding:.75rem .9rem;margin-top:.5rem;font-size:.78rem;color:var(--txt3);display:flex;align-items:center;gap:.5rem}
+.instrument-info i{color:var(--gold)}
+
+/* Enter hint */
+.enter-hint{font-size:.7rem;color:var(--txt4);margin-top:.3rem;display:flex;align-items:center;gap:.3rem}
+.enter-hint kbd{background:rgba(255,255,255,.06);border:1px solid var(--border);padding:.1rem .4rem;border-radius:4px;font-size:.65rem;font-family:'Space Grotesk';color:var(--txt2)}
+</style>
+</head>
+<body>
+
+<div class="bg-mesh"></div>
+
+<header class="topbar">
+  <a href="glorex_landing.html" class="brand">
+    <div class="brand-logo"><img src="glorex_bull_gold.png" alt="GLOREX"/></div>
+    <div class="brand-name">GLOREX</div>
+  </a>
+  <nav class="nav-tabs">
+    <a href="dashboard.html" class="nav-tab">الرئيسية</a>
+    <a href="checklist.html" class="nav-tab">القائمة</a>
+    <a href="journal.html" class="nav-tab">السجل</a>
+    <a href="calendar.html" class="nav-tab">التقويم</a>
+    <a href="lessons.html" class="nav-tab">الدروس</a> <a href="chat.html" class="nav-tab">المحادثة</a>
+  </nav>
+  <div class="user-menu">
+    <span class="user-name" id="userName">...</span>
+    <div class="user-avatar" id="userAvatar">G</div>
+  </div>
+</header>
+
+<main class="main">
+
+  <div class="page-head">
+    <h1 class="page-h1">حاسبة <em>المخاطر</em></h1>
+    <p class="page-sub">احسب حجم العقد المناسب لصفقتك حسب رأس المال ومسافة الستوب</p>
+  </div>
+
+  <div class="grid">
+
+    <!-- Form -->
+    <div class="card">
+      <div class="card-h"><i class="fas fa-cog"></i> بيانات الصفقة</div>
+
+      <div class="field">
+        <div class="field-label"><i class="fas fa-chart-line"></i> الأداة</div>
+
+        <div class="cat-tabs" id="catTabs">
+          <button class="cat-tab active" data-cat="futures">📊 العقود</button>
+          <button class="cat-tab" data-cat="forex">💱 الفوركس</button>
+          <button class="cat-tab" data-cat="metals">🥇 المعادن</button>
+          <button class="cat-tab" data-cat="crypto">₿ الكريبتو</button>
+          <button class="cat-tab" data-cat="custom">⚙️ مخصص</button>
+        </div>
+
+        <div class="pills" id="instPills"></div>
+
+        <div class="instrument-info" id="instInfo">
+          <i class="fas fa-info-circle"></i>
+          <span></span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <div class="field-label"><i class="fas fa-wallet"></i> رأس المال</div>
+          <div class="input-suffix">
+            <input class="input calc-in" id="balance" type="number" value="10000" step="100"/>
+            <span class="suffix">$</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-label"><i class="fas fa-percent"></i> نسبة المخاطرة (بلمية)</div>
+          <div class="input-suffix">
+            <input class="input calc-in" id="riskPct" type="number" value="0.5" step="0.1" min="0.1"/>
+            <span class="suffix">%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-label"><i class="fas fa-shield-halved"></i> مسافة الستوب</div>
+        <div class="input-suffix">
+          <input class="input calc-in" id="stopPoints" type="number" placeholder="مثلاً 20" step="0.1"/>
+          <span class="suffix" id="stopUnit">نقطة</span>
+        </div>
+        <div class="field-hint" id="stopHint">عدد النقاط بين سعر الدخول والستوب</div>
+      </div>
+
+      <div class="field">
+        <div class="field-label"><i class="fas fa-bullseye"></i> نسبة المخاطرة/الربح (R:R)</div>
+        <div class="pills" data-field="rr">
+          <button class="pill" data-val="1">1:1</button>
+          <button class="pill active" data-val="2">1:2</button>
+          <button class="pill" data-val="3">1:3</button>
+          <button class="pill" data-val="4">1:4</button>
+          <button class="pill" data-val="5">1:5</button>
+        </div>
+      </div>
+
+      <div class="field" id="customFields" style="display:none">
+        <div class="field-label"><i class="fas fa-cog"></i> قيمة كل نقطة لكل عقد كامل</div>
+        <div class="input-suffix">
+          <input class="input calc-in" id="pointValue" type="number" value="1" step="0.01"/>
+          <span class="suffix">$/نقطة</span>
+        </div>
+        <div class="field-hint">قيمة الحركة بمقدار 1 نقطة لكل عقد كامل (Standard Lot)</div>
+      </div>
+
+    </div>
+
+    <!-- Results -->
+    <div class="results">
+      <div class="result-main">
+        <div class="result-lbl">🎯 الكمية اللي تدخلها في البروكر</div>
+        <div class="result-val" id="lotSize">0.00</div>
+        <div class="result-unit" id="lotUnit">عقد</div>
+        <div class="result-hint" id="lotHint" style="display:none">
+          <i class="fas fa-info-circle"></i>
+          <span id="lotHintText"></span>
+        </div>
+      </div>
+
+      <div class="result-grid">
+        <div class="res-card">
+          <div class="res-lbl">قيمة المخاطرة</div>
+          <div class="res-val neg" id="riskAmt">$0</div>
+        </div>
+        <div class="res-card">
+          <div class="res-lbl">الربح المتوقع</div>
+          <div class="res-val pos" id="profitAmt">$0</div>
+        </div>
+        <div class="res-card">
+          <div class="res-lbl">مسافة الستوب</div>
+          <div class="res-val" id="stopDist">0 نقطة</div>
+        </div>
+        <div class="res-card">
+          <div class="res-lbl">مسافة الهدف</div>
+          <div class="res-val" id="target">—</div>
+        </div>
+      </div>
+
+      <div id="alert"></div>
+    </div>
+
+  </div>
+
+</main>
+
+<script type="module">
+import { supabase } from './supabase-client.js';
+import { setupUserMenu } from './user-menu.js?v=20260611';
+
+/* الأدوات — قيم الـ pip/point بمنطق المتداول (مش MT5 points الحقيقية)
+   1 pip = 10 MT5 points في معظم الأدوات
+   ──────────────────────────────────────────── */
+const INSTRUMENTS = {
+  // المؤشرات (1 point = 1 unit movement)
+  NQ:   { name:'NQ (Nasdaq 100)',  pv: 1,    unit:'نقطة', cat:'futures', info:'1 نقطة = $1 لكل lot' },
+  ES:   { name:'ES (S&P 500)',     pv: 1,    unit:'نقطة', cat:'futures', info:'1 نقطة = $1 لكل lot' },
+  YM:   { name:'YM (Dow Jones)',   pv: 1,    unit:'نقطة', cat:'futures', info:'1 نقطة = $1 لكل lot' },
+  RTY:  { name:'RTY (Russell)',    pv: 1,    unit:'نقطة', cat:'futures', info:'1 نقطة = $1 لكل lot' },
+  CL:   { name:'CL (النفط WTI)',  pv: 10,   unit:'نقطة', cat:'futures', info:'1 نقطة ($1) = $10 لكل lot (100 برميل)' },
+
+  // المعادن (1 pip = $0.10 movement for gold)
+  GOLD: { name:'GOLD (XAU/USD)',   pv: 10,   unit:'pip', cat:'metals',  info:'1 pip ($0.10) = $10 لكل lot (100 oz)' },
+  SILVER:{ name:'SILVER (XAG/USD)', pv: 50,  unit:'pip', cat:'metals',  info:'1 pip ($0.01) = $50 لكل lot (5000 oz)' },
+
+  // الفوركس USD-quoted (1 pip = $10 per Standard Lot)
+  EURUSD: { name:'EUR/USD', pv: 10,    unit:'pip', cat:'forex', info:'1 pip = $10 لكل Standard Lot (100K)' },
+  GBPUSD: { name:'GBP/USD', pv: 10,    unit:'pip', cat:'forex', info:'1 pip = $10 لكل Standard Lot' },
+  AUDUSD: { name:'AUD/USD', pv: 10,    unit:'pip', cat:'forex', info:'1 pip = $10 لكل Standard Lot' },
+  NZDUSD: { name:'NZD/USD', pv: 10,    unit:'pip', cat:'forex', info:'1 pip = $10 لكل Standard Lot' },
+  USDCAD: { name:'USD/CAD', pv: 7.3,   unit:'pip', cat:'forex', info:'1 pip ≈ $7.30 (يتغير حسب السعر)' },
+  USDCHF: { name:'USD/CHF', pv: 11,    unit:'pip', cat:'forex', info:'1 pip ≈ $11 (يتغير حسب السعر)' },
+  USDJPY: { name:'USD/JPY', pv: 6.6,   unit:'pip', cat:'forex', info:'1 pip ≈ $6.60 (يتغير حسب السعر)' },
+
+  // أزواج Cross
+  EURGBP: { name:'EUR/GBP', pv: 13,    unit:'pip', cat:'forex', info:'1 pip ≈ $13' },
+  EURJPY: { name:'EUR/JPY', pv: 6.6,   unit:'pip', cat:'forex', info:'1 pip ≈ $6.60' },
+  GBPJPY: { name:'GBP/JPY', pv: 6.6,   unit:'pip', cat:'forex', info:'1 pip ≈ $6.60' },
+  EURCHF: { name:'EUR/CHF', pv: 11,    unit:'pip', cat:'forex', info:'1 pip ≈ $11' },
+  EURAUD: { name:'EUR/AUD', pv: 6.6,   unit:'pip', cat:'forex', info:'1 pip ≈ $6.60' },
+  GBPAUD: { name:'GBP/AUD', pv: 6.6,   unit:'pip', cat:'forex', info:'1 pip ≈ $6.60' },
+  AUDJPY: { name:'AUD/JPY', pv: 6.6,   unit:'pip', cat:'forex', info:'1 pip ≈ $6.60' },
+
+  // الكريبتو (1 point = $1 movement)
+  BTCUSD: { name:'BTC/USD', pv: 1,    unit:'نقطة', cat:'crypto', info:'1 نقطة ($1) = $1 لكل 1 BTC' },
+  ETHUSD: { name:'ETH/USD', pv: 10,   unit:'نقطة', cat:'crypto', info:'1 نقطة ($1) = $10 لكل 10 ETH (lot)' },
+
+  // مخصص
+  custom: { name:'مخصص', pv: 1, unit:'نقطة', cat:'custom', info:'حدد قيمة النقطة يدوياً تحت' },
+};
+
+const CAT_NAMES = {
+  futures: 'العقود',
+  forex: 'الفوركس',
+  metals: 'المعادن',
+  crypto: 'الكريبتو',
+  custom: 'مخصص',
+};
+
+const state = {
+  instrument: 'NQ',
+  category: 'futures',
+  balance: 10000,
+  riskPct: 0.5, // percent (%)
+  stopPoints: null,
+  rr: 2,
+  customPV: 1,
+};
+
+/* Render instrument pills based on category */
+function renderInstrumentPills(){
+  const pills = document.getElementById('instPills');
+  const items = Object.entries(INSTRUMENTS).filter(([_, v]) => v.cat === state.category);
+  pills.innerHTML = items.map(([k, v]) =>
+    `<button class="pill ${k===state.instrument?'active':''}" data-inst="${k}">${v.name}</button>`
+  ).join('');
+  pills.querySelectorAll('.pill').forEach(p=>{
+    p.addEventListener('click', ()=>{
+      pills.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));
+      p.classList.add('active');
+      state.instrument = p.dataset.inst;
+      updateInstrumentDisplay();
+      compute();
+    });
+  });
+}
+
+function updateInstrumentDisplay(){
+  const inst = INSTRUMENTS[state.instrument];
+  document.getElementById('stopUnit').textContent = inst.unit;
+  document.getElementById('stopHint').textContent =
+    `عدد ${inst.unit === 'pip' ? 'الـ pips' : 'النقاط'} بين سعر الدخول والستوب`;
+  document.getElementById('instInfo').querySelector('span').textContent =
+    inst.name + ' — ' + inst.info;
+  document.getElementById('customFields').style.display =
+    state.category === 'custom' ? 'block' : 'none';
+}
+
+/* Category tabs */
+document.querySelectorAll('.cat-tab').forEach(t=>{
+  t.addEventListener('click', ()=>{
+    document.querySelectorAll('.cat-tab').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    state.category = t.dataset.cat;
+    // Select first instrument in this category
+    const firstInst = Object.entries(INSTRUMENTS).find(([_, v]) => v.cat === state.category);
+    if (firstInst) state.instrument = firstInst[0];
+    renderInstrumentPills();
+    updateInstrumentDisplay();
+    compute();
+  });
+});
+
+/* RR pills */
+document.querySelectorAll('.pills[data-field="rr"] .pill').forEach(p=>{
+  p.addEventListener('click', ()=>{
+    document.querySelectorAll('.pills[data-field="rr"] .pill').forEach(x=>x.classList.remove('active'));
+    p.classList.add('active');
+    state.rr = Number(p.dataset.val);
+    compute();
+  });
+});
+
+/* Inputs */
+['balance','riskPct','stopPoints','pointValue'].forEach(id=>{
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.addEventListener('input', e=>{
+    const v = parseFloat(e.target.value) || 0;
+    if(id==='balance') state.balance = v;
+    else if(id==='riskPct') state.riskPct = v;
+    else if(id==='stopPoints') state.stopPoints = v;
+    else if(id==='pointValue') state.customPV = v;
+    compute();
+  });
+});
+
+/* Enter key — move to next input */
+document.querySelectorAll('.calc-in').forEach((el, i, all) => {
+  el.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      // Find next visible input
+      for (let j = i+1; j < all.length; j++) {
+        const next = all[j];
+        if (next.offsetParent !== null) { // visible
+          next.focus();
+          next.select?.();
+          return;
+        }
+      }
+      // If at end, blur
+      el.blur();
+    }
+  });
+});
+
+/* ============ Calculation ============ */
+function compute(){
+  const alertEl = document.getElementById('alert');
+  alertEl.innerHTML = '';
+
+  const inst = INSTRUMENTS[state.instrument];
+  const pv = state.category === 'custom' ? state.customPV : inst.pv;
+
+  if(!state.stopPoints || state.stopPoints <= 0){
+    document.getElementById('lotSize').textContent = '0.00';
+    document.getElementById('riskAmt').textContent = '$0';
+    document.getElementById('profitAmt').textContent = '$0';
+    document.getElementById('stopDist').textContent = `0 ${inst.unit}`;
+    document.getElementById('target').textContent = '—';
+    alertEl.innerHTML = '<div class="warning"><i class="fas fa-exclamation-triangle"></i><span>أدخل مسافة الستوب لحساب حجم العقد</span></div>';
+    return;
+  }
+
+  const riskUSD = state.balance * (state.riskPct / 100); // percent (%)
+
+  if(pv === 0){
+    document.getElementById('lotSize').textContent = '∞';
+    return;
+  }
+
+  // Lot size = risk USD / (stop distance * point value per lot)
+  const lotSize = riskUSD / (state.stopPoints * pv);
+
+  // For futures (whole contracts), suggest rounding
+  let displayLot = lotSize.toFixed(2);
+  let hintText = '';
+  let lotUnit = 'عقد';
+
+  if(inst.cat === 'futures'){
+    lotUnit = 'عقد';
+    const rounded = Math.floor(lotSize);
+    if(lotSize >= 1 && lotSize !== rounded){
+      hintText = `العقود الفعلية تتداول بأرقام صحيحة فقط. ضع <span class="rounded-tip">${rounded} عقد</span> في خانة Quantity في البروكر (مخاطرتك الفعلية رح تكون أقل قليلاً)`;
+    } else if(lotSize < 1){
+      hintText = 'الرقم أقل من عقد كامل — جرّب Micro Contracts (MNQ, MES, MYM) أو زود رأس المال';
+    } else {
+      hintText = `ضع <span class="rounded-tip">${rounded} عقد</span> في خانة Quantity في البروكر`;
+    }
+  } else if(inst.cat === 'forex'){
+    lotUnit = 'Standard Lot';
+    if(lotSize < 0.01){
+      hintText = 'الحجم صغير جداً — جرّب Micro Lot (0.01) كحد أدنى';
+    } else if(lotSize < 0.1){
+      hintText = `ضع <span class="rounded-tip">${lotSize.toFixed(2)} lot</span> أو ${(lotSize*100).toFixed(0)} Micro Lots في البروكر`;
+    } else if(lotSize < 1){
+      hintText = `ضع <span class="rounded-tip">${lotSize.toFixed(2)} lot</span> (Mini Lot) في البروكر`;
+    } else {
+      hintText = `ضع <span class="rounded-tip">${lotSize.toFixed(2)} lot</span> في البروكر`;
+    }
+  } else if(inst.cat === 'metals'){
+    lotUnit = state.instrument === 'GOLD' ? 'lot (100 oz)' : 'lot';
+    hintText = `ضع <span class="rounded-tip">${lotSize.toFixed(2)} lot</span> في البروكر`;
+  } else if(inst.cat === 'crypto'){
+    lotUnit = state.instrument === 'BTCUSD' ? 'BTC' : 'ETH';
+    hintText = `ضع <span class="rounded-tip">${lotSize.toFixed(4)} ${lotUnit}</span> في البروكر`;
+  } else if(inst.cat === 'custom'){
+    lotUnit = 'عقد';
+    hintText = `ضع <span class="rounded-tip">${lotSize.toFixed(2)}</span> في البروكر`;
+  }
+
+  document.getElementById('lotSize').textContent = displayLot;
+  document.getElementById('lotUnit').textContent = lotUnit;
+
+  const lotHint = document.getElementById('lotHint');
+  if(hintText){
+    lotHint.style.display = 'flex';
+    document.getElementById('lotHintText').innerHTML = hintText;
+  } else {
+    lotHint.style.display = 'none';
+  }
+
+  document.getElementById('riskAmt').textContent = '-$' + riskUSD.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+  document.getElementById('profitAmt').textContent = '+$' + (riskUSD * state.rr).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+  document.getElementById('stopDist').textContent = state.stopPoints + ' ' + inst.unit;
+  document.getElementById('target').textContent = (state.stopPoints * state.rr) + ' ' + inst.unit;
+
+  // Recommendations (%)
+  if(state.riskPct > 2){
+    alertEl.innerHTML = '<div class="warning"><i class="fas fa-exclamation-triangle"></i><span>نسبة المخاطرة عالية ('+state.riskPct+'%) — يفضّل تكون بين 0.5% و 2%</span></div>';
+  } else if(state.riskPct < 0.5){
+    alertEl.innerHTML = '<div class="success-note"><i class="fas fa-shield-halved"></i><span>إدارة مخاطر ممتازة ✅ — نسبة محافظة جداً</span></div>';
+  } else {
+    alertEl.innerHTML = '<div class="success-note"><i class="fas fa-check-circle"></i><span>نسبة مخاطرة جيدة ومناسبة</span></div>';
+  }
+
+  if(lotSize < 0.01){
+    alertEl.innerHTML += '<div class="warning" style="margin-top:.5rem"><i class="fas fa-info-circle"></i><span>حجم العقد صغير جداً — جرب Micro Contracts أو رأس مال أكبر</span></div>';
+  }
+}
+
+/* Init */
+async function init(){
+  try{
+    const { data:{session} } = await supabase.auth.getSession();
+    if(session){
+      const fn = session.user.user_metadata?.first_name || session.user.email.split('@')[0];
+      document.getElementById('userName').textContent = fn;
+      document.getElementById('userAvatar').textContent = (fn[0]||'G').toUpperCase();
+      await setupUserMenu(session.user);
+    } else {
+      document.getElementById('userName').textContent = 'زائر';
+    }
+  }catch(e){ document.getElementById('userName').textContent='زائر'; }
+
+  renderInstrumentPills();
+  updateInstrumentDisplay();
+  compute();
+}
+init();
+</script>
+
+</body>
+</html>

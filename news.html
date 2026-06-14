@@ -1,0 +1,858 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>أخبار السوق — GLOREX</title>
+<meta name="theme-color" content="#0a0a0a"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold:#D4A017;--gold-l:#F0C030;--gold-d:#A07810;
+  --bg:#080808;--surface:#0d0d0d;--card:#111111;
+  --border:rgba(255,255,255,0.08);
+  --txt:#fff;--txt2:#ccc;--txt3:#999;--txt4:#666;
+  --success:#10b981;--danger:#ef4444;--warning:#f59e0b;
+  --ease:cubic-bezier(.4,0,.2,1);--base:.3s;
+}
+body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;font-family:inherit;border:none;background:none;color:inherit}
+
+.bg-mesh{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 900px 700px at 80% 0%,rgba(212,160,23,.12),transparent 60%),radial-gradient(ellipse 600px 800px at 0% 100%,rgba(160,120,16,.1),transparent 60%)}
+
+.topbar{position:sticky;top:0;z-index:100;background:rgba(8,8,8,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:.95rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{display:flex;align-items:center;gap:.6rem}
+.brand-logo{width:40px;height:40px;border-radius:11px;background:#fff;border:1.5px solid rgba(212,160,23,.5);box-shadow:0 0 14px rgba(184,134,11,.45);display:flex;align-items:center;justify-content:center;padding:5px;overflow:hidden}
+.brand-logo img{width:100%;height:100%;object-fit:contain}
+.brand-name{font-family:'Space Grotesk';font-weight:700;letter-spacing:2px;font-size:1.1rem}
+.nav-tabs{display:flex;gap:.4rem}
+.nav-tab{padding:.55rem 1.1rem;border-radius:10px;color:var(--txt3);font-size:.88rem;font-weight:500;transition:all var(--base) var(--ease)}
+.nav-tab:hover{color:var(--txt);background:rgba(255,255,255,.04)}
+.nav-tab.active{color:var(--gold);background:rgba(212,160,23,.1)}
+.user-name{font-size:.88rem;color:var(--txt3)}
+.user-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:.92rem;font-family:'Space Grotesk'}
+.user-menu{display:flex;align-items:center;gap:.7rem}
+
+.main{max-width:1100px;margin:0 auto;padding:2rem;position:relative;z-index:1}
+
+.page-head{margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:flex-end;gap:1rem;flex-wrap:wrap}
+.page-h1{font-family:'Space Grotesk';font-size:1.9rem;font-weight:700;margin-bottom:.35rem}
+.page-h1 em{font-style:normal;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.page-sub{color:var(--txt3);font-size:.92rem}
+
+.btn{padding:.7rem 1.4rem;border-radius:12px;font-weight:600;font-size:.88rem;transition:all var(--base) var(--ease);display:inline-flex;align-items:center;gap:.5rem;justify-content:center;white-space:nowrap;border:none;cursor:pointer;font-family:inherit}
+.btn-p{background:linear-gradient(135deg,var(--gold),var(--gold-d));color:#000;box-shadow:0 4px 16px rgba(212,160,23,.3)}
+.btn-p:hover{background:linear-gradient(135deg,var(--gold-l),var(--gold));transform:translateY(-2px)}
+.btn-p:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn-g{background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--txt2)}
+.btn-g:hover{background:rgba(255,255,255,.08);color:var(--txt)}
+.btn-danger{background:rgba(239,68,68,.12);color:#ef4444;border:1px solid rgba(239,68,68,.3)}
+.btn-danger:hover{background:rgba(239,68,68,.2)}
+.btn-sm{padding:.45rem .9rem;font-size:.78rem;border-radius:9px}
+
+/* Tabs */
+.tabs{display:flex;gap:.4rem;margin-bottom:1.2rem;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:.5rem}
+.tab{padding:.6rem 1.2rem;border-radius:10px;color:var(--txt3);font-size:.85rem;font-weight:500;transition:all .2s ease;flex:1;text-align:center}
+.tab:hover{background:rgba(255,255,255,.04);color:var(--txt)}
+.tab.active{background:rgba(212,160,23,.15);color:var(--gold)}
+.tab .badge{background:rgba(255,255,255,.08);padding:.1rem .5rem;border-radius:9px;font-size:.7rem;margin-right:.3rem}
+.tab.active .badge{background:rgba(212,160,23,.3);color:var(--gold)}
+
+/* Request card */
+.req-grid{display:grid;gap:.8rem}
+.req-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.1rem 1.3rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+.req-card.inactive{opacity:.6}
+.req-info{flex:1;min-width:0}
+.req-title{font-family:'Space Grotesk';font-weight:600;font-size:1rem;margin-bottom:.3rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.req-tag{padding:.18rem .5rem;border-radius:6px;font-size:.7rem;font-weight:600}
+.req-tag.active{background:rgba(16,185,129,.15);color:#10b981}
+.req-tag.inactive{background:rgba(107,114,128,.2);color:#9ca3af}
+.req-meta{display:flex;gap:1rem;color:var(--txt3);font-size:.78rem;flex-wrap:wrap}
+.req-meta span{display:flex;align-items:center;gap:.3rem}
+.req-meta i{color:var(--gold);font-size:.7rem}
+.req-instruments{display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.4rem}
+.req-instruments span{padding:.2rem .55rem;border-radius:6px;background:rgba(212,160,23,.1);color:var(--gold);font-size:.7rem;font-weight:600}
+.req-actions{display:flex;gap:.4rem;flex-wrap:wrap}
+
+/* News feed */
+.news-list{display:flex;flex-direction:column;gap:1rem}
+.news-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.2rem 1.4rem;transition:all .2s ease}
+.news-card:hover{border-color:rgba(212,160,23,.25)}
+.news-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:.7rem;flex-wrap:wrap}
+.news-title{font-family:'Space Grotesk';font-weight:600;font-size:1.05rem}
+.news-date{font-size:.78rem;color:var(--txt4);display:flex;align-items:center;gap:.3rem;white-space:nowrap}
+.news-content{font-size:.92rem;line-height:1.8;color:var(--txt2);white-space:pre-wrap;word-break:break-word}
+.news-content h1,.news-content h2,.news-content h3{font-family:'Space Grotesk';color:var(--gold);margin:.8rem 0 .4rem;font-size:1rem}
+.news-content strong{color:var(--txt)}
+.news-content p{margin-bottom:.5rem}
+.news-instruments{display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.7rem;padding-top:.7rem;border-top:1px solid var(--border)}
+
+/* Modal */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);z-index:300;display:none;align-items:flex-start;justify-content:center;padding:2rem 1rem;overflow-y:auto}
+.modal-bg.show{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:18px;max-width:620px;width:100%;overflow:hidden;display:flex;flex-direction:column;margin-top:2rem;margin-bottom:2rem}
+.modal-head{padding:1.2rem 1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.modal-title{font-family:'Space Grotesk';font-weight:700;font-size:1.1rem}
+.modal-close{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;color:var(--txt3)}
+.modal-close:hover{background:rgba(239,68,68,.15);color:#ef4444}
+.modal-body{padding:1.5rem;display:flex;flex-direction:column;gap:1.1rem}
+.modal-foot{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;gap:.6rem;justify-content:flex-end}
+
+.field{display:flex;flex-direction:column;gap:.4rem}
+.field-label{font-size:.85rem;color:var(--txt2);font-weight:500;display:flex;align-items:center;gap:.4rem}
+.field-label i{color:var(--gold);font-size:.7rem}
+.field-hint{font-size:.72rem;color:var(--txt4)}
+.input,.select,.textarea{padding:.7rem .9rem;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;color:var(--txt);font-family:inherit;font-size:.9rem;transition:all .2s ease;width:100%}
+.input:focus,.select:focus,.textarea:focus{outline:none;border-color:var(--gold);background:rgba(212,160,23,.04)}
+.select{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3e%3cpath d='M6 9l6 6 6-6'/%3e%3c/svg%3e");background-repeat:no-repeat;background-position:left .8rem center;background-size:14px;padding-left:2.3rem}
+.select option{background:#111;color:#fff}
+.textarea{min-height:90px;resize:vertical;line-height:1.6}
+
+/* Instruments multi-select */
+.inst-cats{display:flex;gap:.3rem;flex-wrap:wrap;margin-bottom:.5rem}
+.inst-cat{padding:.35rem .8rem;border-radius:8px;background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--txt3);font-size:.78rem;font-weight:500;cursor:pointer;transition:all .2s ease}
+.inst-cat:hover{background:rgba(255,255,255,.05)}
+.inst-cat.active{background:rgba(212,160,23,.15);color:var(--gold);border-color:rgba(212,160,23,.3)}
+
+.inst-pills{display:flex;gap:.4rem;flex-wrap:wrap;padding:.7rem;background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:10px;min-height:60px;max-height:160px;overflow-y:auto}
+.inst-pill{padding:.4rem .8rem;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--txt3);font-size:.78rem;font-weight:500;cursor:pointer;transition:all .2s ease;user-select:none}
+.inst-pill:hover{background:rgba(255,255,255,.07);color:var(--txt2)}
+.inst-pill.selected{background:rgba(212,160,23,.18);color:var(--gold);border-color:var(--gold)}
+
+/* Time slots */
+.time-slots{display:flex;gap:.5rem;flex-wrap:wrap}
+.time-chip{display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .7rem;background:rgba(212,160,23,.1);color:var(--gold);border:1px solid rgba(212,160,23,.3);border-radius:8px;font-size:.78rem;font-weight:600}
+.time-chip button{color:var(--gold);opacity:.6;cursor:pointer}
+.time-chip button:hover{opacity:1;color:#ef4444}
+
+.add-time{display:flex;gap:.4rem;align-items:center}
+.add-time input{padding:.4rem .7rem;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;color:var(--txt);font-family:inherit;font-size:.85rem;width:120px}
+.add-time button{padding:.4rem .9rem;background:rgba(212,160,23,.15);color:var(--gold);border-radius:8px;font-size:.78rem;font-weight:600;border:1px solid rgba(212,160,23,.3)}
+
+/* Searchable timezone dropdown */
+.tz-wrap{position:relative}
+.tz-trigger{padding:.7rem .9rem;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;color:var(--txt);font-family:inherit;font-size:.9rem;width:100%;text-align:right;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:all .2s ease}
+.tz-trigger:hover{background:rgba(255,255,255,.05)}
+.tz-trigger:focus,.tz-trigger.open{outline:none;border-color:var(--gold);background:rgba(212,160,23,.04)}
+.tz-trigger i{color:var(--txt4);transition:transform .2s ease}
+.tz-trigger.open i{transform:rotate(180deg)}
+.tz-panel{position:absolute;top:calc(100% + 6px);left:0;right:0;background:#0a0a0a;border:1px solid var(--border);border-radius:12px;box-shadow:0 14px 50px rgba(0,0,0,.6);z-index:50;display:none;flex-direction:column;max-height:340px;overflow:hidden}
+.tz-panel.open{display:flex}
+.tz-search{padding:.6rem;border-bottom:1px solid var(--border);background:rgba(255,255,255,.02)}
+.tz-search input{width:100%;padding:.55rem .85rem;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;color:var(--txt);font-family:inherit;font-size:.85rem}
+.tz-search input:focus{outline:none;border-color:var(--gold)}
+.tz-list{flex:1;overflow-y:auto;padding:.3rem}
+.tz-group-label{font-size:.7rem;color:var(--txt4);text-transform:uppercase;letter-spacing:1px;font-weight:600;padding:.55rem .8rem .3rem;position:sticky;top:0;background:#0a0a0a;z-index:1}
+.tz-option{padding:.55rem .9rem;border-radius:7px;cursor:pointer;font-size:.85rem;display:flex;justify-content:space-between;align-items:center;gap:.5rem;color:var(--txt2);transition:background .15s ease}
+.tz-option:hover{background:rgba(212,160,23,.1);color:var(--gold)}
+.tz-option.selected{background:rgba(212,160,23,.18);color:var(--gold);font-weight:600}
+.tz-option .offset{color:var(--txt4);font-size:.72rem;font-family:'Space Grotesk'}
+.tz-option.selected .offset{color:var(--gold)}
+.tz-empty{padding:1.5rem;text-align:center;color:var(--txt4);font-size:.85rem}
+
+/* Empty state */
+.empty{background:var(--card);border:1px dashed var(--border);border-radius:18px;padding:3.5rem 2rem;text-align:center}
+.empty-icon{width:80px;height:80px;border-radius:50%;background:rgba(212,160,23,.1);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin:0 auto 1rem}
+.empty-h{font-family:'Space Grotesk';font-size:1.2rem;font-weight:700;margin-bottom:.4rem}
+.empty-sub{color:var(--txt3);font-size:.88rem;margin-bottom:1.3rem;max-width:400px;margin-left:auto;margin-right:auto}
+
+.spin{display:flex;justify-content:center;padding:3rem;color:var(--gold);font-size:1.5rem}
+
+/* Toast */
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(20px);background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.8rem 1.4rem;color:var(--txt);font-size:.9rem;box-shadow:0 10px 40px rgba(0,0,0,.5);z-index:400;opacity:0;transition:all .3s ease;display:flex;align-items:center;gap:.5rem}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.success{border-color:rgba(16,185,129,.5)}
+.toast.error{border-color:rgba(239,68,68,.5)}
+.toast.success i{color:#10b981}
+.toast.error i{color:#ef4444}
+
+@media (max-width:768px){
+  .topbar{padding:.8rem 1rem}
+  .nav-tabs{display:none}
+  .main{padding:1.2rem}
+  .req-card{flex-direction:column;align-items:stretch}
+  .req-actions{justify-content:flex-end}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-mesh"></div>
+
+<header class="topbar">
+  <a href="glorex_landing.html" class="brand">
+    <div class="brand-logo"><img src="glorex_bull_gold.png" alt="GLOREX"/></div>
+    <div class="brand-name">GLOREX</div>
+  </a>
+  <nav class="nav-tabs">
+    <a href="dashboard.html" class="nav-tab">الرئيسية</a>
+    <a href="checklist.html" class="nav-tab">القائمة</a>
+    <a href="journal.html" class="nav-tab">السجل</a>
+    <a href="calendar.html" class="nav-tab">التقويم</a>
+    <a href="lessons.html" class="nav-tab">الدروس</a> <a href="chat.html" class="nav-tab">المحادثة</a>
+  </nav>
+  <div class="user-menu">
+    <span class="user-name" id="userName">...</span>
+    <div class="user-avatar" id="userAvatar">G</div>
+  </div>
+</header>
+
+<main class="main">
+
+  <div class="page-head">
+    <div>
+      <h1 class="page-h1">أخبار <em>السوق</em></h1>
+      <p class="page-sub">اطلب من الـ AI أخبار أي زوج عملة أو أداة وقتما تشاء</p>
+    </div>
+    <button class="btn btn-p" onclick="openModal()">
+      <i class="fas fa-plus"></i> طلب جديد
+    </button>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-view="feed">
+      <i class="far fa-newspaper"></i> أخباري
+      <span class="badge" id="feed-count">0</span>
+    </button>
+    <button class="tab" data-view="requests">
+      <i class="fas fa-bell"></i> طلباتي
+      <span class="badge" id="req-count">0</span>
+    </button>
+  </div>
+
+  <div id="content">
+    <div class="spin"><i class="fas fa-spinner fa-spin"></i></div>
+  </div>
+
+</main>
+
+<!-- Modal -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="modalTitle">طلب جديد</div>
+      <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+
+      <div class="field">
+        <div class="field-label"><i class="fas fa-tag"></i> عنوان الطلب</div>
+        <input class="input" id="f-title" placeholder="مثلاً: أخبار الذهب اليومية"/>
+      </div>
+
+      <div class="field">
+        <div class="field-label"><i class="fas fa-chart-line"></i> الأدوات (اختر واحد أو أكثر)</div>
+        <div class="inst-cats" id="instCats">
+          <button class="inst-cat active" data-cat="indices">المؤشرات</button>
+          <button class="inst-cat" data-cat="metals">المعادن</button>
+          <button class="inst-cat" data-cat="forex">الفوركس</button>
+          <button class="inst-cat" data-cat="crypto">الكريبتو</button>
+        </div>
+        <div class="inst-pills" id="instPills"></div>
+        <div class="field-hint" id="selectedCount">لم تختر أي أداة بعد</div>
+      </div>
+
+      <div class="field">
+        <div class="field-label"><i class="far fa-clock"></i> الجدولة</div>
+        <select class="select" id="f-schedule">
+          <option value="once">مرة واحدة (الآن فقط)</option>
+          <option value="daily" selected>يومياً في وقت محدد</option>
+        </select>
+      </div>
+
+      <div class="field" id="timesField">
+        <div class="field-label">
+          <i class="far fa-clock"></i> الوقت
+          <span style="color:var(--txt4);font-weight:400;font-size:.78rem">— بتوقيت <span id="tzLabel">دمشق</span></span>
+        </div>
+        <div class="time-slots" id="timeSlots"></div>
+        <div class="add-time">
+          <input type="time" id="newTime" value="09:00"/>
+          <button onclick="setSingleTime()"><i class="fas fa-check"></i> تعيين الوقت</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-label"><i class="far fa-calendar-alt"></i> فترة الأخبار</div>
+        <select class="select" id="f-days">
+          <option value="1">آخر 24 ساعة</option>
+          <option value="2">آخر يومين</option>
+          <option value="3" selected>آخر 3 أيام</option>
+          <option value="4">آخر 4 أيام</option>
+          <option value="5">آخر 5 أيام</option>
+        </select>
+        <div class="field-hint">يعني AI رح يبحث عن أخبار صارت خلال هذي الفترة الزمنية</div>
+      </div>
+
+      <div class="field">
+        <div class="field-label"><i class="fas fa-globe"></i> منطقتك الزمنية</div>
+        <select class="select" id="f-timezone">
+          <optgroup label="🌍 الدول العربية">
+            <option value="Asia/Damascus">🇸🇾 دمشق — سوريا (UTC+3)</option>
+            <option value="Asia/Riyadh">🇸🇦 الرياض — السعودية (UTC+3)</option>
+            <option value="Asia/Dubai">🇦🇪 دبي/أبوظبي — الإمارات (UTC+4)</option>
+            <option value="Asia/Kuwait">🇰🇼 الكويت (UTC+3)</option>
+            <option value="Asia/Qatar">🇶🇦 الدوحة — قطر (UTC+3)</option>
+            <option value="Asia/Muscat">🇴🇲 مسقط — عُمان (UTC+4)</option>
+            <option value="Asia/Bahrain">🇧🇭 المنامة — البحرين (UTC+3)</option>
+            <option value="Asia/Baghdad">🇮🇶 بغداد — العراق (UTC+3)</option>
+            <option value="Asia/Amman">🇯🇴 عمّان — الأردن (UTC+3)</option>
+            <option value="Asia/Beirut">🇱🇧 بيروت — لبنان (UTC+3)</option>
+            <option value="Asia/Jerusalem">🇵🇸 القدس — فلسطين (UTC+3)</option>
+            <option value="Asia/Aden">🇾🇪 صنعاء — اليمن (UTC+3)</option>
+            <option value="Africa/Cairo">🇪🇬 القاهرة — مصر (UTC+3)</option>
+            <option value="Africa/Khartoum">🇸🇩 الخرطوم — السودان (UTC+2)</option>
+            <option value="Africa/Tripoli">🇱🇾 طرابلس — ليبيا (UTC+2)</option>
+            <option value="Africa/Tunis">🇹🇳 تونس (UTC+1)</option>
+            <option value="Africa/Algiers">🇩🇿 الجزائر (UTC+1)</option>
+            <option value="Africa/Casablanca">🇲🇦 الدار البيضاء — المغرب (UTC+1)</option>
+            <option value="Africa/Nouakchott">🇲🇷 نواكشوط — موريتانيا (UTC+0)</option>
+            <option value="Africa/Djibouti">🇩🇯 جيبوتي (UTC+3)</option>
+            <option value="Africa/Mogadishu">🇸🇴 مقديشو — الصومال (UTC+3)</option>
+            <option value="Indian/Comoro">🇰🇲 جزر القمر (UTC+3)</option>
+          </optgroup>
+
+          <optgroup label="🏛️ أوروبا">
+            <option value="Europe/London">🇬🇧 لندن — المملكة المتحدة (UTC+0)</option>
+            <option value="Europe/Dublin">🇮🇪 دبلن — أيرلندا (UTC+0)</option>
+            <option value="Europe/Lisbon">🇵🇹 لشبونة — البرتغال (UTC+0)</option>
+            <option value="Europe/Paris">🇫🇷 باريس — فرنسا (UTC+1)</option>
+            <option value="Europe/Madrid">🇪🇸 مدريد — إسبانيا (UTC+1)</option>
+            <option value="Europe/Berlin">🇩🇪 برلين — ألمانيا (UTC+1)</option>
+            <option value="Europe/Rome">🇮🇹 روما — إيطاليا (UTC+1)</option>
+            <option value="Europe/Amsterdam">🇳🇱 أمستردام — هولندا (UTC+1)</option>
+            <option value="Europe/Brussels">🇧🇪 بروكسل — بلجيكا (UTC+1)</option>
+            <option value="Europe/Vienna">🇦🇹 فيينا — النمسا (UTC+1)</option>
+            <option value="Europe/Zurich">🇨🇭 زيورخ — سويسرا (UTC+1)</option>
+            <option value="Europe/Stockholm">🇸🇪 ستوكهولم — السويد (UTC+1)</option>
+            <option value="Europe/Oslo">🇳🇴 أوسلو — النرويج (UTC+1)</option>
+            <option value="Europe/Copenhagen">🇩🇰 كوبنهاغن — الدنمارك (UTC+1)</option>
+            <option value="Europe/Warsaw">🇵🇱 وارسو — بولندا (UTC+1)</option>
+            <option value="Europe/Prague">🇨🇿 براغ — التشيك (UTC+1)</option>
+            <option value="Europe/Budapest">🇭🇺 بودابست — المجر (UTC+1)</option>
+            <option value="Europe/Athens">🇬🇷 أثينا — اليونان (UTC+2)</option>
+            <option value="Europe/Helsinki">🇫🇮 هلسنكي — فنلندا (UTC+2)</option>
+            <option value="Europe/Bucharest">🇷🇴 بوخارست — رومانيا (UTC+2)</option>
+            <option value="Europe/Sofia">🇧🇬 صوفيا — بلغاريا (UTC+2)</option>
+            <option value="Europe/Kiev">🇺🇦 كييف — أوكرانيا (UTC+2)</option>
+            <option value="Europe/Istanbul">🇹🇷 إسطنبول — تركيا (UTC+3)</option>
+            <option value="Europe/Moscow">🇷🇺 موسكو — روسيا (UTC+3)</option>
+          </optgroup>
+
+          <optgroup label="🌏 آسيا">
+            <option value="Asia/Tehran">🇮🇷 طهران — إيران (UTC+3:30)</option>
+            <option value="Asia/Yerevan">🇦🇲 يريفان — أرمينيا (UTC+4)</option>
+            <option value="Asia/Baku">🇦🇿 باكو — أذربيجان (UTC+4)</option>
+            <option value="Asia/Kabul">🇦🇫 كابل — أفغانستان (UTC+4:30)</option>
+            <option value="Asia/Karachi">🇵🇰 كراتشي — باكستان (UTC+5)</option>
+            <option value="Asia/Tashkent">🇺🇿 طشقند — أوزبكستان (UTC+5)</option>
+            <option value="Asia/Kolkata">🇮🇳 دلهي — الهند (UTC+5:30)</option>
+            <option value="Asia/Dhaka">🇧🇩 دكا — بنغلاديش (UTC+6)</option>
+            <option value="Asia/Bangkok">🇹🇭 بانكوك — تايلاند (UTC+7)</option>
+            <option value="Asia/Jakarta">🇮🇩 جاكرتا — إندونيسيا (UTC+7)</option>
+            <option value="Asia/Singapore">🇸🇬 سنغافورة (UTC+8)</option>
+            <option value="Asia/Kuala_Lumpur">🇲🇾 كوالالمبور — ماليزيا (UTC+8)</option>
+            <option value="Asia/Hong_Kong">🇭🇰 هونغ كونغ (UTC+8)</option>
+            <option value="Asia/Shanghai">🇨🇳 شانغهاي — الصين (UTC+8)</option>
+            <option value="Asia/Taipei">🇹🇼 تايبيه — تايوان (UTC+8)</option>
+            <option value="Asia/Manila">🇵🇭 مانيلا — الفلبين (UTC+8)</option>
+            <option value="Asia/Seoul">🇰🇷 سيول — كوريا الجنوبية (UTC+9)</option>
+            <option value="Asia/Tokyo">🇯🇵 طوكيو — اليابان (UTC+9)</option>
+            <option value="Australia/Sydney">🇦🇺 سيدني — أستراليا (UTC+10)</option>
+            <option value="Pacific/Auckland">🇳🇿 أوكلاند — نيوزيلندا (UTC+12)</option>
+          </optgroup>
+
+          <optgroup label="🇺🇸 أمريكا الشمالية">
+            <option value="America/New_York">🇺🇸 نيويورك — شرق أمريكا (UTC-5)</option>
+            <option value="America/Chicago">🇺🇸 شيكاغو — وسط أمريكا (UTC-6)</option>
+            <option value="America/Denver">🇺🇸 دنفر — جبال روكي (UTC-7)</option>
+            <option value="America/Los_Angeles">🇺🇸 لوس أنجلوس — غرب أمريكا (UTC-8)</option>
+            <option value="America/Anchorage">🇺🇸 أنكوريج — ألاسكا (UTC-9)</option>
+            <option value="Pacific/Honolulu">🇺🇸 هونولولو — هاواي (UTC-10)</option>
+            <option value="America/Toronto">🇨🇦 تورنتو — كندا (UTC-5)</option>
+            <option value="America/Vancouver">🇨🇦 فانكوفر — كندا (UTC-8)</option>
+            <option value="America/Mexico_City">🇲🇽 مكسيكو سيتي (UTC-6)</option>
+          </optgroup>
+
+          <optgroup label="🌎 أمريكا الجنوبية والوسطى">
+            <option value="America/Sao_Paulo">🇧🇷 ساو باولو — البرازيل (UTC-3)</option>
+            <option value="America/Buenos_Aires">🇦🇷 بوينس آيرس — الأرجنتين (UTC-3)</option>
+            <option value="America/Santiago">🇨🇱 سانتياغو — تشيلي (UTC-4)</option>
+            <option value="America/Lima">🇵🇪 ليما — البيرو (UTC-5)</option>
+            <option value="America/Bogota">🇨🇴 بوغوتا — كولومبيا (UTC-5)</option>
+            <option value="America/Caracas">🇻🇪 كاراكاس — فنزويلا (UTC-4)</option>
+          </optgroup>
+
+          <optgroup label="🌍 إفريقيا (غير عربية)">
+            <option value="Africa/Lagos">🇳🇬 لاغوس — نيجيريا (UTC+1)</option>
+            <option value="Africa/Johannesburg">🇿🇦 جوهانسبرغ — جنوب إفريقيا (UTC+2)</option>
+            <option value="Africa/Nairobi">🇰🇪 نيروبي — كينيا (UTC+3)</option>
+            <option value="Africa/Addis_Ababa">🇪🇹 أديس أبابا — إثيوبيا (UTC+3)</option>
+            <option value="Africa/Dar_es_Salaam">🇹🇿 دار السلام — تنزانيا (UTC+3)</option>
+            <option value="Africa/Accra">🇬🇭 أكرا — غانا (UTC+0)</option>
+          </optgroup>
+
+          <optgroup label="🌐 توقيتات عامة">
+            <option value="UTC">🌍 UTC (التوقيت العالمي)</option>
+          </optgroup>
+        </select>
+        <div class="field-hint">سيتم تشغيل الأخبار حسب توقيتك المحلي</div>
+      </div>
+
+      <div class="field">
+        <div class="field-label"><i class="fas fa-magic"></i> نص مخصص (اختياري)</div>
+        <textarea class="textarea" id="f-prompt" placeholder="اتركه فارغاً لاستخدام النص الافتراضي، أو اكتب طلبك الخاص للـ AI"></textarea>
+        <div class="field-hint">إذا كتبت هنا، سيتجاهل الـ AI الإعدادات الأخرى ويتبع طلبك بالضبط</div>
+      </div>
+
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-g" onclick="closeModal()">إلغاء</button>
+      <button class="btn btn-p" id="saveBtn" onclick="saveRequest()">
+        <i class="fas fa-save"></i> حفظ
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><i class="fas fa-info-circle"></i><span id="toastMsg"></span></div>
+
+<script type="module">
+import { supabase } from './supabase-client.js';
+import { setupUserMenu } from './user-menu.js?v=20260611';
+
+/* ========================= STATE ========================= */
+let view = 'feed';
+let allRequests = [];
+let allNews = [];
+let editingId = null;
+
+const INSTRUMENTS = {
+  indices: [
+    {v:'NQ',l:'Nasdaq 100'},
+    {v:'ES',l:'S&P 500'},
+    {v:'YM',l:'Dow Jones'},
+    {v:'CL',l:'النفط WTI'},
+  ],
+  metals: [
+    {v:'GOLD',l:'الذهب'},
+    {v:'SILVER',l:'الفضة'},
+  ],
+  forex: [
+    {v:'EURUSD',l:'EUR/USD'},
+    {v:'GBPUSD',l:'GBP/USD'},
+    {v:'USDJPY',l:'USD/JPY'},
+    {v:'AUDUSD',l:'AUD/USD'},
+    {v:'USDCAD',l:'USD/CAD'},
+    {v:'USDCHF',l:'USD/CHF'},
+    {v:'NZDUSD',l:'NZD/USD'},
+    {v:'EURJPY',l:'EUR/JPY'},
+    {v:'GBPJPY',l:'GBP/JPY'},
+  ],
+  crypto: [
+    {v:'BTCUSD',l:'Bitcoin'},
+    {v:'ETHUSD',l:'Ethereum'},
+  ],
+};
+
+let selectedInstruments = new Set();
+let currentCat = 'indices';
+let times = [];
+
+/* تسميات التوقيت بالعربي */
+const TZ_LABELS = {
+  // عربية
+  'Asia/Damascus':'دمشق','Asia/Riyadh':'الرياض','Asia/Dubai':'دبي',
+  'Asia/Kuwait':'الكويت','Asia/Qatar':'الدوحة','Asia/Muscat':'مسقط',
+  'Asia/Bahrain':'المنامة','Asia/Baghdad':'بغداد','Asia/Amman':'عمّان',
+  'Asia/Beirut':'بيروت','Asia/Jerusalem':'القدس','Asia/Aden':'صنعاء',
+  'Africa/Cairo':'القاهرة','Africa/Khartoum':'الخرطوم','Africa/Tripoli':'طرابلس',
+  'Africa/Tunis':'تونس','Africa/Algiers':'الجزائر','Africa/Casablanca':'الدار البيضاء',
+  'Africa/Nouakchott':'نواكشوط','Africa/Djibouti':'جيبوتي','Africa/Mogadishu':'مقديشو',
+  'Indian/Comoro':'جزر القمر',
+  // أوروبا
+  'Europe/London':'لندن','Europe/Dublin':'دبلن','Europe/Lisbon':'لشبونة',
+  'Europe/Paris':'باريس','Europe/Madrid':'مدريد','Europe/Berlin':'برلين',
+  'Europe/Rome':'روما','Europe/Amsterdam':'أمستردام','Europe/Brussels':'بروكسل',
+  'Europe/Vienna':'فيينا','Europe/Zurich':'زيورخ','Europe/Stockholm':'ستوكهولم',
+  'Europe/Oslo':'أوسلو','Europe/Copenhagen':'كوبنهاغن','Europe/Warsaw':'وارسو',
+  'Europe/Prague':'براغ','Europe/Budapest':'بودابست','Europe/Athens':'أثينا',
+  'Europe/Helsinki':'هلسنكي','Europe/Bucharest':'بوخارست','Europe/Sofia':'صوفيا',
+  'Europe/Kiev':'كييف','Europe/Istanbul':'إسطنبول','Europe/Moscow':'موسكو',
+  // آسيا
+  'Asia/Tehran':'طهران','Asia/Yerevan':'يريفان','Asia/Baku':'باكو',
+  'Asia/Kabul':'كابل','Asia/Karachi':'كراتشي','Asia/Tashkent':'طشقند',
+  'Asia/Kolkata':'دلهي','Asia/Dhaka':'دكا','Asia/Bangkok':'بانكوك',
+  'Asia/Jakarta':'جاكرتا','Asia/Singapore':'سنغافورة','Asia/Kuala_Lumpur':'كوالالمبور',
+  'Asia/Hong_Kong':'هونغ كونغ','Asia/Shanghai':'شانغهاي','Asia/Taipei':'تايبيه',
+  'Asia/Manila':'مانيلا','Asia/Seoul':'سيول','Asia/Tokyo':'طوكيو',
+  'Australia/Sydney':'سيدني','Pacific/Auckland':'أوكلاند',
+  // أمريكا
+  'America/New_York':'نيويورك','America/Chicago':'شيكاغو','America/Denver':'دنفر',
+  'America/Los_Angeles':'لوس أنجلوس','America/Anchorage':'أنكوريج','Pacific/Honolulu':'هونولولو',
+  'America/Toronto':'تورنتو','America/Vancouver':'فانكوفر','America/Mexico_City':'مكسيكو سيتي',
+  'America/Sao_Paulo':'ساو باولو','America/Buenos_Aires':'بوينس آيرس','America/Santiago':'سانتياغو',
+  'America/Lima':'ليما','America/Bogota':'بوغوتا','America/Caracas':'كاراكاس',
+  // إفريقيا
+  'Africa/Lagos':'لاغوس','Africa/Johannesburg':'جوهانسبرغ','Africa/Nairobi':'نيروبي',
+  'Africa/Addis_Ababa':'أديس أبابا','Africa/Dar_es_Salaam':'دار السلام','Africa/Accra':'أكرا',
+  'UTC':'UTC',
+};
+
+/* كشف توقيت المتصفح */
+function detectTimezone(){
+  try { return Intl.DateTimeFormat().resolvedOptions().timeZone; }
+  catch { return 'Asia/Damascus'; }
+}
+
+/* ========================= UI HELPERS ========================= */
+function toast(msg, type='info'){
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.className = 'toast show ' + type;
+  const icon = t.querySelector('i');
+  icon.className = type==='success'?'fas fa-check-circle':type==='error'?'fas fa-exclamation-circle':'fas fa-info-circle';
+  setTimeout(()=>t.classList.remove('show'), 2800);
+}
+
+const fmtDate = d => new Intl.DateTimeFormat('ar-EG-u-nu-latn',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}).format(new Date(d));
+const fmtRelative = d => {
+  const diff = (Date.now() - new Date(d).getTime()) / 1000;
+  if(diff < 60) return 'الآن';
+  if(diff < 3600) return Math.floor(diff/60) + ' د';
+  if(diff < 86400) return Math.floor(diff/3600) + ' س';
+  return Math.floor(diff/86400) + ' يوم';
+};
+const scheduleLabel = (t) => ({
+  once:'مرة واحدة', daily:'يومياً', twice_daily:'مرتين يومياً',
+  every_4h:'كل 4 ساعات', every_2h:'كل ساعتين', custom:'مخصص'
+}[t] || t);
+
+const instLabel = v => {
+  for(const cat of Object.values(INSTRUMENTS)){
+    const f = cat.find(i=>i.v===v);
+    if(f) return f.l;
+  }
+  return v;
+};
+
+/* Simple markdown → HTML (basic) */
+function md(text){
+  return text
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/^### (.+)$/gm,'<h3>$1</h3>')
+    .replace(/^## (.+)$/gm,'<h2>$1</h2>')
+    .replace(/^# (.+)$/gm,'<h1>$1</h1>')
+    .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
+    .replace(/\n\n/g,'</p><p>')
+    .replace(/\n/g,'<br>');
+}
+
+/* ========================= TABS ========================= */
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    view = t.dataset.view;
+    render();
+  });
+});
+
+/* ========================= RENDER ========================= */
+function render(){
+  const content = document.getElementById('content');
+  if(view === 'feed'){
+    if(allNews.length === 0){
+      content.innerHTML = `
+        <div class="empty">
+          <div class="empty-icon"><i class="far fa-newspaper"></i></div>
+          <div class="empty-h">لا توجد أخبار بعد</div>
+          <div class="empty-sub">أنشئ طلب أخبار جديد عشان يبدأ الـ AI يجمعلك الأخبار</div>
+          <button class="btn btn-p" onclick="openModal()"><i class="fas fa-plus"></i> طلب جديد</button>
+        </div>`;
+      return;
+    }
+    content.innerHTML = '<div class="news-list">' + allNews.map(n=>`
+      <div class="news-card">
+        <div class="news-head">
+          <div class="news-title">${n.title || 'أخبار'}</div>
+          <div class="news-date"><i class="far fa-clock"></i> ${fmtRelative(n.created_at)}</div>
+        </div>
+        <div class="news-content"><p>${md(n.content)}</p></div>
+        ${n.instruments?.length ? `<div class="news-instruments">${n.instruments.map(i=>`<span class="req-tag" style="background:rgba(212,160,23,.1);color:var(--gold)">${instLabel(i)}</span>`).join('')}</div>` : ''}
+      </div>`).join('') + '</div>';
+  } else {
+    if(allRequests.length === 0){
+      content.innerHTML = `
+        <div class="empty">
+          <div class="empty-icon"><i class="fas fa-bell"></i></div>
+          <div class="empty-h">لا توجد طلبات بعد</div>
+          <div class="empty-sub">أنشئ طلبك الأول لتلقي أخبار مخصصة لك</div>
+          <button class="btn btn-p" onclick="openModal()"><i class="fas fa-plus"></i> طلب جديد</button>
+        </div>`;
+      return;
+    }
+    content.innerHTML = '<div class="req-grid">' + allRequests.map(r=>`
+      <div class="req-card ${r.active?'':'inactive'}" data-id="${r.id}">
+        <div class="req-info">
+          <div class="req-title">
+            ${r.title}
+            <span class="req-tag ${r.active?'active':'inactive'}">${r.active?'نشط':'موقوف'}</span>
+          </div>
+          <div class="req-meta">
+            <span><i class="far fa-clock"></i> ${scheduleLabel(r.schedule_type)}</span>
+            ${r.schedule_times?.length ? `<span><i class="far fa-bell"></i> ${r.schedule_times.join(', ')}</span>` : ''}
+            ${r.last_run_at ? `<span><i class="fas fa-history"></i> آخر تشغيل: ${fmtRelative(r.last_run_at)}</span>` : `<span><i class="fas fa-pause"></i> لم يُشغّل بعد</span>`}
+            <span><i class="fas fa-bolt"></i> ${r.total_runs || 0} مرة</span>
+          </div>
+          <div class="req-instruments">
+            ${(r.instruments||[]).map(i=>`<span>${instLabel(i)}</span>`).join('')}
+          </div>
+        </div>
+        <div class="req-actions">
+          <button class="btn btn-p btn-sm" onclick="runNow('${r.id}')"><i class="fas fa-play"></i> شغّل الآن</button>
+          <button class="btn btn-g btn-sm" onclick="toggleActive('${r.id}')"><i class="fas fa-${r.active?'pause':'play'}"></i> ${r.active?'إيقاف':'تفعيل'}</button>
+          <button class="btn btn-g btn-sm" onclick="editRequest('${r.id}')"><i class="fas fa-edit"></i></button>
+          <button class="btn btn-danger btn-sm" onclick="deleteRequest('${r.id}')"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>`).join('') + '</div>';
+  }
+  document.getElementById('feed-count').textContent = allNews.length;
+  document.getElementById('req-count').textContent = allRequests.length;
+}
+
+/* ========================= MODAL ========================= */
+window.openModal = (r=null) => {
+  editingId = r?.id || null;
+  document.getElementById('modalTitle').textContent = r ? 'تعديل الطلب' : 'طلب جديد';
+  document.getElementById('f-title').value = r?.title || '';
+  document.getElementById('f-schedule').value = r?.schedule_type || 'daily';
+  document.getElementById('f-days').value = r?.days_back || 3;
+  document.getElementById('f-prompt').value = r?.custom_prompt || '';
+
+  // اختر التوقيت — إما من الطلب أو من المتصفح
+  const tzSelect = document.getElementById('f-timezone');
+  const detectedTz = r?.timezone || detectTimezone();
+  // إذا التوقيت موجود في القائمة استخدمه، وإلا دمشق
+  const hasOption = [...tzSelect.options].some(o => o.value === detectedTz);
+  tzSelect.value = hasOption ? detectedTz : 'Asia/Damascus';
+  updateTzLabel();
+
+  selectedInstruments = new Set(r?.instruments || []);
+  times = [...(r?.schedule_times || ['09:00'])];
+  currentCat = 'indices';
+  renderInstruments();
+  renderTimes();
+  toggleTimesField();
+  updateSelectedCount();
+  document.getElementById('modalBg').classList.add('show');
+};
+
+function updateTzLabel(){
+  const tz = document.getElementById('f-timezone').value;
+  document.getElementById('tzLabel').textContent = TZ_LABELS[tz] || tz;
+}
+document.getElementById('f-timezone').addEventListener('change', updateTzLabel);
+window.closeModal = () => {
+  document.getElementById('modalBg').classList.remove('show');
+  editingId = null;
+};
+document.getElementById('modalBg').addEventListener('click', e => {
+  if(e.target.id === 'modalBg') closeModal();
+});
+
+document.querySelectorAll('.inst-cat').forEach(c=>{
+  c.addEventListener('click', ()=>{
+    document.querySelectorAll('.inst-cat').forEach(x=>x.classList.remove('active'));
+    c.classList.add('active');
+    currentCat = c.dataset.cat;
+    renderInstruments();
+  });
+});
+
+function renderInstruments(){
+  const pills = document.getElementById('instPills');
+  pills.innerHTML = INSTRUMENTS[currentCat].map(i =>
+    `<button class="inst-pill ${selectedInstruments.has(i.v)?'selected':''}" data-v="${i.v}">${i.l}</button>`
+  ).join('');
+  pills.querySelectorAll('.inst-pill').forEach(p=>{
+    p.addEventListener('click', ()=>{
+      const v = p.dataset.v;
+      if(selectedInstruments.has(v)) selectedInstruments.delete(v);
+      else selectedInstruments.add(v);
+      p.classList.toggle('selected');
+      updateSelectedCount();
+    });
+  });
+}
+
+function updateSelectedCount(){
+  const n = selectedInstruments.size;
+  const el = document.getElementById('selectedCount');
+  if(n === 0) el.textContent = 'لم تختر أي أداة بعد';
+  else el.textContent = `اخترت ${n} ${n===1?'أداة':'أدوات'}: ${[...selectedInstruments].map(instLabel).join(', ')}`;
+}
+
+document.getElementById('f-schedule').addEventListener('change', toggleTimesField);
+function toggleTimesField(){
+  const type = document.getElementById('f-schedule').value;
+  document.getElementById('timesField').style.display = type === 'daily' ? 'flex' : 'none';
+}
+
+function renderTimes(){
+  const ts = document.getElementById('timeSlots');
+  ts.innerHTML = times.map((t,i)=>`
+    <span class="time-chip">${t}
+      <button onclick="removeTime(${i})"><i class="fas fa-times"></i></button>
+    </span>`).join('');
+}
+
+window.setSingleTime = () => {
+  const v = document.getElementById('newTime').value;
+  if(!v) return;
+  times = [v];
+  renderTimes();
+};
+window.removeTime = (i) => {
+  times.splice(i,1);
+  renderTimes();
+};
+
+window.saveRequest = async () => {
+  const title = document.getElementById('f-title').value.trim();
+  const schedule = document.getElementById('f-schedule').value;
+  const days_back = parseInt(document.getElementById('f-days').value) || 3;
+  const prompt = document.getElementById('f-prompt').value.trim() || null;
+  const instruments = [...selectedInstruments];
+
+  if(!title){ toast('اكتب عنواناً للطلب', 'error'); return; }
+  if(instruments.length === 0){ toast('اختر أداة واحدة على الأقل', 'error'); return; }
+
+  const { data:{session} } = await supabase.auth.getSession();
+  if(!session){ toast('سجل دخول أولاً', 'error'); return; }
+
+  const timezone = document.getElementById('f-timezone').value;
+
+  const payload = {
+    user_id: session.user.id,
+    title,
+    instruments,
+    schedule_type: schedule,
+    schedule_times: schedule === 'daily' ? times.slice(0,1) : [],
+    timezone,
+    days_back,
+    custom_prompt: prompt,
+    active: true,
+    updated_at: new Date().toISOString(),
+  };
+
+  let res;
+  if(editingId){
+    res = await supabase.from('news_requests').update(payload).eq('id', editingId);
+  } else {
+    // إذا الجدولة "مرة واحدة"، خله شغّال فوراً
+    if(schedule === 'once') payload.next_run_at = new Date().toISOString();
+    res = await supabase.from('news_requests').insert(payload);
+  }
+  if(res.error){ toast('فشل الحفظ: ' + res.error.message, 'error'); return; }
+
+  toast(editingId ? '✅ تم التعديل' : '✅ تم إنشاء الطلب', 'success');
+  closeModal();
+  await load();
+};
+
+window.editRequest = (id) => {
+  const r = allRequests.find(x=>x.id===id);
+  if(r) openModal(r);
+};
+
+window.deleteRequest = async (id) => {
+  if(!confirm('حذف هذا الطلب؟ سيتم حذف كل أخباره أيضاً.')) return;
+  const { error } = await supabase.from('news_requests').delete().eq('id', id);
+  if(error){ toast('فشل الحذف', 'error'); return; }
+  toast('🗑️ تم الحذف', 'success');
+  await load();
+};
+
+window.toggleActive = async (id) => {
+  const r = allRequests.find(x=>x.id===id);
+  if(!r) return;
+  const { error } = await supabase.from('news_requests').update({ active: !r.active }).eq('id', id);
+  if(error){ toast('فشل التحديث', 'error'); return; }
+  toast(r.active ? '⏸️ تم الإيقاف' : '▶️ تم التفعيل', 'success');
+  await load();
+};
+
+window.runNow = async (id) => {
+  toast('⏳ جاري جلب الأخبار... (30-60 ثانية)', 'info');
+  try {
+    const { data, error: invokeError } = await supabase.functions.invoke('market-pulse', {
+      body: { request_id: id }
+    });
+
+    if(invokeError){
+      console.error('Invoke error:', invokeError);
+      toast('فشل: ' + (invokeError.message || 'خطأ غير معروف'), 'error');
+      return;
+    }
+    if(data?.error){
+      toast('فشل: ' + data.error, 'error');
+      return;
+    }
+    toast('✅ وصلت أخبار جديدة!', 'success');
+    await load();
+    // اظهر الـ feed
+    document.querySelector('.tab[data-view="feed"]').click();
+  } catch(e){
+    console.error('Run error:', e);
+    toast('فشل الاتصال: ' + (e.message || ''), 'error');
+  }
+};
+
+/* ========================= LOAD ========================= */
+async function load(){
+  const { data: reqs } = await supabase
+    .from('news_requests')
+    .select('*')
+    .order('created_at', { ascending: false });
+  allRequests = reqs || [];
+
+  const { data: news } = await supabase
+    .from('user_news')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(50);
+  allNews = news || [];
+
+  render();
+}
+
+async function init(){
+  const { data:{session} } = await supabase.auth.getSession();
+  if(!session){
+    document.querySelector('.main').innerHTML = `
+      <div class="empty">
+        <div class="empty-icon"><i class="fas fa-lock"></i></div>
+        <div class="empty-h">سجل دخول لعرض الأخبار</div>
+        <div class="empty-sub">أنشئ طلبات أخبار شخصية وتلقّى تحليل AI لأي زوج تبيه</div>
+        <a href="signin.html" class="btn btn-p">تسجيل الدخول</a>
+      </div>`;
+    return;
+  }
+  const fn = session.user.user_metadata?.first_name || session.user.email.split('@')[0];
+  document.getElementById('userName').textContent = fn;
+  document.getElementById('userAvatar').textContent = (fn[0]||'G').toUpperCase();
+  await setupUserMenu(session.user);
+
+  await load();
+}
+init();
+</script>
+
+</body>
+</html>

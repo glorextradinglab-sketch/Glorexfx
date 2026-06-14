@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>الإعدادات — GLOREX</title>
+<meta name="theme-color" content="#0a0a0a"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold:#D4A017;--gold-l:#F0C030;--gold-d:#A07810;
+  --bg:#080808;--surface:#0d0d0d;--card:#111111;
+  --border:rgba(255,255,255,0.08);
+  --txt:#fff;--txt2:#ccc;--txt3:#999;--txt4:#666;
+  --ease:cubic-bezier(.4,0,.2,1);--base:.3s;
+  --ok:#22c55e;--warn:#f59e0b;--err:#ef4444;
+}
+body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;font-family:inherit;border:none;background:none;color:inherit}
+input{font-family:inherit;color:inherit}
+
+.bg-mesh{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 900px 700px at 80% 0%,rgba(212,160,23,.08),transparent 60%)}
+
+.topbar{position:sticky;top:0;z-index:100;background:rgba(8,8,8,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:.95rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{display:flex;align-items:center;gap:.6rem}
+.brand-logo{width:40px;height:40px;border-radius:11px;background:#fff;border:1.5px solid rgba(212,160,23,.5);box-shadow:0 0 14px rgba(184,134,11,.45);display:flex;align-items:center;justify-content:center;padding:5px;overflow:hidden}
+.brand-logo img{width:100%;height:100%;object-fit:contain}
+.brand-name{font-family:'Space Grotesk';font-weight:700;font-size:1.25rem;letter-spacing:-.02em}
+.nav-tabs{display:flex;gap:.4rem}
+.nav-tab{padding:.55rem 1.1rem;border-radius:10px;color:var(--txt3);font-size:.88rem;font-weight:500;transition:all var(--base) var(--ease)}
+.nav-tab:hover{color:var(--txt);background:rgba(255,255,255,.04)}
+.user-name{font-size:.92rem;color:var(--txt2)}
+.user-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-family:'Space Grotesk';font-size:.92rem}
+.user-menu{display:flex;align-items:center;gap:.7rem}
+
+.main{position:relative;z-index:1;max-width:920px;margin:0 auto;padding:2.5rem 2rem 5rem}
+
+.page-head{margin-bottom:2.5rem}
+.page-h1{font-family:'Space Grotesk';font-size:2rem;font-weight:700;margin-bottom:.3rem;letter-spacing:-.02em}
+.page-sub{color:var(--txt3);font-size:.95rem}
+
+.layout{display:grid;grid-template-columns:220px 1fr;gap:2rem;align-items:start}
+
+.side-nav{position:sticky;top:90px;display:flex;flex-direction:column;gap:.3rem}
+.side-link{display:flex;align-items:center;gap:.7rem;padding:.75rem 1rem;border-radius:10px;color:var(--txt3);font-size:.92rem;font-weight:500;transition:all var(--base) var(--ease);cursor:pointer;border:none;background:none;width:100%;text-align:right;font-family:inherit}
+.side-link i{width:18px;font-size:.85rem;color:var(--txt4)}
+.side-link:hover{color:var(--txt2);background:rgba(255,255,255,.03)}
+.side-link.active{color:var(--gold);background:rgba(212,160,23,.08)}
+.side-link.active i{color:var(--gold)}
+.side-link.danger{color:#ef4444}
+.side-link.danger i{color:#ef4444}
+.side-link.danger:hover{background:rgba(239,68,68,.06)}
+
+.content{display:flex;flex-direction:column;gap:1.4rem}
+
+.section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.8rem;scroll-margin-top:90px}
+.section h2{display:flex;align-items:center;gap:.6rem;font-family:'Space Grotesk';font-size:1.2rem;font-weight:700;margin-bottom:.4rem;letter-spacing:-.01em}
+.section h2 i{color:var(--gold);font-size:1rem;width:36px;height:36px;border-radius:9px;background:rgba(212,160,23,.1);display:inline-flex;align-items:center;justify-content:center}
+.section p{color:var(--txt3);font-size:.88rem;margin-bottom:1.4rem;padding-right:46px}
+
+.field{margin-bottom:1.1rem}
+.field-lbl{display:block;font-size:.85rem;color:var(--txt2);margin-bottom:.5rem;font-weight:500}
+.field-input{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:.85rem 1rem;color:var(--txt);font-size:.94rem;transition:all var(--base) var(--ease)}
+.field-input:focus{outline:none;border-color:var(--gold);background:rgba(212,160,23,.03)}
+.field-input::placeholder{color:var(--txt4)}
+.field-input:disabled{opacity:.6;cursor:not-allowed}
+.field-hint{font-size:.78rem;color:var(--txt4);margin-top:.4rem;line-height:1.5}
+
+.row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.85rem 1.5rem;border-radius:10px;font-weight:600;font-size:.92rem;cursor:pointer;transition:all var(--base) var(--ease);border:none;font-family:inherit}
+.btn-primary{background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#000;box-shadow:0 6px 20px rgba(212,160,23,.25)}
+.btn-primary:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 10px 28px rgba(212,160,23,.4)}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed}
+.btn-danger{background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.25)}
+.btn-danger:hover{background:rgba(239,68,68,.18)}
+.btn-ghost{background:transparent;color:var(--txt2);border:1px solid var(--border)}
+.btn-ghost:hover{background:rgba(255,255,255,.04);color:var(--txt)}
+
+/* Toggle Switch */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 0;border-bottom:1px dashed rgba(255,255,255,.06)}
+.toggle-row:last-child{border:none}
+.toggle-info strong{display:block;font-size:.95rem;margin-bottom:.2rem}
+.toggle-info span{color:var(--txt3);font-size:.82rem}
+.switch{position:relative;display:inline-block;width:48px;height:26px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;cursor:pointer;inset:0;background:rgba(255,255,255,.1);transition:.3s;border-radius:999px}
+.slider::before{content:'';position:absolute;height:20px;width:20px;right:3px;bottom:3px;background:white;transition:.3s;border-radius:50%}
+input:checked + .slider{background:var(--gold)}
+input:checked + .slider::before{transform:translateX(-22px)}
+
+/* Danger zone */
+.danger-zone{border:1px dashed rgba(239,68,68,.3)}
+.danger-zone h2 i{color:#ef4444;background:rgba(239,68,68,.1)}
+.danger-zone p{color:#fca5a5}
+
+/* Toast */
+.toast{position:fixed;top:1.5rem;right:50%;transform:translateX(50%);padding:.85rem 1.5rem;border-radius:10px;font-size:.92rem;font-weight:500;z-index:99999;color:#fff;box-shadow:0 10px 40px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .3s}
+.toast.show{opacity:1}
+.toast.err{background:linear-gradient(135deg,#ef4444,#dc2626)}
+.toast.ok{background:linear-gradient(135deg,#22c55e,#16a34a)}
+
+@media (max-width:880px){
+  .layout{grid-template-columns:1fr}
+  .side-nav{position:relative;top:0;flex-direction:row;overflow-x:auto;gap:.4rem;padding-bottom:.5rem}
+  .side-link{white-space:nowrap;padding:.6rem 1rem}
+  .row{grid-template-columns:1fr}
+  .nav-tabs{display:none}
+  .main{padding:1.5rem 1rem 3rem}
+  .section{padding:1.4rem 1.2rem}
+  .section p{padding-right:0}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-mesh"></div>
+
+<header class="topbar">
+  <a href="dashboard.html" class="brand">
+    <div class="brand-logo"><img src="glorex_bull_gold.png" alt="GLOREX"/></div>
+    <div class="brand-name">GLOREX</div>
+  </a>
+  <nav class="nav-tabs">
+    <a href="dashboard.html" class="nav-tab">الرئيسية</a>
+    <a href="checklist.html" class="nav-tab">القائمة</a>
+    <a href="journal.html" class="nav-tab">السجل</a>
+    <a href="calendar.html" class="nav-tab">التقويم</a>
+    <a href="lessons.html" class="nav-tab">الدروس</a>
+    <a href="chat.html" class="nav-tab">المحادثة</a>
+  </nav>
+  <div class="user-menu">
+    <span class="user-name" id="userName">...</span>
+    <div class="user-avatar" id="userAvatar">G</div>
+  </div>
+</header>
+
+<main class="main">
+
+  <div class="page-head">
+    <h1 class="page-h1">الإعدادات</h1>
+    <p class="page-sub">إدارة حسابك، الأمان، والتفضيلات</p>
+  </div>
+
+  <div class="layout">
+
+    <!-- Side Nav -->
+    <nav class="side-nav">
+      <a href="profile.html" class="side-link">
+        <i class="fas fa-user"></i> الملف الشخصي
+      </a>
+      <button class="side-link active" data-jump="account">
+        <i class="fas fa-id-card"></i> الحساب
+      </button>
+      <button class="side-link" data-jump="security">
+        <i class="fas fa-shield-alt"></i> الأمان
+      </button>
+      <button class="side-link" data-jump="notifications">
+        <i class="fas fa-bell"></i> الإشعارات
+      </button>
+      <button class="side-link danger" data-jump="danger">
+        <i class="fas fa-trash-alt"></i> منطقة الخطر
+      </button>
+    </nav>
+
+    <!-- Content -->
+    <div class="content">
+
+      <!-- Account -->
+      <section class="section" id="account">
+        <h2><i class="fas fa-id-card"></i> معلومات الحساب</h2>
+        <p>عدّل اسمك ومعلومات الاتصال الخاصة بك</p>
+
+        <div class="row">
+          <div class="field">
+            <label class="field-lbl" for="firstName">الاسم الأول</label>
+            <input type="text" class="field-input" id="firstName" placeholder="غيث"/>
+          </div>
+          <div class="field">
+            <label class="field-lbl" for="lastName">الاسم الأخير</label>
+            <input type="text" class="field-input" id="lastName" placeholder="الحبال"/>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-lbl" for="email">البريد الإلكتروني</label>
+          <input type="email" class="field-input" id="email" disabled/>
+          <div class="field-hint">لتغيير الإيميل، تواصل معنا عبر <a href="https://t.me/GLOREX_SUPPORT" target="_blank" style="color:var(--gold)">تلغرام</a></div>
+        </div>
+
+        <button class="btn btn-primary" id="saveAccount">
+          <i class="fas fa-check"></i> حفظ التغييرات
+        </button>
+      </section>
+
+      <!-- Security -->
+      <section class="section" id="security">
+        <h2><i class="fas fa-shield-alt"></i> الأمان</h2>
+        <p>غيّر كلمة السر لحماية حسابك</p>
+
+        <div class="field">
+          <label class="field-lbl" for="newPassword">كلمة السر الجديدة</label>
+          <input type="password" class="field-input" id="newPassword" placeholder="••••••••" minlength="6"/>
+          <div class="field-hint">6 أحرف على الأقل</div>
+        </div>
+
+        <div class="field">
+          <label class="field-lbl" for="confirmPassword">تأكيد كلمة السر</label>
+          <input type="password" class="field-input" id="confirmPassword" placeholder="••••••••" minlength="6"/>
+        </div>
+
+        <button class="btn btn-primary" id="savePassword">
+          <i class="fas fa-key"></i> تحديث كلمة السر
+        </button>
+      </section>
+
+      <!-- Notifications -->
+      <section class="section" id="notifications">
+        <h2><i class="fas fa-bell"></i> الإشعارات</h2>
+        <p>اختر الإشعارات اللي تحب توصلك</p>
+
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <strong>تأكيد تفعيل الاشتراك</strong>
+            <span>إيميل لما يتم تفعيل اشتراكك</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="notifyActivation" checked disabled/>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <strong>تنبيه انتهاء الاشتراك</strong>
+            <span>تذكير قبل 7 و 3 أيام من الانتهاء</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="notifyExpiry" checked/>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <strong>تأكيد حجز المكالمات</strong>
+            <span>إيميل لما يتم تأكيد جلستك 1:1</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="notifyBookings" checked/>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <strong>أخبار GLOREX التسويقية</strong>
+            <span>عروض، ميزات جديدة، ومقالات تعليمية</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="notifyMarketing"/>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <button class="btn btn-primary" id="saveNotifications" style="margin-top:1rem">
+          <i class="fas fa-check"></i> حفظ التفضيلات
+        </button>
+      </section>
+
+      <!-- Sessions -->
+      <section class="section" id="sessions-section">
+        <h2><i class="fas fa-laptop"></i> الجلسات النشطة</h2>
+        <p>سجّل خروج من كل الأجهزة لو حسيت إنو حسابك مخترق</p>
+
+        <button class="btn btn-ghost" id="signOutAll">
+          <i class="fas fa-sign-out-alt"></i> تسجيل الخروج من كل الأجهزة
+        </button>
+      </section>
+
+      <!-- Danger Zone -->
+      <section class="section danger-zone" id="danger">
+        <h2><i class="fas fa-exclamation-triangle"></i> منطقة الخطر</h2>
+        <p>حذف حسابك إجراء نهائي ولا يمكن التراجع عنه</p>
+
+        <button class="btn btn-danger" id="deleteAccount">
+          <i class="fas fa-trash-alt"></i> حذف حسابي نهائياً
+        </button>
+      </section>
+
+    </div>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { supabase, requireAuth, getUser, signOut } from './supabase-client.js?v=20260610';
+import { setupUserMenu } from './user-menu.js?v=20260611';
+
+const session = await requireAuth();
+if(!session) throw new Error('not auth');
+
+const user = await getUser();
+const fullName = user.user_metadata?.full_name || user.user_metadata?.name || user.email.split('@')[0];
+const initial = (fullName[0]||'G').toUpperCase();
+
+document.getElementById('userName').textContent = fullName.split(' ')[0];
+document.getElementById('userAvatar').textContent = initial;
+
+// User dropdown menu
+await setupUserMenu(user);
+
+// Populate fields
+const firstName = user.user_metadata?.first_name || fullName.split(' ')[0] || '';
+const lastName = user.user_metadata?.last_name || fullName.split(' ').slice(1).join(' ') || '';
+document.getElementById('firstName').value = firstName;
+document.getElementById('lastName').value = lastName;
+document.getElementById('email').value = user.email;
+
+// Load notification preferences
+const { data: profile } = await supabase
+  .from('profiles')
+  .select('notification_prefs')
+  .eq('id', user.id)
+  .single();
+
+const prefs = profile?.notification_prefs || { expiry: true, bookings: true, marketing: false };
+document.getElementById('notifyExpiry').checked = prefs.expiry !== false;
+document.getElementById('notifyBookings').checked = prefs.bookings !== false;
+document.getElementById('notifyMarketing').checked = prefs.marketing === true;
+
+// Side nav scrolling
+document.querySelectorAll('[data-jump]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.side-link').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.jump)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+// Save account info
+document.getElementById('saveAccount').addEventListener('click', async () => {
+  const btn = document.getElementById('saveAccount');
+  const fn = document.getElementById('firstName').value.trim();
+  const ln = document.getElementById('lastName').value.trim();
+
+  if(!fn){ toast('الاسم الأول مطلوب', 'err'); return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> جاري الحفظ...';
+
+  const newFullName = `${fn} ${ln}`.trim();
+  const { error } = await supabase.auth.updateUser({
+    data: { first_name: fn, last_name: ln, full_name: newFullName }
+  });
+
+  // Update profile table too
+  await supabase.from('profiles').update({ full_name: newFullName }).eq('id', user.id);
+
+  btn.disabled = false;
+  btn.innerHTML = '<i class="fas fa-check"></i> حفظ التغييرات';
+
+  if(error){ toast('خطأ: ' + error.message, 'err'); return; }
+  toast('تم الحفظ ✅', 'ok');
+});
+
+// Update password
+document.getElementById('savePassword').addEventListener('click', async () => {
+  const np = document.getElementById('newPassword').value;
+  const cp = document.getElementById('confirmPassword').value;
+
+  if(np.length < 6){ toast('كلمة السر 6 أحرف على الأقل', 'err'); return; }
+  if(np !== cp){ toast('كلمتا السر غير متطابقتين', 'err'); return; }
+
+  const btn = document.getElementById('savePassword');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> جاري التحديث...';
+
+  const { error } = await supabase.auth.updateUser({ password: np });
+
+  btn.disabled = false;
+  btn.innerHTML = '<i class="fas fa-key"></i> تحديث كلمة السر';
+
+  if(error){ toast('خطأ: ' + error.message, 'err'); return; }
+  document.getElementById('newPassword').value = '';
+  document.getElementById('confirmPassword').value = '';
+  toast('تم تحديث كلمة السر ✅', 'ok');
+});
+
+// Save notifications
+document.getElementById('saveNotifications').addEventListener('click', async () => {
+  const btn = document.getElementById('saveNotifications');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> جاري الحفظ...';
+
+  const newPrefs = {
+    expiry: document.getElementById('notifyExpiry').checked,
+    bookings: document.getElementById('notifyBookings').checked,
+    marketing: document.getElementById('notifyMarketing').checked
+  };
+
+  const { error } = await supabase.from('profiles').update({ notification_prefs: newPrefs }).eq('id', user.id);
+
+  btn.disabled = false;
+  btn.innerHTML = '<i class="fas fa-check"></i> حفظ التفضيلات';
+
+  if(error){ toast('خطأ: ' + error.message, 'err'); return; }
+  toast('تم الحفظ ✅', 'ok');
+});
+
+// Sign out all
+document.getElementById('signOutAll').addEventListener('click', async () => {
+  if(!confirm('تأكيد تسجيل الخروج من كل الأجهزة؟')) return;
+  await supabase.auth.signOut({ scope: 'global' });
+  location.href = 'signin.html';
+});
+
+// Delete account
+document.getElementById('deleteAccount').addEventListener('click', async () => {
+  const confirmation = prompt('للتأكيد، اكتب: حذف نهائي');
+  if(confirmation !== 'حذف نهائي') return;
+
+  const btn = document.getElementById('deleteAccount');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> جاري الحذف...';
+
+  const { error } = await supabase.rpc('delete_my_account');
+
+  if(error){
+    toast('خطأ: ' + error.message, 'err');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-trash-alt"></i> حذف حسابي نهائياً';
+    return;
+  }
+
+  await signOut();
+});
+
+function toast(msg, type='ok'){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast show ${type}`;
+  setTimeout(()=>t.classList.remove('show'), 3500);
+}
+</script>
+
+</body>
+</html>

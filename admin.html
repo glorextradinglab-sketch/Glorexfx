@@ -1,0 +1,1009 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>لوحة الإدارة — GLOREX</title>
+<meta name="theme-color" content="#0a0a0a"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold:#D4A017;--gold-l:#F0C030;--gold-d:#A07810;
+  --bg:#080808;--surface:#0d0d0d;--card:#111111;
+  --border:rgba(255,255,255,0.08);
+  --txt:#fff;--txt2:#ccc;--txt3:#999;--txt4:#666;
+  --ease:cubic-bezier(.4,0,.2,1);--base:.3s;
+  --ok:#22c55e;--warn:#f59e0b;--err:#ef4444;--info:#3b82f6;
+}
+body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;font-family:inherit;border:none;background:none;color:inherit}
+input,textarea{font-family:inherit;color:inherit}
+
+.bg-mesh{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 900px 700px at 80% 0%,rgba(212,160,23,.08),transparent 60%),radial-gradient(ellipse 600px 800px at 0% 100%,rgba(160,120,16,.06),transparent 60%)}
+
+/* Loading */
+.loading{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg);z-index:99999;flex-direction:column;gap:1rem}
+.loading.hide{opacity:0;pointer-events:none;transition:opacity .4s}
+.spinner{width:48px;height:48px;border:3px solid rgba(212,160,23,.2);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Topbar */
+.topbar{position:sticky;top:0;z-index:100;background:rgba(8,8,8,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:.95rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{display:flex;align-items:center;gap:.6rem}
+.brand-logo{width:40px;height:40px;border-radius:11px;background:#fff;border:1.5px solid rgba(212,160,23,.5);box-shadow:0 0 14px rgba(184,134,11,.45);display:flex;align-items:center;justify-content:center;padding:5px;overflow:hidden}
+.brand-logo img{width:100%;height:100%;object-fit:contain}
+.brand-name{font-family:'Space Grotesk';font-weight:700;font-size:1.25rem;letter-spacing:-.02em}
+.brand-tag{font-size:.65rem;background:rgba(239,68,68,.15);color:var(--err);padding:.2rem .55rem;border-radius:6px;font-weight:700;letter-spacing:1px;margin-right:.5rem}
+.user-menu{display:flex;align-items:center;gap:.7rem}
+.user-name{font-size:.92rem;color:var(--txt2)}
+.user-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-family:'Space Grotesk';font-size:.92rem}
+.btn-logout{background:rgba(239,68,68,.1);color:var(--err);padding:.5rem .9rem;border-radius:9px;font-size:.85rem;font-weight:500;transition:all var(--base) var(--ease);display:flex;align-items:center;gap:.4rem}
+.btn-logout:hover{background:rgba(239,68,68,.18)}
+
+.main{position:relative;z-index:1;max-width:1400px;margin:0 auto;padding:2rem 1.8rem 4rem}
+
+/* Page head */
+.page-head{margin-bottom:2rem}
+.page-h1{font-family:'Space Grotesk';font-size:2rem;font-weight:700;margin-bottom:.3rem;letter-spacing:-.02em}
+.page-sub{color:var(--txt3);font-size:.95rem}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.3rem 1.4rem;display:flex;align-items:center;gap:1rem;transition:all var(--base) var(--ease)}
+.stat-card:hover{border-color:rgba(255,255,255,.14)}
+.stat-ico{width:46px;height:46px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.15rem;flex-shrink:0}
+.stat-ico.warn{background:rgba(245,158,11,.12);color:var(--warn)}
+.stat-ico.ok{background:rgba(34,197,94,.12);color:var(--ok)}
+.stat-ico.info{background:rgba(59,130,246,.12);color:var(--info)}
+.stat-ico.gold{background:rgba(212,160,23,.12);color:var(--gold)}
+.stat-info{flex-grow:1;min-width:0}
+.stat-val{font-family:'Space Grotesk';font-size:1.7rem;font-weight:700;line-height:1.1;letter-spacing:-.02em}
+.stat-lbl{font-size:.78rem;color:var(--txt3);margin-top:.2rem}
+
+/* Tabs */
+.tabs{display:flex;gap:.4rem;margin-bottom:1.4rem;border-bottom:1px solid var(--border);overflow-x:auto}
+.tab{padding:.85rem 1.2rem;color:var(--txt3);font-size:.92rem;font-weight:500;border-bottom:2px solid transparent;transition:all var(--base) var(--ease);white-space:nowrap;display:flex;align-items:center;gap:.5rem}
+.tab:hover{color:var(--txt2)}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.tab .count{background:rgba(212,160,23,.15);color:var(--gold);font-size:.72rem;padding:.15rem .5rem;border-radius:10px;font-weight:700;font-family:'Space Grotesk'}
+.tab.active .count{background:var(--gold);color:#000}
+
+/* Requests */
+.requests{display:flex;flex-direction:column;gap:1rem}
+.req-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.4rem;transition:all var(--base) var(--ease)}
+.req-card:hover{border-color:rgba(255,255,255,.14)}
+.req-card.pending{border-left:3px solid var(--warn)}
+.req-card.approved{border-left:3px solid var(--ok)}
+.req-card.rejected{border-left:3px solid var(--err);opacity:.7}
+
+.req-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.2rem;flex-wrap:wrap}
+.req-user{display:flex;align-items:center;gap:.8rem}
+.req-avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));color:#000;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:'Space Grotesk';font-size:1rem;flex-shrink:0}
+.req-name{font-size:.98rem;font-weight:600}
+.req-email{color:var(--txt3);font-size:.82rem;direction:ltr;text-align:right}
+.req-status{display:flex;align-items:center;gap:.4rem;font-size:.78rem;font-weight:600;padding:.4rem .75rem;border-radius:8px}
+.req-status.pending{background:rgba(245,158,11,.12);color:var(--warn)}
+.req-status.approved{background:rgba(34,197,94,.12);color:var(--ok)}
+.req-status.rejected{background:rgba(239,68,68,.12);color:var(--err)}
+
+.req-body{display:grid;grid-template-columns:160px 1fr auto;gap:1.4rem;align-items:start}
+.proof-img{width:160px;height:160px;border-radius:11px;background:var(--surface);border:1px solid var(--border);overflow:hidden;cursor:zoom-in;transition:all var(--base) var(--ease);display:flex;align-items:center;justify-content:center;position:relative}
+.proof-img:hover{border-color:var(--gold);transform:scale(1.02)}
+.proof-img img{width:100%;height:100%;object-fit:cover}
+.proof-img .no-img{color:var(--txt4);font-size:.78rem;text-align:center;padding:1rem}
+.proof-img .zoom-ico{position:absolute;top:6px;left:6px;background:rgba(0,0,0,.6);color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem}
+
+.req-info{display:flex;flex-direction:column;gap:.7rem;min-width:0}
+.info-row{display:flex;align-items:flex-start;gap:.6rem;font-size:.88rem}
+.info-lbl{color:var(--txt3);min-width:90px}
+.info-val{color:var(--txt);font-weight:500;word-break:break-word}
+.info-val.plan{display:inline-flex;align-items:center;gap:.4rem;background:rgba(212,160,23,.12);color:var(--gold);padding:.25rem .6rem;border-radius:7px;font-size:.8rem;font-weight:700;text-transform:uppercase;width:fit-content}
+.info-val.amount{font-family:'Space Grotesk';font-size:1.05rem;font-weight:700;color:var(--gold)}
+.info-val.txid{font-family:'Space Grotesk','SF Mono',Menlo,monospace;direction:ltr;text-align:left;font-size:.78rem;color:var(--txt2);background:var(--surface);padding:.3rem .6rem;border-radius:6px}
+.info-val.txid a{color:var(--info);text-decoration:underline;text-underline-offset:2px}
+.info-val.note{background:rgba(239,68,68,.06);color:#fca5a5;padding:.6rem .8rem;border-radius:8px;border-right:2px solid var(--err);font-style:italic}
+
+.req-actions{display:flex;flex-direction:column;gap:.5rem;min-width:140px}
+.btn{padding:.7rem 1rem;border-radius:9px;font-weight:600;font-size:.88rem;display:flex;align-items:center;justify-content:center;gap:.45rem;transition:all var(--base) var(--ease);width:100%}
+.btn-approve{background:linear-gradient(135deg,#16a34a,#15803d);color:#fff}
+.btn-approve:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(22,163,74,.3)}
+.btn-reject{background:rgba(239,68,68,.1);color:var(--err);border:1px solid rgba(239,68,68,.2)}
+.btn-reject:hover{background:rgba(239,68,68,.18)}
+.btn-verify{background:rgba(59,130,246,.1);color:var(--info);border:1px solid rgba(59,130,246,.2);font-size:.78rem;padding:.5rem .75rem}
+.btn-verify:hover{background:rgba(59,130,246,.18)}
+
+.empty{text-align:center;padding:4rem 2rem;color:var(--txt3)}
+.empty i{font-size:3rem;color:var(--txt4);margin-bottom:1rem}
+.empty h3{font-size:1.1rem;margin-bottom:.4rem;color:var(--txt2)}
+.empty p{font-size:.92rem}
+
+/* Image modal */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:1000;display:none;align-items:center;justify-content:center;padding:2rem;backdrop-filter:blur(8px)}
+.modal.open{display:flex}
+.modal-img{max-width:90vw;max-height:88vh;border-radius:12px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.modal-close{position:absolute;top:1.5rem;left:1.5rem;background:rgba(255,255,255,.1);color:#fff;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;transition:all var(--base) var(--ease)}
+.modal-close:hover{background:rgba(255,255,255,.2)}
+
+/* Reject modal */
+.reject-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1001;display:none;align-items:center;justify-content:center;padding:2rem;backdrop-filter:blur(6px)}
+.reject-modal.open{display:flex}
+.reject-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;max-width:480px;width:100%}
+.reject-card h3{font-family:'Space Grotesk';font-size:1.2rem;margin-bottom:.5rem}
+.reject-card p{color:var(--txt3);font-size:.9rem;margin-bottom:1.2rem;line-height:1.6}
+.reject-card textarea{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:.9rem;color:var(--txt);font-size:.92rem;min-height:100px;resize:vertical;font-family:inherit}
+.reject-card textarea:focus{outline:none;border-color:var(--err)}
+.reject-actions{display:flex;gap:.6rem;margin-top:1.2rem}
+.btn-cancel{background:rgba(255,255,255,.05);color:var(--txt2);border:1px solid var(--border);flex:1}
+.btn-confirm-reject{background:linear-gradient(135deg,#dc2626,#991b1b);color:#fff;flex:1}
+
+/* Toast */
+.toast{position:fixed;top:1.5rem;right:50%;transform:translateX(50%);padding:.85rem 1.5rem;border-radius:10px;font-size:.92rem;font-weight:500;z-index:99999;color:#fff;box-shadow:0 10px 40px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .3s}
+.toast.show{opacity:1}
+.toast.err{background:linear-gradient(135deg,#ef4444,#dc2626)}
+.toast.ok{background:linear-gradient(135deg,#22c55e,#16a34a)}
+
+/* Not Authorized */
+.unauthorized{text-align:center;padding:6rem 2rem;max-width:500px;margin:0 auto}
+.unauthorized .lock-ico{width:90px;height:90px;border-radius:50%;background:rgba(239,68,68,.1);color:var(--err);display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin:0 auto 1.5rem}
+.unauthorized h1{font-family:'Space Grotesk';font-size:1.8rem;margin-bottom:.7rem}
+.unauthorized p{color:var(--txt3);line-height:1.7;margin-bottom:2rem}
+.btn-back{display:inline-flex;align-items:center;gap:.5rem;background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#000;padding:.85rem 1.6rem;border-radius:11px;font-weight:600}
+
+@media (max-width:920px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .req-body{grid-template-columns:1fr}
+  .proof-img{width:100%;height:240px;margin-bottom:.5rem}
+  .req-actions{flex-direction:row;width:100%}
+  .main{padding:1.5rem 1rem 3rem}
+  .topbar{padding:.8rem 1rem}
+}
+</style>
+</head>
+<body>
+
+<div class="loading" id="loading">
+  <div class="spinner"></div>
+  <div style="color:var(--txt3);font-size:.9rem">جاري التحميل...</div>
+</div>
+
+<div class="bg-mesh"></div>
+
+<header class="topbar">
+  <a href="dashboard.html" class="brand">
+    <div class="brand-logo"><img src="glorex_bull_gold.png" alt="GLOREX"/></div>
+    <div class="brand-name">GLOREX</div>
+    <span class="brand-tag">ADMIN</span>
+  </a>
+  <div class="user-menu">
+    <span class="user-name" id="userName">...</span>
+    <div class="user-avatar" id="userAvatar">G</div>
+    <button class="btn-logout" id="logoutBtn">
+      <i class="fas fa-sign-out-alt"></i> خروج
+    </button>
+  </div>
+</header>
+
+<!-- Authorized view -->
+<main class="main" id="adminMain" style="display:none">
+
+  <div class="page-head">
+    <h1 class="page-h1">لوحة الإدارة</h1>
+    <p class="page-sub">إدارة طلبات الاشتراك والمدفوعات</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats" id="statsGrid">
+    <div class="stat-card">
+      <div class="stat-ico warn"><i class="fas fa-clock"></i></div>
+      <div class="stat-info">
+        <div class="stat-val" id="statPending">—</div>
+        <div class="stat-lbl">طلبات قيد المراجعة</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-ico ok"><i class="fas fa-check-circle"></i></div>
+      <div class="stat-info">
+        <div class="stat-val" id="statActive">—</div>
+        <div class="stat-lbl">مشتركون نشطون</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-ico gold"><i class="fas fa-dollar-sign"></i></div>
+      <div class="stat-info">
+        <div class="stat-val" id="statRevenue">—</div>
+        <div class="stat-lbl">إيراد هذا الشهر</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-ico info"><i class="fas fa-users"></i></div>
+      <div class="stat-info">
+        <div class="stat-val" id="statUsers">—</div>
+        <div class="stat-lbl">إجمالي المسجلين</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section Tabs (Payments vs Bookings vs Referrals) -->
+  <div class="tabs" style="margin-bottom:.6rem;border-bottom:none;border-bottom:1px solid var(--border);padding-bottom:.3rem">
+    <button class="tab active" data-section="payments" style="font-size:1rem;font-weight:600">
+      <i class="fas fa-credit-card"></i> طلبات الدفع
+    </button>
+    <button class="tab" data-section="bookings" style="font-size:1rem;font-weight:600">
+      <i class="fas fa-video"></i> حجوزات المكالمات
+      <span class="count" id="cntBookingsBadge">0</span>
+    </button>
+    <button class="tab" data-section="referrals" style="font-size:1rem;font-weight:600">
+      <i class="fas fa-gift" style="color:#22c55e"></i> الإحالات
+      <span class="count" id="cntReferralsBadge">0</span>
+    </button>
+  </div>
+
+  <!-- Payments Section -->
+  <div id="paymentsSection">
+    <div class="tabs">
+      <button class="tab active" data-tab="pending">
+        <i class="fas fa-clock"></i> قيد المراجعة
+        <span class="count" id="cntPending">0</span>
+      </button>
+      <button class="tab" data-tab="approved">
+        <i class="fas fa-check"></i> مفعّلة
+        <span class="count" id="cntApproved">0</span>
+      </button>
+      <button class="tab" data-tab="rejected">
+        <i class="fas fa-times"></i> مرفوضة
+        <span class="count" id="cntRejected">0</span>
+      </button>
+      <button class="tab" data-tab="all">
+        <i class="fas fa-list"></i> الكل
+        <span class="count" id="cntAll">0</span>
+      </button>
+    </div>
+    <div class="requests" id="requestsList"></div>
+  </div>
+
+  <!-- Bookings Section -->
+  <div id="bookingsSection" style="display:none">
+    <div class="tabs">
+      <button class="tab active" data-bktab="pending">
+        <i class="fas fa-clock"></i> قيد التأكيد
+        <span class="count" id="cntBkPending">0</span>
+      </button>
+      <button class="tab" data-bktab="confirmed">
+        <i class="fas fa-check"></i> مؤكدة
+        <span class="count" id="cntBkConfirmed">0</span>
+      </button>
+      <button class="tab" data-bktab="completed">
+        <i class="fas fa-flag-checkered"></i> منتهية
+        <span class="count" id="cntBkCompleted">0</span>
+      </button>
+      <button class="tab" data-bktab="cancelled">
+        <i class="fas fa-ban"></i> ملغية
+        <span class="count" id="cntBkCancelled">0</span>
+      </button>
+    </div>
+    <div class="requests" id="bookingsList"></div>
+  </div>
+
+  <!-- Referrals Section -->
+  <div id="referralsSection" style="display:none">
+
+    <!-- Referrals Stats -->
+    <div class="stats" style="margin-bottom:1.4rem">
+      <div class="stat-card">
+        <div class="stat-ico ok"><i class="fas fa-handshake"></i></div>
+        <div class="stat-info">
+          <div class="stat-val" id="statRefTotal">—</div>
+          <div class="stat-lbl">إجمالي الإحالات</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-ico warn"><i class="fas fa-clock"></i></div>
+        <div class="stat-info">
+          <div class="stat-val" id="statRefPending">—</div>
+          <div class="stat-lbl">قيد الانتظار</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-ico gold"><i class="fas fa-coins"></i></div>
+        <div class="stat-info">
+          <div class="stat-val" id="statRefCommissions">—</div>
+          <div class="stat-lbl">إجمالي العمولات</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-ico info"><i class="fas fa-piggy-bank"></i></div>
+        <div class="stat-info">
+          <div class="stat-val" id="statRefBalance">—</div>
+          <div class="stat-lbl">أرصدة لم تُستخدم</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sub Tabs for Referrals -->
+    <div class="tabs">
+      <button class="tab active" data-reftab="all">
+        <i class="fas fa-list"></i> كل الإحالات
+        <span class="count" id="cntRefAll">0</span>
+      </button>
+      <button class="tab" data-reftab="awarded">
+        <i class="fas fa-check"></i> ممنوحة
+        <span class="count" id="cntRefAwarded">0</span>
+      </button>
+      <button class="tab" data-reftab="pending">
+        <i class="fas fa-clock"></i> قيد الانتظار
+        <span class="count" id="cntRefPending">0</span>
+      </button>
+      <button class="tab" data-reftab="top">
+        <i class="fas fa-trophy" style="color:#fbbf24"></i> الأكثر إحالة
+      </button>
+    </div>
+
+    <div class="requests" id="referralsList"></div>
+  </div>
+
+</main>
+
+<!-- Unauthorized view -->
+<main class="main" id="unauthorizedView" style="display:none">
+  <div class="unauthorized">
+    <div class="lock-ico"><i class="fas fa-lock"></i></div>
+    <h1>ليس لديك صلاحية</h1>
+    <p>هذه الصفحة مخصصة للإدارة فقط. تواصل مع المسؤول إذا تعتقد أن هذا خطأ.</p>
+    <a href="dashboard.html" class="btn-back">
+      <i class="fas fa-arrow-right"></i> العودة للوحة التحكم
+    </a>
+  </div>
+</main>
+
+<!-- Image modal -->
+<div class="modal" id="imgModal">
+  <button class="modal-close" id="closeModal"><i class="fas fa-times"></i></button>
+  <img class="modal-img" id="modalImg" alt="proof"/>
+</div>
+
+<!-- Reject modal -->
+<div class="reject-modal" id="rejectModal">
+  <div class="reject-card">
+    <h3>رفض الطلب</h3>
+    <p>اكتب سبب الرفض — رح يوصل للمستخدم بشكل واضح.</p>
+    <textarea id="rejectReason" placeholder="مثال: لم نتمكن من تأكيد المبلغ، الرجاء إعادة المحاولة مع TxID صحيح..."></textarea>
+    <div class="reject-actions">
+      <button class="btn btn-cancel" id="cancelReject">إلغاء</button>
+      <button class="btn btn-confirm-reject" id="confirmReject">
+        <i class="fas fa-ban"></i> تأكيد الرفض
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { supabase, requireAuth, getUser, signOut } from './supabase-client.js';
+
+const session = await requireAuth();
+if(!session){ throw new Error('not auth'); }
+const user = await getUser();
+
+const fullName = user.user_metadata?.full_name || user.user_metadata?.name || user.email.split('@')[0];
+document.getElementById('userName').textContent = fullName.split(' ')[0];
+document.getElementById('userAvatar').textContent = (fullName[0]||'A').toUpperCase();
+
+// ── تحقق من Admin ──
+const { data: profile, error: profErr } = await supabase
+  .from('profiles')
+  .select('is_admin')
+  .eq('id', user.id)
+  .single();
+
+document.getElementById('loading').classList.add('hide');
+
+if(profErr || !profile?.is_admin){
+  document.getElementById('unauthorizedView').style.display = 'block';
+} else {
+  document.getElementById('adminMain').style.display = 'block';
+  await loadStats();
+  await loadRequests('pending');
+  await loadBookings('pending');
+  await updateBookingsBadge();
+  await updateReferralsBadge();
+}
+
+// ── Section Tabs (Payments / Bookings) ──
+let currentSection = 'payments';
+document.querySelectorAll('[data-section]').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('[data-section]').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentSection = tab.dataset.section;
+    document.getElementById('paymentsSection').style.display = currentSection === 'payments' ? 'block' : 'none';
+    document.getElementById('bookingsSection').style.display = currentSection === 'bookings' ? 'block' : 'none';
+    document.getElementById('referralsSection').style.display = currentSection === 'referrals' ? 'block' : 'none';
+    if(currentSection === 'referrals') loadReferrals(currentRefTab);
+  });
+});
+
+// ── Referrals Sub-Tabs ──
+let currentRefTab = 'all';
+document.querySelectorAll('[data-reftab]').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('[data-reftab]').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentRefTab = tab.dataset.reftab;
+    loadReferrals(currentRefTab);
+  });
+});
+
+// ── Update Referrals Badge ──
+async function updateReferralsBadge(){
+  const { count } = await supabase.from('referrals')
+    .select('*', { count:'exact', head:true })
+    .eq('status', 'pending');
+  const badge = document.getElementById('cntReferralsBadge');
+  badge.textContent = count ?? 0;
+  if((count ?? 0) > 0) badge.style.background = '#22c55e', badge.style.color = '#000';
+}
+
+// ── Load Referrals + Stats ──
+async function loadReferrals(filter){
+  const list = document.getElementById('referralsList');
+  list.innerHTML = '<div class="empty"><div class="spinner" style="margin:0 auto 1rem"></div></div>';
+
+  // جيب كل الإحالات + بيانات المستخدمين
+  const { data: allRefs } = await supabase
+    .from('referrals')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  const refs = allRefs || [];
+
+  // إحصائيات
+  const awarded = refs.filter(r => r.status === 'awarded');
+  const pending = refs.filter(r => r.status === 'pending');
+  const totalCommissions = awarded.reduce((s, r) => s + Number(r.commission_amount || 0), 0);
+
+  // جيب الأرصدة غير المستخدمة
+  const { data: credits } = await supabase
+    .from('account_credits')
+    .select('user_id, amount');
+  const balanceByUser = {};
+  (credits || []).forEach(c => {
+    balanceByUser[c.user_id] = (balanceByUser[c.user_id] || 0) + Number(c.amount);
+  });
+  const totalUnused = Object.values(balanceByUser).reduce((s, v) => s + v, 0);
+
+  document.getElementById('statRefTotal').textContent = refs.length;
+  document.getElementById('statRefPending').textContent = pending.length;
+  document.getElementById('statRefCommissions').textContent = '$' + totalCommissions.toFixed(0);
+  document.getElementById('statRefBalance').textContent = '$' + totalUnused.toFixed(0);
+
+  // Tab counts
+  document.getElementById('cntRefAll').textContent = refs.length;
+  document.getElementById('cntRefAwarded').textContent = awarded.length;
+  document.getElementById('cntRefPending').textContent = pending.length;
+
+  // اختار اللي رح يتعرض
+  let filtered = refs;
+  if(filter === 'awarded') filtered = awarded;
+  else if(filter === 'pending') filtered = pending;
+  else if(filter === 'top') return renderTopReferrers(refs);
+
+  if(filtered.length === 0){
+    const msgs = {
+      all: { h:'لا توجد إحالات بعد', p:'الإحالات ستظهر هنا لما المستخدمين يبدأوا يشاركوا أكوادهم' },
+      awarded: { h:'لا توجد إحالات ممنوحة', p:'الإحالات الناجحة (بعد تأكيد الدفع) ستظهر هنا' },
+      pending: { h:'لا توجد إحالات معلّقة', p:'الإحالات بانتظار تأكيد الدفع ستظهر هنا' }
+    };
+    const m = msgs[filter] || msgs.all;
+    list.innerHTML = `<div class="empty"><i class="fas fa-gift"></i><h3>${m.h}</h3><p>${m.p}</p></div>`;
+    return;
+  }
+
+  // اعرض الإحالات
+  // جيب أسماء المستخدمين
+  const userIds = [...new Set([...filtered.map(r=>r.referrer_id), ...filtered.map(r=>r.referred_id)])];
+  const { data: profiles } = await supabase
+    .from('profiles')
+    .select('id, email, full_name')
+    .in('id', userIds);
+  const userMap = {};
+  (profiles || []).forEach(p => userMap[p.id] = p);
+
+  list.innerHTML = '';
+  for(const r of filtered){
+    list.appendChild(buildReferralCard(r, userMap));
+  }
+}
+
+function buildReferralCard(r, userMap){
+  const card = document.createElement('div');
+  card.className = `req-card ${r.status === 'awarded' ? 'approved' : (r.status === 'cancelled' ? 'rejected' : 'pending')}`;
+
+  const referrer = userMap[r.referrer_id] || { full_name: 'مستخدم', email: '?' };
+  const referred = userMap[r.referred_id] || { full_name: 'مستخدم', email: '?' };
+  const refInitial = (referrer.full_name || '?')[0]?.toUpperCase() || '?';
+  const newInitial = (referred.full_name || '?')[0]?.toUpperCase() || '?';
+
+  const statusText = { pending: 'بانتظار الدفع', awarded: 'ممنوحة ✅', cancelled: 'ملغية' };
+  const statusIco = { pending: 'fa-clock', awarded: 'fa-check-circle', cancelled: 'fa-ban' };
+  const date = new Date(r.created_at).toLocaleString('ar-EG-u-nu-latn', { dateStyle:'medium', timeStyle:'short' });
+
+  card.innerHTML = `
+    <div class="req-head">
+      <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap">
+        <!-- Referrer -->
+        <div class="req-user">
+          <div class="req-avatar" style="background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff">${refInitial}</div>
+          <div>
+            <div style="font-size:.72rem;color:var(--txt3);margin-bottom:.15rem">المُحيل (صاحب الكود)</div>
+            <div class="req-name">${escapeHtml(referrer.full_name)}</div>
+            <div class="req-email">${escapeHtml(referrer.email)}</div>
+          </div>
+        </div>
+        <i class="fas fa-arrow-left" style="color:var(--txt4);font-size:.9rem"></i>
+        <!-- Referred -->
+        <div class="req-user">
+          <div class="req-avatar">${newInitial}</div>
+          <div>
+            <div style="font-size:.72rem;color:var(--txt3);margin-bottom:.15rem">المستخدم الجديد</div>
+            <div class="req-name">${escapeHtml(referred.full_name)}</div>
+            <div class="req-email">${escapeHtml(referred.email)}</div>
+          </div>
+        </div>
+      </div>
+      <div class="req-status ${r.status === 'awarded' ? 'approved' : (r.status === 'cancelled' ? 'rejected' : 'pending')}">
+        <i class="fas ${statusIco[r.status]}"></i> ${statusText[r.status]}
+      </div>
+    </div>
+    <div class="req-body" style="grid-template-columns:1fr">
+      <div class="req-info">
+        <div class="info-row"><span class="info-lbl">الكود المُستخدم:</span><span class="info-val txid" style="background:rgba(34,197,94,.08);color:#22c55e">${escapeHtml(r.code)}</span></div>
+        <div class="info-row"><span class="info-lbl">خصم العميل الجديد:</span><span class="info-val amount" style="color:#22c55e">$${Number(r.discount_amount||0).toFixed(2)}</span></div>
+        <div class="info-row"><span class="info-lbl">عمولة المُحيل:</span><span class="info-val amount" style="color:var(--gold);font-size:1.15rem">$${Number(r.commission_amount||0).toFixed(2)}</span></div>
+        <div class="info-row"><span class="info-lbl">التاريخ:</span><span class="info-val">${date}</span></div>
+        ${r.awarded_at ? `<div class="info-row"><span class="info-lbl">تمت المنح في:</span><span class="info-val">${new Date(r.awarded_at).toLocaleString('ar-EG-u-nu-latn',{dateStyle:'medium', timeStyle:'short'})}</span></div>` : ''}
+      </div>
+    </div>
+  `;
+  return card;
+}
+
+function renderTopReferrers(refs){
+  const list = document.getElementById('referralsList');
+
+  // تجميع حسب المُحيل
+  const byReferrer = {};
+  refs.filter(r => r.status === 'awarded').forEach(r => {
+    if(!byReferrer[r.referrer_id]){
+      byReferrer[r.referrer_id] = { count: 0, total: 0, ref: r.referrer_id };
+    }
+    byReferrer[r.referrer_id].count++;
+    byReferrer[r.referrer_id].total += Number(r.commission_amount || 0);
+  });
+
+  const top = Object.values(byReferrer).sort((a,b) => b.total - a.total).slice(0, 10);
+
+  if(top.length === 0){
+    list.innerHTML = `<div class="empty"><i class="fas fa-trophy"></i><h3>لا توجد إحالات ناجحة بعد</h3><p>القائمة ستظهر بعد أول إحالة مفعّلة</p></div>`;
+    return;
+  }
+
+  // جيب بيانات المستخدمين
+  const userIds = top.map(t => t.ref);
+  supabase.from('profiles').select('id, email, full_name').in('id', userIds).then(({data}) => {
+    const userMap = {};
+    (data || []).forEach(p => userMap[p.id] = p);
+
+    list.innerHTML = '<div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.5rem">';
+    top.forEach((t, idx) => {
+      const user = userMap[t.ref] || { full_name: 'مستخدم', email: '?' };
+      const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `${idx+1}.`;
+      list.children[0].innerHTML += `
+        <div style="display:flex;align-items:center;gap:1rem;padding:1rem 0;${idx < top.length-1 ? 'border-bottom:1px dashed rgba(255,255,255,.06)' : ''}">
+          <div style="font-size:1.5rem;width:40px;text-align:center">${medal}</div>
+          <div class="req-avatar" style="background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff">${(user.full_name||'?')[0].toUpperCase()}</div>
+          <div style="flex-grow:1">
+            <div style="font-weight:600;font-size:1rem">${escapeHtml(user.full_name)}</div>
+            <div style="color:var(--txt3);font-size:.82rem">${escapeHtml(user.email)}</div>
+          </div>
+          <div style="text-align:left">
+            <div style="font-family:'Space Grotesk';font-size:1.3rem;font-weight:700;color:var(--gold)">$${t.total.toFixed(2)}</div>
+            <div style="color:var(--txt3);font-size:.78rem">${t.count} إحالة</div>
+          </div>
+        </div>
+      `;
+    });
+  });
+}
+
+// ── Payment Tabs ──
+let currentTab = 'pending';
+document.querySelectorAll('[data-tab]').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('[data-tab]').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentTab = tab.dataset.tab;
+    loadRequests(currentTab);
+  });
+});
+
+// ── Booking Tabs ──
+let currentBkTab = 'pending';
+document.querySelectorAll('[data-bktab]').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('[data-bktab]').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentBkTab = tab.dataset.bktab;
+    loadBookings(currentBkTab);
+  });
+});
+
+// ── Update Bookings Pending Badge ──
+async function updateBookingsBadge(){
+  const { count } = await supabase.from('call_bookings')
+    .select('*', { count:'exact', head:true })
+    .eq('status', 'pending');
+  const badge = document.getElementById('cntBookingsBadge');
+  badge.textContent = count ?? 0;
+  if((count ?? 0) > 0) badge.style.background = '#ef4444', badge.style.color = '#fff';
+}
+
+// ── Load Bookings ──
+async function loadBookings(filter){
+  const list = document.getElementById('bookingsList');
+  list.innerHTML = '<div class="empty"><div class="spinner" style="margin:0 auto 1rem"></div></div>';
+
+  const { data: bookings, error } = await supabase
+    .from('call_bookings')
+    .select('*')
+    .eq('status', filter)
+    .order('scheduled_at', { ascending: filter === 'pending' });
+
+  if(error){
+    list.innerHTML = `<div class="empty"><i class="fas fa-exclamation-triangle"></i><h3>خطأ</h3><p>${error.message}</p></div>`;
+    return;
+  }
+
+  // Update counts
+  const { data: all } = await supabase.from('call_bookings').select('status');
+  if(all){
+    document.getElementById('cntBkPending').textContent = all.filter(b=>b.status==='pending').length;
+    document.getElementById('cntBkConfirmed').textContent = all.filter(b=>b.status==='confirmed').length;
+    document.getElementById('cntBkCompleted').textContent = all.filter(b=>b.status==='completed').length;
+    document.getElementById('cntBkCancelled').textContent = all.filter(b=>b.status==='cancelled').length;
+  }
+
+  if(!bookings || bookings.length === 0){
+    const msgs = {
+      pending: { h:'لا توجد حجوزات قيد التأكيد', p:'حجوزات Premium رح تظهر هون' },
+      confirmed: { h:'لا توجد حجوزات مؤكدة', p:'الحجوزات المؤكدة بـ Google Meet ستظهر هنا' },
+      completed: { h:'لا توجد جلسات منتهية', p:'الجلسات المكتملة ستظهر هنا' },
+      cancelled: { h:'لا توجد حجوزات ملغية', p:'' }
+    };
+    const m = msgs[filter];
+    list.innerHTML = `<div class="empty"><i class="fas fa-calendar-times"></i><h3>${m.h}</h3><p>${m.p}</p></div>`;
+    return;
+  }
+
+  list.innerHTML = '';
+  for(const b of bookings){
+    list.appendChild(buildBookingCard(b));
+  }
+}
+
+function buildBookingCard(b){
+  const card = document.createElement('div');
+  card.className = `req-card ${b.status}`;
+  const date = new Date(b.scheduled_at);
+  const initial = (b.user_name || b.user_email)[0]?.toUpperCase() || '?';
+  const statusText = { pending:'قيد التأكيد', confirmed:'مؤكد', completed:'منتهي', cancelled:'ملغي' };
+  const statusIco = { pending:'fa-clock', confirmed:'fa-check', completed:'fa-flag-checkered', cancelled:'fa-times' };
+
+  card.innerHTML = `
+    <div class="req-head">
+      <div class="req-user">
+        <div class="req-avatar">${initial}</div>
+        <div>
+          <div class="req-name">${escapeHtml(b.user_name || 'بدون اسم')}</div>
+          <div class="req-email">${escapeHtml(b.user_email)}</div>
+        </div>
+      </div>
+      <div class="req-status ${b.status}">
+        <i class="fas ${statusIco[b.status]}"></i> ${statusText[b.status]}
+      </div>
+    </div>
+    <div class="req-body" style="grid-template-columns:1fr auto">
+      <div class="req-info">
+        <div class="info-row">
+          <span class="info-lbl">التاريخ:</span>
+          <span class="info-val" style="font-weight:700">${date.toLocaleDateString('ar-EG-u-nu-latn',{weekday:'long', day:'numeric', month:'long', year:'numeric'})}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-lbl">الوقت:</span>
+          <span class="info-val amount" style="color:var(--gold);font-family:'Space Grotesk';font-size:1.15rem">${date.toLocaleTimeString('ar-EG-u-nu-latn',{hour:'2-digit',minute:'2-digit'})}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-lbl">المدة:</span>
+          <span class="info-val">${b.duration_min} دقيقة</span>
+        </div>
+        ${b.notes ? `<div class="info-row"><span class="info-lbl">ملاحظات:</span><span class="info-val" style="font-style:italic">${escapeHtml(b.notes)}</span></div>` : ''}
+        ${b.meeting_url ? `<div class="info-row"><span class="info-lbl">رابط Meet:</span><a href="${escapeHtml(b.meeting_url)}" target="_blank" class="info-val txid" style="color:var(--info)">${escapeHtml(b.meeting_url)}</a></div>` : ''}
+        ${b.admin_note ? `<div class="info-row"><span class="info-lbl">ملاحظة Admin:</span><span class="info-val note">${escapeHtml(b.admin_note)}</span></div>` : ''}
+      </div>
+      ${b.status === 'pending' ? `
+        <div class="req-actions">
+          <button class="btn btn-approve" data-action="confirm-bk" data-id="${b.id}">
+            <i class="fas fa-check"></i> تأكيد + رابط Meet
+          </button>
+          <button class="btn btn-reject" data-action="cancel-bk" data-id="${b.id}">
+            <i class="fas fa-ban"></i> إلغاء
+          </button>
+        </div>
+      ` : b.status === 'confirmed' ? `
+        <div class="req-actions">
+          <button class="btn btn-approve" data-action="complete-bk" data-id="${b.id}" style="background:#3b82f6">
+            <i class="fas fa-flag-checkered"></i> تمت
+          </button>
+        </div>
+      ` : ''}
+    </div>
+  `;
+
+  card.querySelectorAll('[data-action]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.id;
+      if(btn.dataset.action === 'confirm-bk') confirmBooking(id);
+      else if(btn.dataset.action === 'cancel-bk') cancelBookingAdmin(id);
+      else if(btn.dataset.action === 'complete-bk') completeBooking(id);
+    });
+  });
+  return card;
+}
+
+async function confirmBooking(id){
+  const url = prompt('الصق رابط Google Meet:\n(مثال: https://meet.google.com/abc-defg-hij)');
+  if(!url) return;
+  if(!url.includes('meet.google.com') && !confirm('الرابط ما فيه meet.google.com. تأكيد؟')) return;
+
+  const { data, error } = await supabase.rpc('confirm_booking', { p_id: id, p_meeting_url: url });
+  if(error || data?.error){
+    showToast(error?.message || data?.error || 'خطأ', 'err');
+    return;
+  }
+  showToast('تم التأكيد ✅', 'ok');
+  await loadBookings(currentBkTab);
+  await updateBookingsBadge();
+}
+
+async function cancelBookingAdmin(id){
+  const reason = prompt('سبب الإلغاء:');
+  if(!reason || reason.length < 3) return;
+  const { data, error } = await supabase.rpc('cancel_booking', { p_id: id, p_reason: reason });
+  if(error || data?.error){ showToast(error?.message || data?.error, 'err'); return; }
+  showToast('تم الإلغاء', 'ok');
+  await loadBookings(currentBkTab);
+  await updateBookingsBadge();
+}
+
+async function completeBooking(id){
+  if(!confirm('وضع الجلسة كمنتهية؟')) return;
+  await supabase.from('call_bookings').update({ status: 'completed' }).eq('id', id);
+  showToast('تم ✅', 'ok');
+  await loadBookings(currentBkTab);
+}
+
+// ── Logout ──
+document.getElementById('logoutBtn').addEventListener('click', () => signOut());
+
+// ── Stats ──
+async function loadStats(){
+  const [{count: pCount}, {data: profiles}, {data: approvedMonth}] = await Promise.all([
+    supabase.from('payment_requests').select('*', { count:'exact', head:true }).eq('status','pending'),
+    supabase.from('profiles').select('subscription_tier'),
+    supabase.from('payment_requests')
+      .select('amount')
+      .eq('status','approved')
+      .gte('reviewed_at', new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString())
+  ]);
+  document.getElementById('statPending').textContent = pCount ?? 0;
+  document.getElementById('statUsers').textContent = profiles?.length ?? 0;
+  document.getElementById('statActive').textContent = profiles?.filter(p => p.subscription_tier !== 'free').length ?? 0;
+  const revenue = (approvedMonth ?? []).reduce((s,r) => s + Number(r.amount||0), 0);
+  document.getElementById('statRevenue').textContent = '$' + revenue.toFixed(0);
+}
+
+// ── Load Requests ──
+async function loadRequests(filter){
+  const list = document.getElementById('requestsList');
+  list.innerHTML = '<div class="empty"><div class="spinner" style="margin:0 auto 1rem"></div></div>';
+
+  let q = supabase.from('payment_requests').select('*').order('created_at', { ascending: false });
+  if(filter !== 'all') q = q.eq('status', filter);
+
+  const { data: requests, error } = await q;
+
+  if(error){
+    list.innerHTML = `<div class="empty"><i class="fas fa-exclamation-triangle"></i><h3>خطأ في التحميل</h3><p>${error.message}</p></div>`;
+    return;
+  }
+
+  // Update tab counts
+  const { data: allReqs } = await supabase.from('payment_requests').select('status');
+  if(allReqs){
+    document.getElementById('cntPending').textContent = allReqs.filter(r=>r.status==='pending').length;
+    document.getElementById('cntApproved').textContent = allReqs.filter(r=>r.status==='approved').length;
+    document.getElementById('cntRejected').textContent = allReqs.filter(r=>r.status==='rejected').length;
+    document.getElementById('cntAll').textContent = allReqs.length;
+  }
+
+  if(!requests || requests.length === 0){
+    const msgs = {
+      pending: { ico:'fa-inbox', h:'لا توجد طلبات قيد المراجعة', p:'كل الطلبات تمت معالجتها 🎉' },
+      approved: { ico:'fa-check-circle', h:'لا توجد طلبات مفعّلة بعد', p:'ستظهر هنا الاشتراكات المفعّلة' },
+      rejected: { ico:'fa-ban', h:'لا توجد طلبات مرفوضة', p:'لم يتم رفض أي طلب حتى الآن' },
+      all: { ico:'fa-inbox', h:'لا توجد طلبات', p:'لم يقم أحد بإرسال طلب اشتراك بعد' }
+    };
+    const m = msgs[filter];
+    list.innerHTML = `<div class="empty"><i class="fas ${m.ico}"></i><h3>${m.h}</h3><p>${m.p}</p></div>`;
+    return;
+  }
+
+  list.innerHTML = '';
+  for(const req of requests){
+    const card = await buildRequestCard(req);
+    list.appendChild(card);
+  }
+}
+
+// ── Build Request Card ──
+async function buildRequestCard(req){
+  const card = document.createElement('div');
+  card.className = `req-card ${req.status}`;
+
+  // Get proof image URL (signed)
+  let proofImg = '<div class="no-img">لا توجد صورة</div>';
+  if(req.proof_url){
+    const { data: signedData } = await supabase.storage
+      .from('payment-proofs')
+      .createSignedUrl(req.proof_url, 3600);
+    if(signedData?.signedUrl){
+      proofImg = `<span class="zoom-ico"><i class="fas fa-search-plus"></i></span><img src="${signedData.signedUrl}" alt="proof" data-fullsize="${signedData.signedUrl}"/>`;
+    }
+  }
+
+  const statusText = { pending: 'قيد المراجعة', approved: 'مفعّل', rejected: 'مرفوض' };
+  const statusIco = { pending: 'fa-clock', approved: 'fa-check', rejected: 'fa-times' };
+  const planText = req.plan === 'basic' ? 'Basic' : 'Premium';
+  const initial = (req.user_name || req.user_email)[0]?.toUpperCase() || '?';
+  const date = new Date(req.created_at).toLocaleString('ar-EG-u-nu-latn', { dateStyle:'medium', timeStyle:'short' });
+
+  card.innerHTML = `
+    <div class="req-head">
+      <div class="req-user">
+        <div class="req-avatar">${initial}</div>
+        <div>
+          <div class="req-name">${escapeHtml(req.user_name || 'بدون اسم')}</div>
+          <div class="req-email">${escapeHtml(req.user_email)}</div>
+        </div>
+      </div>
+      <div class="req-status ${req.status}">
+        <i class="fas ${statusIco[req.status]}"></i> ${statusText[req.status]}
+      </div>
+    </div>
+    <div class="req-body">
+      <div class="proof-img">${proofImg}</div>
+      <div class="req-info">
+        <div class="info-row"><span class="info-lbl">الباقة:</span><span class="info-val plan">${planText}</span></div>
+        <div class="info-row"><span class="info-lbl">المبلغ:</span><span class="info-val amount">$${req.amount} USDT</span></div>
+        <div class="info-row"><span class="info-lbl">الطريقة:</span><span class="info-val">USDT (TRC20)</span></div>
+        <div class="info-row"><span class="info-lbl">التاريخ:</span><span class="info-val">${date}</span></div>
+        ${req.txid ? `
+          <div class="info-row">
+            <span class="info-lbl">TxID:</span>
+            <span class="info-val txid">
+              ${escapeHtml(req.txid)}
+              <a href="https://tronscan.org/#/transaction/${encodeURIComponent(req.txid)}" target="_blank" rel="noopener">→ تحقق</a>
+            </span>
+          </div>` : ''}
+        ${req.admin_note ? `<div class="info-row"><span class="info-lbl">سبب الرفض:</span><span class="info-val note">${escapeHtml(req.admin_note)}</span></div>` : ''}
+        ${req.reviewed_at ? `<div class="info-row"><span class="info-lbl">تمت المراجعة:</span><span class="info-val">${new Date(req.reviewed_at).toLocaleString('ar-EG-u-nu-latn',{dateStyle:'medium', timeStyle:'short'})}</span></div>` : ''}
+      </div>
+      ${req.status === 'pending' ? `
+        <div class="req-actions">
+          <button class="btn btn-approve" data-action="approve" data-id="${req.id}">
+            <i class="fas fa-check"></i> تفعيل
+          </button>
+          <button class="btn btn-reject" data-action="reject" data-id="${req.id}">
+            <i class="fas fa-times"></i> رفض
+          </button>
+        </div>` : ''}
+    </div>
+  `;
+
+  // Image click → modal
+  const img = card.querySelector('.proof-img img');
+  if(img){
+    card.querySelector('.proof-img').addEventListener('click', () => {
+      document.getElementById('modalImg').src = img.dataset.fullsize;
+      document.getElementById('imgModal').classList.add('open');
+    });
+  }
+
+  // Approve / Reject
+  card.querySelectorAll('[data-action]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if(btn.dataset.action === 'approve') approveRequest(btn.dataset.id);
+      else openRejectModal(btn.dataset.id);
+    });
+  });
+
+  return card;
+}
+
+// ── Approve ──
+async function approveRequest(id){
+  if(!confirm('تفعيل هذا الاشتراك؟')) return;
+  const { data, error } = await supabase.rpc('approve_payment', { request_id: id });
+  if(error || data?.error){
+    showToast(error?.message || data?.error || 'خطأ', 'err');
+    return;
+  }
+  showToast('تم التفعيل بنجاح ✅', 'ok');
+  await loadStats();
+  await loadRequests(currentTab);
+}
+
+// ── Reject ──
+let rejectId = null;
+function openRejectModal(id){
+  rejectId = id;
+  document.getElementById('rejectReason').value = '';
+  document.getElementById('rejectModal').classList.add('open');
+}
+document.getElementById('cancelReject').addEventListener('click', () => {
+  document.getElementById('rejectModal').classList.remove('open');
+});
+document.getElementById('confirmReject').addEventListener('click', async () => {
+  const reason = document.getElementById('rejectReason').value.trim();
+  if(reason.length < 5){
+    showToast('السبب لازم يكون 5 أحرف على الأقل', 'err');
+    return;
+  }
+  const { data, error } = await supabase.rpc('reject_payment', { request_id: rejectId, reason: reason });
+  if(error || data?.error){
+    showToast(error?.message || data?.error || 'خطأ', 'err');
+    return;
+  }
+  document.getElementById('rejectModal').classList.remove('open');
+  showToast('تم رفض الطلب', 'ok');
+  await loadStats();
+  await loadRequests(currentTab);
+});
+
+// ── Modal close ──
+document.getElementById('closeModal').addEventListener('click', () => {
+  document.getElementById('imgModal').classList.remove('open');
+});
+document.getElementById('imgModal').addEventListener('click', e => {
+  if(e.target.id === 'imgModal') document.getElementById('imgModal').classList.remove('open');
+});
+
+// ── Helpers ──
+function escapeHtml(s){
+  return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+}
+function showToast(msg, type='ok'){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast show ${type}`;
+  setTimeout(()=>t.classList.remove('show'), 3500);
+}
+</script>
+
+</body>
+</html>

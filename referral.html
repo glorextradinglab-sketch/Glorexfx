@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>شارك واربح — GLOREX</title>
+<meta name="theme-color" content="#0a0a0a"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold:#D4A017;--gold-l:#F0C030;--gold-d:#A07810;
+  --bg:#080808;--surface:#0d0d0d;--card:#111111;
+  --border:rgba(255,255,255,0.08);
+  --txt:#fff;--txt2:#ccc;--txt3:#999;--txt4:#666;
+  --ease:cubic-bezier(.4,0,.2,1);--base:.3s;
+  --ok:#22c55e;--info:#3b82f6;
+}
+body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;font-family:inherit;border:none;background:none;color:inherit}
+input{font-family:inherit;color:inherit}
+
+.bg-mesh{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 900px 700px at 80% 0%,rgba(212,160,23,.1),transparent 60%),radial-gradient(ellipse 600px 800px at 0% 100%,rgba(160,120,16,.07),transparent 60%)}
+
+.topbar{position:sticky;top:0;z-index:100;background:rgba(8,8,8,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:.95rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{display:flex;align-items:center;gap:.6rem}
+.brand-logo{width:40px;height:40px;border-radius:11px;background:#fff;border:1.5px solid rgba(212,160,23,.5);box-shadow:0 0 14px rgba(184,134,11,.45);display:flex;align-items:center;justify-content:center;padding:5px;overflow:hidden}
+.brand-logo img{width:100%;height:100%;object-fit:contain}
+.brand-name{font-family:'Space Grotesk';font-weight:700;font-size:1.25rem;letter-spacing:-.02em}
+.nav-tabs{display:flex;gap:.4rem}
+.nav-tab{padding:.55rem 1.1rem;border-radius:10px;color:var(--txt3);font-size:.88rem;font-weight:500;transition:all var(--base) var(--ease)}
+.nav-tab:hover{color:var(--txt);background:rgba(255,255,255,.04)}
+.user-name{font-size:.92rem;color:var(--txt2)}
+.user-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-family:'Space Grotesk';font-size:.92rem}
+.user-menu{display:flex;align-items:center;gap:.7rem}
+
+.main{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:2.5rem 2rem 5rem}
+
+.page-head{text-align:center;margin-bottom:2.5rem}
+.page-eyebrow{display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1rem;background:rgba(212,160,23,.1);border:1px solid rgba(212,160,23,.25);border-radius:999px;color:var(--gold);font-size:.82rem;font-weight:600;margin-bottom:1.2rem}
+.page-h1{font-family:'Space Grotesk';font-size:clamp(2rem,5vw,3rem);font-weight:700;line-height:1.15;margin-bottom:.7rem;letter-spacing:-.02em}
+.page-h1 em{font-style:normal;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.page-sub{color:var(--txt3);font-size:1.05rem;line-height:1.7;max-width:580px;margin:0 auto}
+
+/* Hero Card — Code Display */
+.code-card{background:linear-gradient(160deg,#161106,#0d0a04);border:1px solid rgba(212,160,23,.3);border-radius:20px;padding:2.5rem 2rem;margin-bottom:2rem;position:relative;overflow:hidden;text-align:center}
+.code-card::before{content:'';position:absolute;top:-50%;right:-15%;width:400px;height:400px;background:radial-gradient(circle,rgba(212,160,23,.12),transparent 70%);pointer-events:none}
+.code-inner{position:relative}
+.code-lbl{color:var(--txt3);font-size:.92rem;margin-bottom:.7rem}
+.code-display{display:inline-flex;align-items:center;gap:.8rem;background:rgba(0,0,0,.4);border:2px dashed rgba(212,160,23,.4);padding:1rem 1.8rem;border-radius:14px;margin-bottom:1.4rem;flex-wrap:wrap;justify-content:center}
+.code-text{font-family:'Space Grotesk';font-size:2.2rem;font-weight:700;color:var(--gold);letter-spacing:.05em}
+.code-btn{padding:.7rem 1.1rem;background:rgba(212,160,23,.15);color:var(--gold);border-radius:9px;font-size:.85rem;font-weight:600;display:inline-flex;align-items:center;gap:.4rem;transition:all var(--base) var(--ease)}
+.code-btn:hover{background:rgba(212,160,23,.25)}
+.code-btn.copied{background:rgba(34,197,94,.15);color:var(--ok)}
+.code-actions{display:flex;justify-content:center;gap:.6rem;flex-wrap:wrap}
+.btn-edit{padding:.55rem 1rem;color:var(--txt3);font-size:.85rem;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:9px;display:inline-flex;align-items:center;gap:.4rem;transition:all var(--base) var(--ease)}
+.btn-edit:hover{color:var(--gold);border-color:rgba(212,160,23,.3)}
+
+/* Edit form */
+.edit-form{display:none;margin-top:1.5rem;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.4rem;max-width:480px;margin-left:auto;margin-right:auto}
+.edit-form.show{display:block}
+.edit-form-h{font-size:.95rem;font-weight:600;margin-bottom:.9rem;color:var(--txt2)}
+.edit-input{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:.85rem 1rem;color:var(--txt);font-size:1.05rem;font-family:'Space Grotesk';text-transform:uppercase;letter-spacing:.05em;text-align:center;margin-bottom:.8rem}
+.edit-input:focus{outline:none;border-color:var(--gold)}
+.edit-hint{color:var(--txt4);font-size:.78rem;margin-bottom:1rem;text-align:right;line-height:1.6}
+.edit-actions{display:flex;gap:.5rem}
+.btn-save{flex:1;background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#000;padding:.7rem;border-radius:9px;font-weight:700;font-size:.9rem}
+.btn-save:disabled{opacity:.5;cursor:not-allowed}
+.btn-cancel{padding:.7rem 1.2rem;background:rgba(255,255,255,.04);color:var(--txt2);border:1px solid var(--border);border-radius:9px;font-size:.9rem}
+
+/* Share Link */
+.link-section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.3rem 1.5rem;margin-bottom:2rem}
+.link-h{font-size:.88rem;color:var(--txt3);margin-bottom:.7rem;font-weight:500}
+.link-box{display:flex;gap:.6rem;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:.7rem .85rem}
+.link-text{flex-grow:1;font-family:'Space Grotesk','SF Mono',monospace;font-size:.88rem;color:var(--txt2);direction:ltr;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.share-buttons{display:flex;gap:.5rem;margin-top:.9rem;flex-wrap:wrap}
+.share-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1rem;border-radius:9px;font-size:.85rem;font-weight:500;transition:all var(--base) var(--ease)}
+.share-btn.wa{background:rgba(37,211,102,.1);color:#25d366}
+.share-btn.tg{background:rgba(36,161,222,.1);color:#24a1de}
+.share-btn.tw{background:rgba(0,0,0,.3);color:#fff;border:1px solid var(--border)}
+.share-btn.email{background:rgba(212,160,23,.1);color:var(--gold)}
+.share-btn:hover{transform:translateY(-1px);opacity:.85}
+
+/* Stats Grid */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.4rem;text-align:center;transition:all var(--base) var(--ease)}
+.stat-card:hover{border-color:rgba(255,255,255,.14)}
+.stat-card.highlight{background:linear-gradient(160deg,rgba(34,197,94,.06),rgba(34,197,94,.01));border-color:rgba(34,197,94,.25)}
+.stat-ico{width:46px;height:46px;border-radius:11px;background:rgba(212,160,23,.1);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.15rem;margin:0 auto .7rem}
+.stat-card.highlight .stat-ico{background:rgba(34,197,94,.12);color:var(--ok)}
+.stat-val{font-family:'Space Grotesk';font-size:2rem;font-weight:700;line-height:1.1;letter-spacing:-.02em;margin-bottom:.25rem}
+.stat-card.highlight .stat-val{color:var(--ok)}
+.stat-lbl{color:var(--txt3);font-size:.85rem}
+
+/* How it works */
+.steps-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.8rem;margin-bottom:2rem}
+.steps-h{font-family:'Space Grotesk';font-size:1.2rem;font-weight:700;margin-bottom:1.4rem;display:flex;align-items:center;gap:.5rem}
+.steps-h i{color:var(--gold)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+.step{position:relative;padding-right:48px}
+.step-num{position:absolute;right:0;top:0;width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));color:#000;font-family:'Space Grotesk';font-weight:700;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.step strong{display:block;font-size:.98rem;margin-bottom:.3rem;color:var(--txt)}
+.step p{color:var(--txt3);font-size:.85rem;line-height:1.7}
+
+/* History */
+.history-section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.8rem}
+.history-h{font-family:'Space Grotesk';font-size:1.2rem;font-weight:700;margin-bottom:1.4rem;display:flex;align-items:center;gap:.5rem}
+.history-h i{color:var(--gold)}
+.history-item{display:flex;align-items:center;justify-content:space-between;gap:.8rem;padding:1rem 0;border-bottom:1px dashed rgba(255,255,255,.06)}
+.history-item:last-child{border:none;padding-bottom:0}
+.h-info{display:flex;align-items:center;gap:.85rem;min-width:0;flex-grow:1}
+.h-ico{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0}
+.h-ico.ok{background:rgba(34,197,94,.1);color:var(--ok)}
+.h-ico.pending{background:rgba(245,158,11,.1);color:#f59e0b}
+.h-text strong{display:block;font-size:.92rem;margin-bottom:.15rem}
+.h-text span{color:var(--txt3);font-size:.78rem}
+.h-amount{font-family:'Space Grotesk';font-weight:700;color:var(--ok);font-size:1.05rem;flex-shrink:0}
+.h-amount.pending{color:#f59e0b}
+.h-empty{text-align:center;padding:2.5rem 1rem;color:var(--txt3)}
+.h-empty i{font-size:2.5rem;color:var(--txt4);display:block;margin-bottom:.9rem}
+.h-empty p{font-size:.9rem;line-height:1.7}
+
+/* Toast */
+.toast{position:fixed;top:1.5rem;right:50%;transform:translateX(50%);padding:.85rem 1.5rem;border-radius:10px;font-size:.92rem;font-weight:500;z-index:99999;color:#fff;box-shadow:0 10px 40px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .3s}
+.toast.show{opacity:1}
+.toast.err{background:linear-gradient(135deg,#ef4444,#dc2626)}
+.toast.ok{background:linear-gradient(135deg,#22c55e,#16a34a)}
+
+@media (max-width:820px){
+  .stats{grid-template-columns:repeat(3,1fr);gap:.5rem}
+  .stat-card{padding:1rem .8rem}
+  .stat-val{font-size:1.5rem}
+  .stat-lbl{font-size:.75rem}
+  .steps{grid-template-columns:1fr;gap:1.2rem}
+  .nav-tabs{display:none}
+  .main{padding:1.5rem 1rem 3rem}
+  .code-text{font-size:1.6rem}
+  .code-card{padding:1.8rem 1.2rem}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-mesh"></div>
+
+<header class="topbar">
+  <a href="dashboard.html" class="brand">
+    <div class="brand-logo"><img src="glorex_bull_gold.png" alt="GLOREX"/></div>
+    <div class="brand-name">GLOREX</div>
+  </a>
+  <nav class="nav-tabs">
+    <a href="dashboard.html" class="nav-tab">الرئيسية</a>
+    <a href="checklist.html" class="nav-tab">القائمة</a>
+    <a href="journal.html" class="nav-tab">السجل</a>
+    <a href="calendar.html" class="nav-tab">التقويم</a>
+    <a href="lessons.html" class="nav-tab">الدروس</a>
+    <a href="chat.html" class="nav-tab">المحادثة</a>
+  </nav>
+  <div class="user-menu">
+    <span class="user-name" id="userName">...</span>
+    <div class="user-avatar" id="userAvatar">G</div>
+  </div>
+</header>
+
+<main class="main">
+
+  <div class="page-head">
+    <div class="page-eyebrow">🎁 برنامج الإحالة</div>
+    <h1 class="page-h1">شارك كودك <em>واربح عمولات</em></h1>
+    <p class="page-sub">شارك GLOREX مع أصدقائك المتداولين — كل واحد يشترك بكودك تحصل على <strong style="color:var(--gold)">20% عمولة</strong> وهو يحصل على <strong style="color:var(--gold)">15% خصم</strong></p>
+  </div>
+
+  <!-- Code Card -->
+  <div class="code-card">
+    <div class="code-inner">
+      <div class="code-lbl">كودك الخاص</div>
+      <div class="code-display">
+        <span class="code-text" id="myCode">جاري التحميل...</span>
+        <button class="code-btn" id="copyBtn">
+          <i class="fas fa-copy"></i> نسخ
+        </button>
+      </div>
+      <div class="code-actions">
+        <button class="btn-edit" id="editToggle">
+          <i class="fas fa-pen"></i> تخصيص الكود
+        </button>
+      </div>
+
+      <!-- Edit Form -->
+      <div class="edit-form" id="editForm">
+        <div class="edit-form-h">اختار كود مخصص:</div>
+        <input type="text" class="edit-input" id="editInput" placeholder="مثلاً: GHAITH" maxlength="12"/>
+        <div class="edit-hint">
+          📏 4-12 حرف • 🔤 حروف وأرقام فقط • ✨ يجب أن يكون فريد
+        </div>
+        <div class="edit-actions">
+          <button class="btn-save" id="saveBtn">حفظ الكود</button>
+          <button class="btn-cancel" id="cancelBtn">إلغاء</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Share Link -->
+  <div class="link-section">
+    <div class="link-h">رابط الإحالة المباشر:</div>
+    <div class="link-box">
+      <span class="link-text" id="shareLink">جاري التحميل...</span>
+      <button class="code-btn" id="copyLinkBtn">
+        <i class="fas fa-link"></i> نسخ
+      </button>
+    </div>
+    <div class="share-buttons">
+      <a href="#" class="share-btn wa" id="shareWa">
+        <i class="fab fa-whatsapp"></i> WhatsApp
+      </a>
+      <a href="#" class="share-btn tg" id="shareTg" target="_blank">
+        <i class="fab fa-telegram"></i> Telegram
+      </a>
+      <a href="#" class="share-btn tw" id="shareTw" target="_blank">
+        <i class="fab fa-x-twitter"></i> X / Twitter
+      </a>
+      <a href="#" class="share-btn email" id="shareEmail">
+        <i class="fas fa-envelope"></i> إيميل
+      </a>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat-card">
+      <div class="stat-ico"><i class="fas fa-users"></i></div>
+      <div class="stat-val" id="statReferrals">0</div>
+      <div class="stat-lbl">صديق اشترك بكودك</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-ico"><i class="fas fa-coins"></i></div>
+      <div class="stat-val" id="statTotal">$0</div>
+      <div class="stat-lbl">إجمالي العمولات</div>
+    </div>
+    <div class="stat-card highlight">
+      <div class="stat-ico"><i class="fas fa-wallet"></i></div>
+      <div class="stat-val" id="statBalance">$0</div>
+      <div class="stat-lbl">رصيدك المتاح</div>
+    </div>
+  </div>
+
+  <!-- How it works -->
+  <div class="steps-card">
+    <div class="steps-h"><i class="fas fa-lightbulb"></i> كيف يشتغل؟</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <strong>شارك كودك</strong>
+        <p>ابعت كودك أو رابطك لأصدقائك المتداولين عبر WhatsApp أو Telegram</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <strong>صديقك يشترك</strong>
+        <p>يستخدم كودك وقت الاشتراك ويحصل على <strong style="color:var(--gold)">15% خصم</strong> على أول اشتراك</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <strong>أنت تكسب</strong>
+        <p>تحصل على <strong style="color:var(--gold)">20% عمولة</strong> رصيد بحسابك — استخدمه لتجديد اشتراكك أو ترقيتو</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- History -->
+  <div class="history-section">
+    <div class="history-h"><i class="fas fa-history"></i> سجل الإحالات</div>
+    <div id="historyList">
+      <div class="h-empty">
+        <i class="fas fa-circle-notch fa-spin"></i>
+        <p>جاري التحميل...</p>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { supabase, requireAuth, getUser } from './supabase-client.js?v=20260610';
+import { setupUserMenu } from './user-menu.js?v=20260611';
+
+const session = await requireAuth();
+if(!session) throw new Error('not auth');
+
+const user = await getUser();
+const fullName = user.user_metadata?.full_name || user.user_metadata?.name || user.email.split('@')[0];
+const initial = (fullName[0]||'G').toUpperCase();
+
+document.getElementById('userName').textContent = fullName.split(' ')[0];
+document.getElementById('userAvatar').textContent = initial;
+await setupUserMenu(user);
+
+// ── جيب الكود ──
+let myCode = '';
+
+async function loadCode(){
+  const { data, error } = await supabase
+    .from('referral_codes')
+    .select('code')
+    .eq('user_id', user.id)
+    .single();
+
+  if(error || !data){
+    document.getElementById('myCode').textContent = 'GLREX99';
+    return;
+  }
+  myCode = data.code;
+  document.getElementById('myCode').textContent = myCode;
+  document.getElementById('shareLink').textContent = `${location.origin}/signup.html?ref=${myCode}`;
+  updateShareLinks();
+}
+
+function updateShareLinks(){
+  const link = `${location.origin}/signup.html?ref=${myCode}`;
+  const msg = `🎁 جربت GLOREX؟ منصة احترافية لتعليم التداول. استخدم كودي ${myCode} وخذ خصم 15%: ${link}`;
+  document.getElementById('shareWa').href = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+  document.getElementById('shareTg').href = `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(`🎁 جربت GLOREX؟ استخدم كودي ${myCode} وخذ خصم 15%`)}`;
+  document.getElementById('shareTw').href = `https://x.com/intent/tweet?text=${encodeURIComponent(msg)}`;
+  document.getElementById('shareEmail').href = `mailto:?subject=${encodeURIComponent('جرب GLOREX — منصة تعليم التداول')}&body=${encodeURIComponent(msg)}`;
+}
+
+// ── نسخ ──
+document.getElementById('copyBtn').addEventListener('click', async () => {
+  await navigator.clipboard.writeText(myCode);
+  const btn = document.getElementById('copyBtn');
+  btn.classList.add('copied');
+  btn.innerHTML = '<i class="fas fa-check"></i> تم النسخ';
+  toast('تم نسخ الكود ✅', 'ok');
+  setTimeout(() => {
+    btn.classList.remove('copied');
+    btn.innerHTML = '<i class="fas fa-copy"></i> نسخ';
+  }, 2000);
+});
+
+document.getElementById('copyLinkBtn').addEventListener('click', async () => {
+  const link = `${location.origin}/signup.html?ref=${myCode}`;
+  await navigator.clipboard.writeText(link);
+  const btn = document.getElementById('copyLinkBtn');
+  btn.classList.add('copied');
+  btn.innerHTML = '<i class="fas fa-check"></i> تم';
+  toast('تم نسخ الرابط ✅', 'ok');
+  setTimeout(() => {
+    btn.classList.remove('copied');
+    btn.innerHTML = '<i class="fas fa-link"></i> نسخ';
+  }, 2000);
+});
+
+// ── Edit Code ──
+document.getElementById('editToggle').addEventListener('click', () => {
+  document.getElementById('editForm').classList.toggle('show');
+  document.getElementById('editInput').value = myCode;
+  document.getElementById('editInput').focus();
+});
+
+document.getElementById('cancelBtn').addEventListener('click', () => {
+  document.getElementById('editForm').classList.remove('show');
+});
+
+document.getElementById('editInput').addEventListener('input', (e) => {
+  e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9_]/g, '');
+});
+
+document.getElementById('saveBtn').addEventListener('click', async () => {
+  const newCode = document.getElementById('editInput').value.trim();
+  if(newCode === myCode){
+    document.getElementById('editForm').classList.remove('show');
+    return;
+  }
+  if(newCode.length < 4){ toast('الكود لازم 4 حروف على الأقل', 'err'); return; }
+
+  const btn = document.getElementById('saveBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> جاري الحفظ...';
+
+  const { data, error } = await supabase.rpc('update_my_referral_code', { new_code: newCode });
+
+  btn.disabled = false;
+  btn.innerHTML = 'حفظ الكود';
+
+  if(error || data?.error){
+    toast(data?.error || error?.message || 'خطأ', 'err');
+    return;
+  }
+
+  myCode = data.new_code;
+  document.getElementById('myCode').textContent = myCode;
+  document.getElementById('shareLink').textContent = `${location.origin}/signup.html?ref=${myCode}`;
+  updateShareLinks();
+  document.getElementById('editForm').classList.remove('show');
+  toast('تم تحديث كودك ✅', 'ok');
+});
+
+// ── إحصائيات ──
+async function loadStats(){
+  // إجمالي الإحالات
+  const { data: refs } = await supabase
+    .from('referrals')
+    .select('*')
+    .eq('referrer_id', user.id);
+
+  const awarded = (refs||[]).filter(r => r.status === 'awarded');
+  const total = awarded.reduce((sum, r) => sum + Number(r.commission_amount||0), 0);
+
+  document.getElementById('statReferrals').textContent = (refs||[]).length;
+  document.getElementById('statTotal').textContent = '$' + total.toFixed(0);
+
+  // الرصيد المتاح
+  const { data: balance } = await supabase.rpc('get_account_balance');
+  document.getElementById('statBalance').textContent = '$' + Number(balance||0).toFixed(2);
+
+  // سجل الإحالات
+  const list = document.getElementById('historyList');
+  if(!refs || refs.length === 0){
+    list.innerHTML = `
+      <div class="h-empty">
+        <i class="fas fa-handshake"></i>
+        <p>ما في إحالات بعد — شارك كودك مع أصدقائك وابدا تكسب! 🚀</p>
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = '';
+  for(const r of refs){
+    const isPending = r.status === 'pending';
+    const item = document.createElement('div');
+    item.className = 'history-item';
+    item.innerHTML = `
+      <div class="h-info">
+        <div class="h-ico ${isPending?'pending':'ok'}">
+          <i class="fas fa-${isPending?'clock':'check'}"></i>
+        </div>
+        <div class="h-text">
+          <strong>${isPending ? 'بانتظار تأكيد الدفع' : 'إحالة مفعّلة'}</strong>
+          <span>${new Date(r.created_at).toLocaleDateString('ar-EG-u-nu-latn',{dateStyle:'medium'})}</span>
+        </div>
+      </div>
+      <span class="h-amount ${isPending?'pending':''}">
+        ${isPending ? '— ' : '+'}$${Number(r.commission_amount||0).toFixed(2)}
+      </span>
+    `;
+    list.appendChild(item);
+  }
+}
+
+// ── Toast ──
+function toast(msg, type='ok'){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast show ${type}`;
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Init
+await loadCode();
+await loadStats();
+</script>
+
+</body>
+</html>

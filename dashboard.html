@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>لوحة التحكم — GLOREX</title>
 <meta name="theme-color" content="#0a0a0a"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
+<script>
+/* امسح أي service worker قديم وأي cache */
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.getRegistrations().then(rs => rs.forEach(r => r.unregister()));
+}
+if(window.caches) caches.keys().then(ks => ks.forEach(k => caches.delete(k)));
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
@@ -56,19 +66,28 @@ a{color:inherit;text-decoration:none}
 }
 .brand{display:flex;align-items:center;gap:.6rem}
 .brand-logo{
-  width:36px;height:36px;border-radius:9px;
-  background:linear-gradient(135deg,var(--gold),var(--gold-d));
+  width:40px;height:40px;border-radius:11px;
+  background:#fff;
+  border:1.5px solid rgba(212,160,23,.5);
+  box-shadow:0 0 14px rgba(184,134,11,.45);
   display:flex;align-items:center;justify-content:center;
-  color:#000;font-weight:700;font-family:'Space Grotesk'
+  padding:5px;overflow:hidden
 }
+.brand-logo img{width:100%;height:100%;object-fit:contain}
 .brand-name{font-family:'Space Grotesk';font-weight:700;font-size:1.25rem;letter-spacing:-.02em}
+
+/* Nav tabs */
+.nav-tabs{display:flex;gap:.4rem}
+.nav-tab{padding:.55rem 1.1rem;border-radius:10px;color:var(--txt3);font-size:.88rem;font-weight:500;transition:all var(--base) var(--ease);text-decoration:none}
+.nav-tab:hover{color:var(--txt);background:rgba(255,255,255,.04)}
+.nav-tab.active{color:var(--gold);background:rgba(212,160,23,.1)}
 
 .user-menu{display:flex;align-items:center;gap:.7rem;position:relative}
 .user-avatar{
   width:38px;height:38px;border-radius:50%;
-  background:linear-gradient(135deg,var(--gold),var(--gold-d));
+  background:linear-gradient(135deg,var(--gold-l),var(--gold-d));
   display:flex;align-items:center;justify-content:center;
-  color:#000;font-weight:700;cursor:pointer;
+  color:#000;font-weight:700;cursor:pointer;font-family:'Space Grotesk';font-size:.92rem;
   transition:transform var(--base) var(--ease);user-select:none
 }
 .user-avatar:hover{transform:scale(1.05)}
@@ -176,16 +195,50 @@ a{color:inherit;text-decoration:none}
 
 /* Quick actions */
 .actions{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-top:1rem}
+.actions-grid{grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.9rem}
+.action[data-locked="true"]{opacity:.65;cursor:pointer;position:relative}
+.action[data-locked="true"]:hover{opacity:.85;transform:translateY(-2px);border-color:rgba(212,160,23,.3)}
+.action[data-locked="true"]::after{content:'🔒 للمشتركين';position:absolute;top:.6rem;left:.6rem;background:linear-gradient(135deg,rgba(212,160,23,.18),rgba(160,120,16,.12));color:var(--gold);padding:.25rem .65rem;border-radius:7px;font-size:.7rem;font-weight:700;letter-spacing:.3px;border:1px solid rgba(212,160,23,.25)}
 .action{
   padding:1rem;border-radius:12px;
   background:var(--surface);border:1px solid var(--border);
   display:flex;flex-direction:column;align-items:flex-start;gap:.4rem;
-  cursor:pointer;transition:all var(--base) var(--ease);color:inherit
+  cursor:pointer;transition:all var(--base) var(--ease);color:inherit;
+  position:relative
 }
 .action:hover{border-color:rgba(212,160,23,.3);background:var(--card);transform:translateY(-2px)}
 .action i{color:var(--gold);font-size:1.1rem}
 .action-t{font-weight:600;font-size:.92rem}
 .action-d{color:var(--txt4);font-size:.78rem}
+
+/* Referral special card */
+.action.action-referral{
+  background:linear-gradient(135deg,rgba(34,197,94,.08),rgba(212,160,23,.04));
+  border-color:rgba(34,197,94,.28);
+  position:relative;overflow:hidden;
+  transition:all var(--base) var(--ease)
+}
+.action.action-referral:hover{
+  background:linear-gradient(135deg,rgba(34,197,94,.12),rgba(212,160,23,.06));
+  border-color:rgba(34,197,94,.4);
+  transform:translateY(-3px);
+  box-shadow:0 12px 30px rgba(34,197,94,.12)
+}
+.action.action-referral i{color:#22c55e;font-size:1.25rem;position:relative;z-index:2}
+.action.action-referral .action-t{position:relative;z-index:2}
+.action.action-referral .action-d{color:rgba(34,197,94,.7);position:relative;z-index:2}
+.referral-glow{position:absolute;top:-30px;left:-30px;width:140px;height:140px;background:radial-gradient(circle,rgba(34,197,94,.22),transparent 70%);pointer-events:none;border-radius:50%}
+.action.action-referral::after{
+  content:'';position:absolute;top:.5rem;left:.5rem;
+  width:8px;height:8px;border-radius:50%;
+  background:#22c55e;box-shadow:0 0 12px #22c55e;
+  animation:pulse-dot-green 2s ease-in-out infinite
+}
+@keyframes pulse-dot-green{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+
+/* Lesson badge (when new content available) */
+.lesson-badge{position:absolute;top:.5rem;left:.5rem;background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;padding:.2rem .55rem;border-radius:6px;font-size:.65rem;font-weight:700;letter-spacing:.5px;animation:pulse-badge 1.8s ease-in-out infinite;z-index:3}
+@keyframes pulse-badge{50%{transform:scale(1.08)}}
 
 /* Community card */
 .community-card{
@@ -231,17 +284,30 @@ a{color:inherit;text-decoration:none}
 <!-- Top Bar -->
 <header class="topbar">
   <a href="glorex_landing.html" class="brand">
-    <div class="brand-logo">G</div>
+    <div class="brand-logo"><img src="glorex_bull_gold.png" alt="GLOREX"/></div>
     <div class="brand-name">GLOREX</div>
   </a>
+
+  <nav class="nav-tabs">
+    <a href="dashboard.html" class="nav-tab active">الرئيسية</a>
+    <a href="checklist.html" class="nav-tab">القائمة</a>
+    <a href="journal.html" class="nav-tab">السجل</a>
+    <a href="calendar.html" class="nav-tab">التقويم</a>
+    <a href="lessons.html" class="nav-tab">الدروس</a> <a href="chat.html" class="nav-tab">المحادثة</a>
+  </nav>
 
   <div class="user-menu" id="userMenu">
     <span class="user-name" id="userName">جاري التحميل...</span>
     <div class="user-avatar" id="userAvatar">G</div>
     <div class="user-dropdown" id="userDropdown">
-      <button class="dd-item"><i class="fas fa-user"></i> الملف الشخصي</button>
-      <button class="dd-item"><i class="fas fa-cog"></i> الإعدادات</button>
-      <button class="dd-item"><i class="fas fa-credit-card"></i> الفاتورة</button>
+      <a href="admin.html" class="dd-item" id="adminLink" style="text-decoration:none;display:none;background:rgba(239,68,68,.06);color:#ef4444;font-weight:600">
+        <i class="fas fa-shield-alt" style="color:#ef4444"></i> لوحة الإدارة
+        <span id="adminBadge" style="margin-right:auto;background:#ef4444;color:#fff;font-size:.65rem;padding:.15rem .4rem;border-radius:999px;font-weight:700;display:none"></span>
+      </a>
+      <a href="subscribe.html" class="dd-item" style="text-decoration:none"><i class="fas fa-crown" style="color:var(--gold)"></i> الاشتراك والباقات</a>
+      <a href="referral.html" class="dd-item" style="text-decoration:none"><i class="fas fa-gift" style="color:#22c55e"></i> شارك واربح 🎁</a>
+      <a href="profile.html" class="dd-item" style="text-decoration:none"><i class="fas fa-user"></i> الملف الشخصي</a>
+      <a href="settings.html" class="dd-item" style="text-decoration:none"><i class="fas fa-cog"></i> الإعدادات</a>
       <div class="dd-sep"></div>
       <button class="dd-item logout" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
     </div>
@@ -252,134 +318,84 @@ a{color:inherit;text-decoration:none}
 
   <!-- Welcome -->
   <section class="welcome">
-    <h1 class="welcome-h1">مرحباً، <em id="welcomeName">صديقي</em> 👋</h1>
+    <div style="display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;margin-bottom:.4rem">
+      <h1 class="welcome-h1" style="margin:0">مرحباً، <em id="welcomeName">صديقي</em> 👋</h1>
+      <a href="subscribe.html" id="tierBadge" style="display:none;align-items:center;gap:.4rem;padding:.4rem .85rem;border-radius:999px;font-size:.78rem;font-weight:700;text-decoration:none;letter-spacing:.3px"></a>
+    </div>
     <p class="welcome-sub">جاهز لتداول اليوم؟ تحقق من خطتك وادخل السوق بثقة.</p>
   </section>
 
-  <!-- Stats -->
-  <section class="stats">
+  <!-- Stats section hidden until we have meaningful metrics -->
+  <section class="stats" style="display:none">
     <div class="stat">
       <div class="stat-icon"><i class="fas fa-graduation-cap"></i></div>
-      <div class="stat-val">3<span style="color:var(--txt4)">/9</span></div>
+      <div class="stat-val" id="stat-lessons">0</div>
       <div class="stat-lbl">دروس مكتملة</div>
-    </div>
-    <div class="stat">
-      <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
-      <div class="stat-val">12</div>
-      <div class="stat-lbl">صفقات هذا الشهر</div>
-    </div>
-    <div class="stat">
-      <div class="stat-icon"><i class="fas fa-bullseye"></i></div>
-      <div class="stat-val">68%</div>
-      <div class="stat-lbl">نسبة النجاح</div>
-    </div>
-    <div class="stat">
-      <div class="stat-icon"><i class="fas fa-fire"></i></div>
-      <div class="stat-val">7</div>
-      <div class="stat-lbl">يوم متتالي</div>
     </div>
   </section>
 
-  <!-- Main Grid -->
-  <div class="grid">
-    <!-- LEFT: Lessons -->
-    <section class="card">
-      <div class="card-head">
-        <h2 class="card-h">الدروس القادمة</h2>
-        <a href="#" class="card-link">عرض الكل ←</a>
-      </div>
-
-      <div class="progress">
-        <div class="progress-head">
-          <span>تقدمك في المسار</span>
-          <span class="progress-pct">33%</span>
-        </div>
-        <div class="progress-bar"><div class="progress-fill" style="width:33%"></div></div>
-      </div>
-
-      <div class="lesson done">
-        <div class="lesson-num"><i class="fas fa-check"></i></div>
-        <div class="lesson-info">
-          <div class="lesson-title">مقدمة في Supply & Demand</div>
-          <div class="lesson-meta">22 دقيقة • مكتمل</div>
-        </div>
-      </div>
-      <div class="lesson done">
-        <div class="lesson-num"><i class="fas fa-check"></i></div>
-        <div class="lesson-info">
-          <div class="lesson-title">كيف ترسم مناطق الـ Demand</div>
-          <div class="lesson-meta">31 دقيقة • مكتمل</div>
-        </div>
-      </div>
-      <div class="lesson done">
-        <div class="lesson-num"><i class="fas fa-check"></i></div>
-        <div class="lesson-info">
-          <div class="lesson-title">Fair Value Gap — الأساسيات</div>
-          <div class="lesson-meta">28 دقيقة • مكتمل</div>
-        </div>
-      </div>
-      <div class="lesson">
-        <div class="lesson-num">4</div>
-        <div class="lesson-info">
-          <div class="lesson-title">دمج SD مع FVG على NQ</div>
-          <div class="lesson-meta">42 دقيقة • التالي</div>
-        </div>
-        <i class="fas fa-play-circle lesson-cta"></i>
-      </div>
-      <div class="lesson">
-        <div class="lesson-num">5</div>
-        <div class="lesson-info">
-          <div class="lesson-title">إدارة المخاطر — قواعد ذهبية</div>
-          <div class="lesson-meta">35 دقيقة</div>
-        </div>
-        <i class="fas fa-lock lesson-cta" style="color:var(--txt4)"></i>
-      </div>
-    </section>
-
-    <!-- RIGHT: Sidebar -->
-    <aside>
-      <!-- Quick Actions -->
-      <section class="card" style="margin-bottom:1.5rem">
-        <div class="card-head">
-          <h2 class="card-h">إجراءات سريعة</h2>
-        </div>
-        <div class="actions">
-          <a class="action" href="#">
-            <i class="fas fa-book-open"></i>
-            <div class="action-t">Trade Journal</div>
-            <div class="action-d">سجل صفقاتك</div>
-          </a>
-          <a class="action" href="#">
-            <i class="fas fa-tasks"></i>
-            <div class="action-t">Checklist</div>
-            <div class="action-d">قبل كل صفقة</div>
-          </a>
-          <a class="action" href="#">
-            <i class="fas fa-calculator"></i>
-            <div class="action-t">حاسبة المخاطر</div>
-            <div class="action-d">حجم الصفقة</div>
-          </a>
-          <a class="action" href="#">
-            <i class="fas fa-calendar-alt"></i>
-            <div class="action-t">أخبار اليوم</div>
-            <div class="action-d">economic calendar</div>
-          </a>
-        </div>
-      </section>
-
-      <!-- Community -->
-      <section class="community-card">
-        <div class="community-icon"><i class="fab fa-discord"></i></div>
-        <div class="community-h">انضم لمجتمع Discord</div>
-        <div class="community-d">صفقات لايف، أسئلة وأجوبة، ومراجعات أسبوعية مع 500+ متداول.</div>
-        <a class="community-btn" href="#" target="_blank">انضم الآن <i class="fas fa-arrow-left"></i></a>
-      </section>
-    </aside>
-  </div>
+  <!-- Quick Actions Grid -->
+  <section class="card">
+    <div class="card-head">
+      <h2 class="card-h">إجراءات سريعة</h2>
+    </div>
+    <div class="actions actions-grid">
+      <a class="action" href="checklist.html" data-tier="basic" data-feature="قائمة الفحص">
+        <i class="fas fa-tasks"></i>
+        <div class="action-t">ماذا تقول الخطة؟</div>
+        <div class="action-d">قبل كل صفقة</div>
+      </a>
+      <a class="action" href="journal.html" data-tier="basic" data-feature="سجل الصفقات">
+        <i class="fas fa-book-open"></i>
+        <div class="action-t">سجل الصفقات</div>
+        <div class="action-d">راجع وحلل صفقاتك</div>
+      </a>
+      <a class="action" href="calendar.html" data-tier="basic" data-feature="التقويم">
+        <i class="fas fa-calendar-day"></i>
+        <div class="action-t">التقويم</div>
+        <div class="action-d">أحداث الأسبوع</div>
+      </a>
+      <a class="action" href="calculator.html" data-tier="free">
+        <i class="fas fa-calculator"></i>
+        <div class="action-t">حاسبة المخاطر</div>
+        <div class="action-d">حساب حجم العقد</div>
+      </a>
+      <a class="action" href="news.html" data-tier="basic" data-feature="أخبار AI">
+        <i class="fas fa-newspaper"></i>
+        <div class="action-t">أخبار اليوم</div>
+        <div class="action-d">AI تحليل ذكي</div>
+      </a>
+      <a class="action" href="lessons.html" data-tier="basic" data-feature="الدروس">
+        <span class="lesson-badge" id="lessonBadge" style="display:none">جديد</span>
+        <i class="fas fa-graduation-cap"></i>
+        <div class="action-t">الدروس</div>
+        <div class="action-d" id="lessonsDesc">يُحدّث باستمرار</div>
+      </a>
+      <a class="action" href="chat.html" data-tier="free">
+        <i class="fas fa-comments"></i>
+        <div class="action-t">المحادثة الجماعية</div>
+        <div class="action-d">تواصل مع المتداولين</div>
+      </a>
+      <a class="action" href="bookings.html" data-tier="premium" data-feature="حجز جلسة 1:1">
+        <i class="fas fa-video"></i>
+        <div class="action-t">احجز مكالمتك</div>
+        <div class="action-d">جلسة 1:1 معي</div>
+      </a>
+      <a class="action action-referral" href="referral.html">
+        <span class="referral-glow"></span>
+        <i class="fas fa-gift"></i>
+        <div class="action-t">شارك واربح 🎁</div>
+        <div class="action-d">دعوة الأصدقاء = مكافآت</div>
+      </a>
+    </div>
+  </section>
 </main>
 
 <script type="module">
-import { requireAuth, signOut, onAuthChange } from './supabase-client.js';
+import { requireAuth, signOut, onAuthChange, getSubscriptionTier, showFeaturePaywall, supabase } from './supabase-client.js?v=20260610';
+
+/* Tier hierarchy */
+const TIER_LEVEL = { free: 0, basic: 1, premium: 2 };
 
 /* ── Auth gate: redirect to signin if not logged in ── */
 const session = await requireAuth();
@@ -395,12 +411,83 @@ else {
   document.getElementById('userAvatar').textContent = initial;
   document.getElementById('welcomeName').textContent = firstName;
 
+  /* ── تحقق إذا المستخدم Admin → عرض رابط Admin ── */
+  try {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('is_admin')
+      .eq('id', user.id)
+      .single();
+
+    if(profile?.is_admin){
+      const adminLink = document.getElementById('adminLink');
+      adminLink.style.display = 'flex';
+
+      // عد الطلبات pending وحطها بـ badge
+      const [{count: pendingPayments}, {count: pendingBookings}] = await Promise.all([
+        supabase.from('payment_requests').select('*', {count:'exact', head:true}).eq('status','pending'),
+        supabase.from('call_bookings').select('*', {count:'exact', head:true}).eq('status','pending')
+      ]);
+      const total = (pendingPayments||0) + (pendingBookings||0);
+      if(total > 0){
+        const badge = document.getElementById('adminBadge');
+        badge.textContent = total;
+        badge.style.display = 'inline-block';
+      }
+    }
+  } catch(e) { console.warn('فشل فحص is_admin', e); }
+
+  /* ── جيب باقة المستخدم وحدد الميزات المقفلة ── */
+  let userTier = 'free';
+  try {
+    userTier = await getSubscriptionTier() || 'free';
+  } catch(e) {
+    console.warn('فشل جلب الباقة، استخدم free افتراضياً:', e);
+  }
+  const userLevel = TIER_LEVEL[userTier] ?? 0;
+
+  /* ── Tier Badge ── */
+  const badge = document.getElementById('tierBadge');
+  const badges = {
+    free: { text: '🆓 Free', bg: 'rgba(255,255,255,.08)', color: '#bbb', border: 'rgba(255,255,255,.1)' },
+    basic: { text: '⭐ Basic', bg: 'rgba(59,130,246,.12)', color: '#60a5fa', border: 'rgba(59,130,246,.3)' },
+    premium: { text: '👑 Premium', bg: 'linear-gradient(135deg,rgba(240,192,48,.18),rgba(160,120,16,.1))', color: '#F0C030', border: 'rgba(212,160,23,.4)' }
+  };
+  const b = badges[userTier] || badges.free;
+  badge.innerHTML = b.text + (userTier === 'free' ? ' <i class="fas fa-arrow-left" style="font-size:.65rem;opacity:.7"></i>' : '');
+  badge.style.background = b.bg;
+  badge.style.color = b.color;
+  badge.style.border = `1px solid ${b.border}`;
+  badge.style.display = 'inline-flex';
+  if (userTier === 'free') badge.title = 'اضغط للترقية';
+
+  document.querySelectorAll('.action[data-tier]').forEach(action => {
+    const requiredTier = action.dataset.tier;
+    const requiredLevel = TIER_LEVEL[requiredTier] ?? 0;
+    const locked = userLevel < requiredLevel;
+    action.dataset.locked = locked ? 'true' : 'false';
+
+    if (locked) {
+      action.addEventListener('click', e => {
+        e.preventDefault();
+        const featureName = action.dataset.feature || 'هذه الميزة';
+        showFeaturePaywall(requiredTier, featureName);
+      });
+    }
+  });
+
   /* Hide boot screen */
   setTimeout(()=>{
     document.getElementById('boot').classList.add('hide');
     setTimeout(()=> document.getElementById('boot').remove(), 400);
   }, 300);
 }
+
+/* Safety net: hide boot after 5 seconds no matter what */
+setTimeout(()=>{
+  const boot = document.getElementById('boot');
+  if(boot) boot.classList.add('hide');
+}, 5000);
 
 /* ── User dropdown ── */
 const avatar = document.getElementById('userAvatar');
