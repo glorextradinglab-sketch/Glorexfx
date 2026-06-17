@@ -25,10 +25,14 @@ const STYLES = `
 
 /* ============================================================
    📱 Mobile Bottom Navigation
+   IMPORTANT: hide all mobile-only elements on desktop by default
 ============================================================ */
-.bottom-nav{display:none}
+.bottom-nav,.more-backdrop,.more-drawer{display:none !important}
 
 @media(max-width:768px){
+  /* Re-enable on mobile */
+  .more-backdrop{display:block !important}
+  .more-drawer{display:block !important}
   /* Hide desktop nav-tabs on mobile */
   .nav-tabs{display:none !important}
   .topbar .user-name{display:none !important}
