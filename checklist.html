@@ -407,6 +407,16 @@ textarea.input{min-height:80px;resize:vertical;font-family:inherit}
     </div>
   </div>
 
+  <!-- 📱 Mobile-only save/reset actions (under form) -->
+  <div class="score-actions-mobile">
+    <button class="btn btn-p" id="saveBtnMobile" disabled>
+      <i class="fas fa-save"></i> حفظ الصفقة
+    </button>
+    <button class="btn btn-g" id="resetBtnMobile">
+      <i class="fas fa-redo"></i> إعادة تعيين
+    </button>
+  </div>
+
 </main>
 
 <div class="toast" id="toast"><i class="fas fa-info-circle"></i><span id="toastMsg"></span></div>
@@ -557,8 +567,19 @@ function refresh(){
   else if(state.side==='sell'){ zl.textContent='Supply'; zl.className='zone-label zone-sell'; }
   else { zl.textContent='Demand / Supply'; zl.className='zone-label'; }
 
-  document.getElementById('saveBtn').disabled = !state.side || r.total < 40;
+  const disabled = !state.side || r.total < 40;
+  document.getElementById('saveBtn').disabled = disabled;
+  const mobileSave = document.getElementById('saveBtnMobile');
+  if (mobileSave) mobileSave.disabled = disabled;
 }
+
+/* 📱 Wire mobile buttons to trigger desktop ones */
+document.getElementById('saveBtnMobile')?.addEventListener('click', () => {
+  document.getElementById('saveBtn').click();
+});
+document.getElementById('resetBtnMobile')?.addEventListener('click', () => {
+  document.getElementById('resetBtn').click();
+});
 
 /* Toast */
 function toast(msg, type='info'){
