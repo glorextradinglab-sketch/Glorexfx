@@ -289,7 +289,7 @@ input{font-family:inherit;color:inherit}
 
 <script type="module">
 import { supabase, requireAuth, getUser } from './supabase-client.js?v=20260610';
-import { setupUserMenu } from './user-menu.js?v=20260611';
+import { setupUserMenu } from './user-menu.js?v=20260617';
 
 const session = await requireAuth();
 if(!session) throw new Error('not auth');
