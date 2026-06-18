@@ -477,9 +477,9 @@ async function loadSubscribers(filter){
 
   const { data: profiles, error } = await supabase
     .from('profiles')
-    .select('id, email, full_name, subscription_tier, subscription_end, created_at')
+    .select('id, email, full_name, subscription_tier, subscription_expires_at, created_at')
     .neq('subscription_tier', 'free')
-    .order('subscription_end', { ascending: true, nullsFirst: false });
+    .order('subscription_expires_at', { ascending: true, nullsFirst: false });
 
   if(error){
     list.innerHTML = `<div class="empty"><i class="fas fa-exclamation-triangle"></i><h3>فشل جلب البيانات</h3><p>${error.message}</p></div>`;
@@ -494,7 +494,7 @@ async function loadSubscribers(filter){
     all: all.length,
     premium: all.filter(p => p.subscription_tier === 'premium').length,
     basic: all.filter(p => p.subscription_tier === 'basic').length,
-    expiring: all.filter(p => p.subscription_end && new Date(p.subscription_end) <= soon).length
+    expiring: all.filter(p => p.subscription_expires_at && new Date(p.subscription_expires_at) <= soon).length
   };
   document.getElementById('cntSubsAll').textContent = counts.all;
   document.getElementById('cntSubsPremium').textContent = counts.premium;
@@ -505,7 +505,7 @@ async function loadSubscribers(filter){
   let filtered = all;
   if(filter === 'premium') filtered = all.filter(p => p.subscription_tier === 'premium');
   else if(filter === 'basic') filtered = all.filter(p => p.subscription_tier === 'basic');
-  else if(filter === 'expiring') filtered = all.filter(p => p.subscription_end && new Date(p.subscription_end) <= soon);
+  else if(filter === 'expiring') filtered = all.filter(p => p.subscription_expires_at && new Date(p.subscription_expires_at) <= soon);
 
   if(filtered.length === 0){
     const msg = {
@@ -526,7 +526,7 @@ async function loadSubscribers(filter){
     const tierIcon = tier === 'premium' ? 'fa-crown' : 'fa-star';
     const tierLabel = tier === 'premium' ? 'Premium' : 'Basic';
 
-    const endDate = p.subscription_end ? new Date(p.subscription_end) : null;
+    const endDate = p.subscription_expires_at ? new Date(p.subscription_expires_at) : null;
     const daysLeft = endDate ? Math.ceil((endDate - now) / (1000*60*60*24)) : null;
     const expiryColor = daysLeft === null ? '#888' : daysLeft <= 3 ? '#ef4444' : daysLeft <= 7 ? '#f59e0b' : '#22c55e';
     const expiryText = daysLeft === null ? 'بدون انتهاء' : daysLeft <= 0 ? 'منتهي' : `${daysLeft} يوم`;
