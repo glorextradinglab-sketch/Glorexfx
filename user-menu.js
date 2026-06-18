@@ -198,6 +198,17 @@ export async function setupUserMenu(user) {
   const avatar = menu.querySelector('.user-avatar');
   avatar.addEventListener('click', (e) => {
     e.stopPropagation();
+    // 📱 On mobile, open the bottom drawer instead of the dropdown
+    if (window.matchMedia('(max-width:768px)').matches) {
+      const d = document.querySelector('.more-drawer');
+      const b = document.querySelector('.more-backdrop');
+      if (d && b) {
+        d.classList.add('open');
+        b.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        return;
+      }
+    }
     dropdown.classList.toggle('open');
   });
 
