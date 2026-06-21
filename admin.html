@@ -166,6 +166,37 @@ input,textarea{font-family:inherit;color:inherit}
   .topbar{padding:.8rem 1rem}
   .info-val{word-break:normal !important;overflow-wrap:break-word}
 }
+
+/* Booking Settings */
+.settings-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:2rem;max-width:900px;margin:0 auto}
+.settings-head{margin-bottom:2rem;padding-bottom:1.4rem;border-bottom:1px solid var(--border)}
+.settings-head h2{font-family:'Space Grotesk';font-size:1.4rem;margin-bottom:.4rem;display:flex;align-items:center;gap:.6rem}
+.settings-head p{color:var(--txt3);font-size:.9rem;line-height:1.6}
+.settings-grid{display:flex;flex-direction:column;gap:1.5rem}
+.settings-field{display:flex;flex-direction:column;gap:.5rem}
+.settings-field label{font-size:.92rem;font-weight:600;color:var(--txt);display:flex;align-items:center;gap:.4rem}
+.settings-field input,.settings-field select{background:rgba(255,255,255,.04);border:1.5px solid var(--border);border-radius:9px;padding:.75rem .9rem;color:var(--txt);font-size:.95rem;font-family:inherit;transition:all .2s ease;font-family:'Space Grotesk',inherit}
+.settings-field input:focus,.settings-field select:focus{outline:none;border-color:#a78bfa;background:rgba(167,139,250,.06)}
+.settings-field small{color:var(--txt3);font-size:.78rem;line-height:1.5}
+.settings-field-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.days-picker{display:grid;grid-template-columns:repeat(7,1fr);gap:.5rem}
+.days-picker label{flex-direction:column;align-items:center;gap:.4rem;background:rgba(255,255,255,.04);border:1.5px solid var(--border);border-radius:9px;padding:.7rem .3rem;cursor:pointer;transition:all .2s ease}
+.days-picker label:hover{border-color:#a78bfa}
+.days-picker label:has(input:checked){background:rgba(167,139,250,.15);border-color:#a78bfa;color:#c4b5fd}
+.days-picker input[type=checkbox]{display:none}
+.days-picker span{font-size:.82rem;font-weight:600}
+.settings-preview{background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.3);border-radius:10px;padding:1rem 1.2rem;font-size:.92rem;line-height:1.7}
+.settings-preview strong{color:#c4b5fd}
+.settings-actions{display:flex;gap:.7rem;margin-top:.5rem}
+.settings-actions .btn{flex:0 0 auto;padding:.85rem 1.6rem}
+@media (max-width:640px){
+  .settings-card{padding:1.4rem}
+  .settings-head h2{font-size:1.15rem}
+  .settings-field-row{grid-template-columns:1fr}
+  .days-picker{grid-template-columns:repeat(4,1fr)}
+  .settings-actions{flex-direction:column}
+  .settings-actions .btn{width:100%}
+}
 </style>
 </head>
 <body>
@@ -248,6 +279,9 @@ input,textarea{font-family:inherit;color:inherit}
     <button class="tab" data-section="subscribers" style="font-size:1rem;font-weight:600">
       <i class="fas fa-users" style="color:#60a5fa"></i> المشتركون
       <span class="count" id="cntSubsBadge">0</span>
+    </button>
+    <button class="tab" data-section="settings" style="font-size:1rem;font-weight:600">
+      <i class="fas fa-cog" style="color:#a78bfa"></i> إعدادات المواعيد
     </button>
   </div>
 
@@ -377,6 +411,102 @@ input,textarea{font-family:inherit;color:inherit}
     <div class="requests" id="subscribersList"></div>
   </div>
 
+  <!-- Booking Settings Section -->
+  <div id="settingsSection" style="display:none">
+    <div class="settings-card">
+      <div class="settings-head">
+        <h2><i class="fas fa-calendar-alt" style="color:#a78bfa"></i> إعدادات حجز المكالمات 1:1</h2>
+        <p>كنترول كامل لمواعيدك — عدّل من أي مكان بالعالم</p>
+      </div>
+
+      <div class="settings-grid">
+        <div class="settings-field">
+          <label>🌍 المنطقة الزمنية</label>
+          <select id="setTimezone">
+            <optgroup label="🇪🇺 أوروبا">
+              <option value="Europe/Berlin">Berlin (ألمانيا)</option>
+              <option value="Europe/Paris">Paris (فرنسا)</option>
+              <option value="Europe/London">London (بريطانيا)</option>
+              <option value="Europe/Istanbul">Istanbul (تركيا)</option>
+            </optgroup>
+            <optgroup label="🌍 الشرق الأوسط">
+              <option value="Asia/Damascus">Damascus (سوريا)</option>
+              <option value="Asia/Beirut">Beirut (لبنان)</option>
+              <option value="Asia/Dubai">Dubai (الإمارات)</option>
+              <option value="Asia/Riyadh">Riyadh (السعودية)</option>
+              <option value="Asia/Qatar">Doha (قطر)</option>
+            </optgroup>
+            <optgroup label="🌏 آسيا">
+              <option value="Asia/Tokyo">Tokyo (اليابان)</option>
+              <option value="Asia/Singapore">Singapore</option>
+              <option value="Asia/Bangkok">Bangkok</option>
+              <option value="Asia/Hong_Kong">Hong Kong</option>
+              <option value="Asia/Kuala_Lumpur">Kuala Lumpur</option>
+            </optgroup>
+            <optgroup label="🌎 الأمريكتين">
+              <option value="America/New_York">New York</option>
+              <option value="America/Los_Angeles">Los Angeles</option>
+              <option value="America/Chicago">Chicago</option>
+            </optgroup>
+          </select>
+          <small>المواعيد ستحسب على أساس هذا التوقيت</small>
+        </div>
+
+        <div class="settings-field">
+          <label>📅 الأيام المتاحة</label>
+          <div class="days-picker" id="daysPicker">
+            <label><input type="checkbox" value="0"><span>الأحد</span></label>
+            <label><input type="checkbox" value="1"><span>الإثنين</span></label>
+            <label><input type="checkbox" value="2"><span>الثلاثاء</span></label>
+            <label><input type="checkbox" value="3"><span>الأربعاء</span></label>
+            <label><input type="checkbox" value="4"><span>الخميس</span></label>
+            <label><input type="checkbox" value="5"><span>الجمعة</span></label>
+            <label><input type="checkbox" value="6"><span>السبت</span></label>
+          </div>
+        </div>
+
+        <div class="settings-field-row">
+          <div class="settings-field">
+            <label>🕒 من الساعة</label>
+            <input type="number" id="setStartHour" min="0" max="23" step="0.5">
+            <small>صيغة 24 ساعة (19 = 7 مساءً)</small>
+          </div>
+          <div class="settings-field">
+            <label>🕘 إلى الساعة</label>
+            <input type="number" id="setEndHour" min="0" max="24" step="0.5">
+            <small>19 = 7م ، 21 = 9م</small>
+          </div>
+        </div>
+
+        <div class="settings-field-row">
+          <div class="settings-field">
+            <label>⏱️ مدة المكالمة (دقيقة)</label>
+            <input type="number" id="setSlotDuration" min="15" max="180" step="15">
+            <small>كل مكالمة كم دقيقة</small>
+          </div>
+          <div class="settings-field">
+            <label>📆 الحجز المسبق (أسابيع)</label>
+            <input type="number" id="setMaxWeeks" min="1" max="12">
+            <small>قد إيش يقدر يحجز مقدماً</small>
+          </div>
+        </div>
+
+        <div class="settings-preview" id="settingsPreview">
+          <strong>📊 معاينة:</strong> <span id="previewText">—</span>
+        </div>
+
+        <div class="settings-actions">
+          <button class="btn btn-approve" id="saveSettingsBtn">
+            <i class="fas fa-save"></i> حفظ الإعدادات
+          </button>
+          <button class="btn" id="reloadSettingsBtn" style="background:rgba(255,255,255,.05);color:var(--txt2);border:1px solid var(--border)">
+            <i class="fas fa-undo"></i> استرجاع
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </main>
 
 <!-- Unauthorized view -->
@@ -456,10 +586,82 @@ document.querySelectorAll('[data-section]').forEach(tab => {
     document.getElementById('bookingsSection').style.display = currentSection === 'bookings' ? 'block' : 'none';
     document.getElementById('referralsSection').style.display = currentSection === 'referrals' ? 'block' : 'none';
     document.getElementById('subscribersSection').style.display = currentSection === 'subscribers' ? 'block' : 'none';
+    document.getElementById('settingsSection').style.display = currentSection === 'settings' ? 'block' : 'none';
     if(currentSection === 'referrals') loadReferrals(currentRefTab);
     if(currentSection === 'subscribers') loadSubscribers(currentSubTab);
+    if(currentSection === 'settings') loadBookingSettings();
   });
 });
+
+// ═════════════════════════════════════════════════
+// 🎛️ Booking Settings
+// ═════════════════════════════════════════════════
+const DAY_NAMES = ['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+
+async function loadBookingSettings(){
+  const { data, error } = await supabase.rpc('get_booking_settings');
+  if(error){ showToast('فشل تحميل الإعدادات', 'err'); return; }
+  fillSettingsForm(data);
+}
+
+function fillSettingsForm(s){
+  document.getElementById('setTimezone').value = s.timezone;
+  document.getElementById('setStartHour').value = s.start_hour;
+  document.getElementById('setEndHour').value = s.end_hour;
+  document.getElementById('setSlotDuration').value = s.slot_duration_min;
+  document.getElementById('setMaxWeeks').value = s.max_weeks_ahead;
+  document.querySelectorAll('#daysPicker input[type=checkbox]').forEach(cb => {
+    cb.checked = s.working_days.includes(parseInt(cb.value));
+  });
+  updateSettingsPreview();
+}
+
+function updateSettingsPreview(){
+  const tz = document.getElementById('setTimezone').value;
+  const start = parseFloat(document.getElementById('setStartHour').value) || 0;
+  const end = parseFloat(document.getElementById('setEndHour').value) || 0;
+  const dur = parseInt(document.getElementById('setSlotDuration').value) || 30;
+  const days = Array.from(document.querySelectorAll('#daysPicker input:checked')).map(c => DAY_NAMES[parseInt(c.value)]);
+  const slots = Math.max(0, Math.floor((end - start) * 60 / dur));
+  const fmt = h => `${String(Math.floor(h)).padStart(2,'0')}:${String(Math.round((h - Math.floor(h)) * 60)).padStart(2,'0')}`;
+  const daysText = days.length ? days.join('، ') : '⚠️ لم تختر يوم';
+  document.getElementById('previewText').innerHTML =
+    `${daysText} | <strong>${fmt(start)} - ${fmt(end)}</strong> بتوقيت <strong>${tz.split('/').pop().replace(/_/g,' ')}</strong> | <strong>${slots}</strong> موعد متاح × ${dur}د`;
+}
+
+document.querySelectorAll('#settingsSection input, #settingsSection select').forEach(el => {
+  el.addEventListener('input', updateSettingsPreview);
+  el.addEventListener('change', updateSettingsPreview);
+});
+
+document.getElementById('saveSettingsBtn').addEventListener('click', async () => {
+  const days = Array.from(document.querySelectorAll('#daysPicker input:checked')).map(c => parseInt(c.value));
+  if(days.length === 0){ showToast('اختار يوم واحد على الأقل', 'err'); return; }
+
+  const btn = document.getElementById('saveSettingsBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> جاري الحفظ...';
+
+  const { data, error } = await supabase.rpc('update_booking_settings', {
+    p_working_days: days,
+    p_start_hour: parseFloat(document.getElementById('setStartHour').value),
+    p_end_hour: parseFloat(document.getElementById('setEndHour').value),
+    p_slot_duration_min: parseInt(document.getElementById('setSlotDuration').value),
+    p_timezone: document.getElementById('setTimezone').value,
+    p_max_weeks_ahead: parseInt(document.getElementById('setMaxWeeks').value)
+  });
+
+  btn.disabled = false;
+  btn.innerHTML = '<i class="fas fa-save"></i> حفظ الإعدادات';
+
+  if(error || data?.error){
+    showToast(error?.message || data?.error || 'خطأ بالحفظ', 'err');
+    return;
+  }
+  showToast('تم الحفظ ✅ المواعيد ستظهر بالإعدادات الجديدة فوراً', 'ok');
+});
+
+document.getElementById('reloadSettingsBtn').addEventListener('click', loadBookingSettings);
 
 // ── Subscribers Sub-Tabs ──
 let currentSubTab = 'all';

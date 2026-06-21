@@ -199,11 +199,11 @@ textarea{font-family:inherit;color:inherit}
   <div class="info-bar">
     <div class="info-card">
       <div class="info-ico"><i class="fas fa-clock"></i></div>
-      <div class="info-text"><strong>30 دقيقة</strong><span>مدة الجلسة</span></div>
+      <div class="info-text"><strong id="slotDurationLabel">30 دقيقة</strong><span>مدة الجلسة</span></div>
     </div>
     <div class="info-card">
       <div class="info-ico"><i class="fas fa-calendar-day"></i></div>
-      <div class="info-text"><strong>الأحد فقط</strong><span>أيام التوفر</span></div>
+      <div class="info-text"><strong id="workingDaysLabel">الأحد فقط</strong><span>أيام التوفر</span></div>
     </div>
     <div class="info-card">
       <div class="info-ico"><i class="fas fa-moon"></i></div>
@@ -318,9 +318,43 @@ if(userTier !== 'premium'){
 }
 
 // إعدادات الجلسة
-const WORKING_DAYS = [0]; // الأحد فقط (0 = Sunday)
-const WORKING_HOURS = [19, 19.5, 20, 20.5]; // 7:00, 7:30, 8:00, 8:30 PM دمشق
-const TIMEZONE = 'Asia/Damascus';
+// WORKING_DAYS تأتي ديناميكياً من SETTINGS.working_days
+// إعدادات الحجز (محمّلة من DB)
+let SETTINGS = {
+  working_days: [0],
+  start_hour: 19,
+  end_hour: 21,
+  slot_duration_min: 30,
+  timezone: 'Europe/Berlin',
+  max_weeks_ahead: 4
+};
+let WORKING_HOURS = [19, 19.5, 20, 20.5];
+let TIMEZONE = 'Europe/Berlin';
+
+async function loadSettings(){
+  const { data, error } = await supabase.rpc('get_booking_settings');
+  if(!error && data){
+    SETTINGS = data;
+    TIMEZONE = data.timezone;
+    // ابني WORKING_HOURS من start_hour, end_hour, slot_duration_min
+    WORKING_HOURS = [];
+    const slotHours = data.slot_duration_min / 60;
+    for(let h = data.start_hour; h + slotHours <= data.end_hour; h += slotHours){
+      WORKING_HOURS.push(h);
+    }
+  }
+}
+
+// تحويل offset لتوقيت معين بتاريخ معين (يحسب DST تلقائياً)
+function getTimezoneOffsetMinutes(tz, date){
+  const dtf = new Intl.DateTimeFormat('en-US', {
+    timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+  });
+  const parts = dtf.formatToParts(date).reduce((a,p) => (a[p.type]=p.value, a), {});
+  const asUTC = Date.UTC(+parts.year, +parts.month - 1, +parts.day, +parts.hour, +parts.minute, +parts.second);
+  return (asUTC - date.getTime()) / 60000;
+}
 const SLOT_DURATION = 30;
 
 let currentWeekOffset = 0;
@@ -442,42 +476,52 @@ async function loadBookedSlots(){
   bookedSlots = new Set((data||[]).map(b => b.scheduled_at));
 }
 
-// ── ابني المواعيد المتاحة للأسبوع ──
-function getNextSundays(weeks = 4){
-  const sundays = [];
+// ── ابني الأيام المتاحة (حسب الإعدادات) ──
+function getNextWorkingDays(){
+  const result = [];
   const today = new Date();
   today.setHours(0,0,0,0);
-  for(let i = 0; i < 30 && sundays.length < weeks; i++){
+  const maxDays = (SETTINGS.max_weeks_ahead || 4) * 7;
+  const workingDays = SETTINGS.working_days || [0];
+  for(let i = 0; i < maxDays && result.length < (SETTINGS.max_weeks_ahead || 4) * workingDays.length; i++){
     const d = new Date(today);
     d.setDate(today.getDate() + i);
-    if(WORKING_DAYS.includes(d.getDay())) sundays.push(d);
+    if(workingDays.includes(d.getDay())) result.push(d);
   }
-  return sundays;
+  return result;
 }
+// alias للتوافق مع الكود القديم
+const getNextSundays = getNextWorkingDays;
 
 function buildSlotDate(date, hour){
-  // ابني الموعد بتوقيت دمشق UTC+3 بشكل دقيق
-  // ثم العرض بـ toLocaleTimeString بيحوّله تلقائياً لتوقيت المستخدم المحلي
+  // ابني الموعد بتوقيت SETTINGS.timezone بدقة (يحسب DST تلقائياً)
   const y = date.getFullYear();
   const mo = String(date.getMonth() + 1).padStart(2, '0');
   const d = String(date.getDate()).padStart(2, '0');
   const h = Math.floor(hour);
-  const m = (hour - h) * 60;
-  const hStr = String(h).padStart(2, '0');
-  const mStr = String(m).padStart(2, '0');
-  return new Date(`${y}-${mo}-${d}T${hStr}:${mStr}:00+03:00`);
+  const m = Math.round((hour - h) * 60);
+  // محاولة أولى بـ offset 0، ثم احسب الفرق الفعلي
+  const tentative = new Date(`${y}-${mo}-${d}T${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:00Z`);
+  const offsetMin = getTimezoneOffsetMinutes(TIMEZONE, tentative);
+  return new Date(tentative.getTime() - offsetMin * 60000);
 }
 
-// عرض الفترة بتوقيت المستخدم المحلي
+// عرض فترة العمل بتوقيت المستخدم المحلي
 function getLocalTimeRangeStr(){
   const today = new Date();
-  const y = today.getFullYear();
-  const mo = String(today.getMonth() + 1).padStart(2, '0');
-  const d = String(today.getDate()).padStart(2, '0');
-  const start = new Date(`${y}-${mo}-${d}T19:00:00+03:00`);
-  const end = new Date(`${y}-${mo}-${d}T21:00:00+03:00`);
+  const start = buildSlotDate(today, SETTINGS.start_hour);
+  const end = buildSlotDate(today, SETTINGS.end_hour);
   const opts = { hour: '2-digit', minute: '2-digit' };
   return `${start.toLocaleTimeString('ar-EG-u-nu-latn', opts)} - ${end.toLocaleTimeString('ar-EG-u-nu-latn', opts)}`;
+}
+
+function getWorkingDaysLabel(){
+  const names = ['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+  const days = (SETTINGS.working_days || []).map(d => names[d]);
+  if(days.length === 7) return 'كل الأيام';
+  if(days.length === 0) return '—';
+  if(days.length === 1) return days[0] + ' فقط';
+  return days.join('، ');
 }
 
 function getLocalTzLabel(){
@@ -550,7 +594,7 @@ function selectSlot(el, date){
   box.innerHTML = `
     <div class="sel-time">${date.toLocaleTimeString('ar-EG-u-nu-latn',{hour:'2-digit',minute:'2-digit'})}</div>
     <div class="sel-date">${date.toLocaleDateString('ar-EG-u-nu-latn',{weekday:'long', day:'numeric', month:'long'})}</div>
-    <div class="sel-duration"><i class="fas fa-clock"></i> 30 دقيقة</div>
+    <div class="sel-duration"><i class="fas fa-clock"></i> ${SETTINGS.slot_duration_min} دقيقة</div>
   `;
 
   updateSubmitState();
@@ -631,12 +675,20 @@ function showToast(msg, type='ok'){
 
 // ── Init ──
 async function init(){
-  // املأ info card بتوقيت المستخدم المحلي
+  // 1. حمّل الإعدادات من DB أولاً
+  await loadSettings();
+
+  // 2. املأ info cards ديناميكياً
   const hoursEl = document.getElementById('localHoursRange');
   const tzEl = document.getElementById('localTzLabel');
+  const daysEl = document.getElementById('workingDaysLabel');
+  const durEl = document.getElementById('slotDurationLabel');
   if(hoursEl) hoursEl.textContent = getLocalTimeRangeStr();
   if(tzEl) tzEl.textContent = 'بتوقيتك (' + getLocalTzLabel() + ')';
+  if(daysEl) daysEl.textContent = getWorkingDaysLabel();
+  if(durEl) durEl.textContent = SETTINGS.slot_duration_min + ' دقيقة';
 
+  // 3. تابع باقي الإجراءات
   const hasExisting = await checkExistingBooking();
   if(!hasExisting){
     await loadBookedSlots();
