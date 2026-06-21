@@ -100,8 +100,32 @@ textarea{font-family:inherit;color:inherit}
 .submit-btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 12px 32px rgba(212,160,23,.45)}
 .submit-btn:disabled{opacity:.4;cursor:not-allowed}
 
+.warning-notice{display:flex;gap:1rem;background:linear-gradient(135deg,rgba(239,68,68,.08),rgba(245,158,11,.08));border:1px solid rgba(239,68,68,.35);border-right:4px solid #ef4444;border-radius:14px;padding:1.3rem 1.5rem;margin-bottom:2rem}
+.warn-ico{flex-shrink:0;width:44px;height:44px;border-radius:11px;background:rgba(239,68,68,.15);display:flex;align-items:center;justify-content:center;color:#ef4444;font-size:1.3rem}
+.warn-body{flex:1;min-width:0}
+.warn-body h3{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;font-weight:700;color:#fca5a5;margin:0 0 .6rem}
+.warn-body ul{margin:0;padding-right:1.2rem;list-style:disc}
+.warn-body li{font-size:.88rem;line-height:1.75;color:var(--txt2);margin-bottom:.35rem}
+.warn-body li strong{color:#fda4af;font-weight:700}
+@media(max-width:640px){.warning-notice{flex-direction:column;gap:.7rem;padding:1.1rem}.warn-ico{width:38px;height:38px;font-size:1.1rem}.warn-body h3{font-size:.98rem}.warn-body li{font-size:.83rem}}
+
+.confirm-check{display:flex;gap:.7rem;align-items:flex-start;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.25);border-radius:10px;padding:.85rem 1rem;margin:1rem 0;cursor:pointer;transition:all var(--base) var(--ease)}
+.confirm-check:hover{background:rgba(239,68,68,.1)}
+.confirm-check input[type=checkbox]{flex-shrink:0;width:20px;height:20px;margin-top:1px;accent-color:var(--gold);cursor:pointer}
+.confirm-check span{font-size:.83rem;line-height:1.65;color:var(--txt2)}
+.confirm-check span strong{color:#fda4af}
+.confirm-check:has(input:checked){background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.35)}
+.confirm-check:has(input:checked) span strong{color:var(--ok)}
+
 .existing-booking{background:var(--card);border:1px solid rgba(34,197,94,.3);border-radius:14px;padding:1.4rem;margin-bottom:2rem}
 .existing-booking.pending{border-color:rgba(245,158,11,.3)}
+.cancel-window{margin-top:1.2rem;padding-top:1.2rem;border-top:1px dashed rgba(255,255,255,.08);display:flex;flex-direction:column;gap:.75rem}
+.cancel-info{display:flex;align-items:center;gap:.55rem;font-size:.83rem;color:var(--txt3);background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);padding:.65rem .85rem;border-radius:9px}
+.cancel-info i{color:var(--warn);font-size:.95rem}
+.cancel-info strong{color:var(--warn);font-family:'Space Grotesk',monospace;font-weight:700;letter-spacing:.5px}
+.cancel-btn{background:rgba(239,68,68,.1);color:#fca5a5;border:1px solid rgba(239,68,68,.35);padding:.75rem 1rem;border-radius:10px;font-weight:600;font-size:.88rem;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;cursor:pointer;transition:all var(--base) var(--ease)}
+.cancel-btn:hover:not(:disabled){background:rgba(239,68,68,.18);border-color:#ef4444;color:#fff}
+.cancel-btn:disabled{opacity:.5;cursor:not-allowed}
 .eb-head{display:flex;align-items:center;gap:.7rem;margin-bottom:.9rem}
 .eb-head i{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem}
 .eb-head.confirmed i{background:rgba(34,197,94,.12);color:var(--ok)}
@@ -179,7 +203,7 @@ textarea{font-family:inherit;color:inherit}
     </div>
     <div class="info-card">
       <div class="info-ico"><i class="fas fa-moon"></i></div>
-      <div class="info-text"><strong>7:00م - 9:00م</strong><span>توقيت دمشق</span></div>
+      <div class="info-text"><strong>7:00م - 9:00م</strong><span>GMT+3</span></div>
     </div>
     <div class="info-card">
       <div class="info-ico"><i class="fab fa-google"></i></div>
@@ -189,6 +213,20 @@ textarea{font-family:inherit;color:inherit}
 
   <!-- Existing Booking Banner (يظهر لو في حجز نشط) -->
   <div id="existingBookingArea"></div>
+
+  <!-- ⚠️ تنبيه مهم قبل الحجز -->
+  <div class="warning-notice">
+    <div class="warn-ico"><i class="fas fa-exclamation-triangle"></i></div>
+    <div class="warn-body">
+      <h3>⚠️ مهم جداً قبل الحجز</h3>
+      <ul>
+        <li><strong>مكالمة واحدة فقط شهرياً</strong> — هاي فرصتك الوحيدة هاد الشهر، استغلها بشكل صح</li>
+        <li><strong>تأكد من تواجدك بالموعد</strong> قبل ما تحجز — الموعد بينحجز فوراً ومش رح تقدر تغيّره بسهولة</li>
+        <li><strong>عدم الحضور = خسارة الفرصة</strong> — لن يتم تعويضك بموعد آخر هاد الشهر</li>
+        <li>تأكد من جاهزية الإنترنت والميكروفون قبل الموعد بـ 10 دقايق</li>
+      </ul>
+    </div>
+  </div>
 
   <div class="layout" id="bookingLayout">
     <!-- Left: Calendar -->
@@ -223,6 +261,11 @@ textarea{font-family:inherit;color:inherit}
           <label class="field-lbl" for="notes">شو حابب نناقش؟ (اختياري)</label>
           <textarea id="notes" placeholder="مثلاً: مراجعة صفقاتي الأخيرة، شرح استراتيجية معينة، حل مشكلة..."></textarea>
         </div>
+
+        <label class="confirm-check">
+          <input type="checkbox" id="confirmAttend">
+          <span>أؤكد التزامي بالحضور في الموعد المحدد، وأفهم أن لدي <strong>مكالمة واحدة فقط شهرياً</strong> ولن يتم تعويضي عند الغياب</span>
+        </label>
 
         <button class="submit-btn" id="submitBtn" disabled>
           <i class="fas fa-check"></i> تأكيد الحجز
@@ -293,6 +336,10 @@ async function checkExistingBooking(){
     const b = existing[0];
     const date = new Date(b.scheduled_at);
     const isPending = b.status === 'pending';
+    const createdAt = new Date(b.created_at);
+    const secondsSince = Math.floor((Date.now() - createdAt.getTime()) / 1000);
+    const cancelWindowSec = 15 * 60;
+    const canCancel = secondsSince < cancelWindowSec;
     const html = `
       <div class="existing-booking ${b.status}">
         <div class="eb-head ${b.status}">
@@ -317,13 +364,67 @@ async function checkExistingBooking(){
           `<p style="color:var(--txt3);font-size:.88rem;line-height:1.7">رح يوصلك رابط Google Meet على إيميلك المسجل بعد ما أأكد الحجز.</p>`
           : `<a href="${b.meeting_url||'#'}" target="_blank" class="eb-link"><i class="fab fa-google"></i> انضم لـ Google Meet</a>`
         }
+        ${canCancel ? `
+          <div class="cancel-window">
+            <div class="cancel-info">
+              <i class="fas fa-info-circle"></i>
+              <span>فينك تلغي الحجز خلال <strong id="cancelCountdown">${formatTime(cancelWindowSec - secondsSince)}</strong></span>
+            </div>
+            <button class="cancel-btn" id="userCancelBtn" data-id="${b.id}">
+              <i class="fas fa-times-circle"></i> إلغاء الحجز
+            </button>
+          </div>
+        ` : ''}
       </div>
     `;
     document.getElementById('existingBookingArea').innerHTML = html;
     document.getElementById('bookingLayout').style.display = 'none';
+
+    if(canCancel){
+      startCancelCountdown(cancelWindowSec - secondsSince);
+      document.getElementById('userCancelBtn').addEventListener('click', () => cancelMyBooking(b.id));
+    }
     return true;
   }
   return false;
+}
+
+function formatTime(sec){
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return `${m}:${String(s).padStart(2,'0')}`;
+}
+
+let cancelTimer = null;
+function startCancelCountdown(seconds){
+  if(cancelTimer) clearInterval(cancelTimer);
+  let remaining = seconds;
+  cancelTimer = setInterval(() => {
+    remaining--;
+    const el = document.getElementById('cancelCountdown');
+    if(!el || remaining <= 0){
+      clearInterval(cancelTimer);
+      location.reload();
+      return;
+    }
+    el.textContent = formatTime(remaining);
+  }, 1000);
+}
+
+async function cancelMyBooking(id){
+  if(!confirm('متأكد إنك بدك تلغي الحجز؟ هاي فرصتك الوحيدة بالشهر.')) return;
+  const btn = document.getElementById('userCancelBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> جاري الإلغاء...';
+  const { data, error } = await supabase.rpc('cancel_my_booking', { p_id: id });
+  if(error || data?.error){
+    showToast(error?.message || data?.error || 'خطأ بالإلغاء', 'err');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-times-circle"></i> إلغاء الحجز';
+    return;
+  }
+  showToast('تم إلغاء الحجز ✅', 'ok');
+  setTimeout(() => location.reload(), 1000);
 }
 
 // ── جيب الحجوزات الموجودة (عشان نعرف اللي محجوز) ──
@@ -426,12 +527,23 @@ function selectSlot(el, date){
     <div class="sel-duration"><i class="fas fa-clock"></i> 30 دقيقة</div>
   `;
 
-  document.getElementById('submitBtn').disabled = false;
+  updateSubmitState();
 }
+
+function updateSubmitState(){
+  const checked = document.getElementById('confirmAttend').checked;
+  document.getElementById('submitBtn').disabled = !(selectedSlot && checked);
+}
+
+document.getElementById('confirmAttend').addEventListener('change', updateSubmitState);
 
 // ── Submit ──
 document.getElementById('submitBtn').addEventListener('click', async () => {
   if(!selectedSlot) return;
+  if(!document.getElementById('confirmAttend').checked){
+    showToast('لازم تأكد التزامك بالحضور أولاً', 'err');
+    return;
+  }
   const btn = document.getElementById('submitBtn');
   btn.disabled = true;
   btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> جاري الحجز...';
