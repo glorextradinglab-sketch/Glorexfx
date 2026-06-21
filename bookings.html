@@ -207,7 +207,7 @@ textarea{font-family:inherit;color:inherit}
     </div>
     <div class="info-card">
       <div class="info-ico"><i class="fas fa-moon"></i></div>
-      <div class="info-text"><strong>7:00م - 9:00م</strong><span>GMT+3</span></div>
+      <div class="info-text"><strong id="localHoursRange">—</strong><span id="localTzLabel">بتوقيتك المحلي</span></div>
     </div>
     <div class="info-card">
       <div class="info-ico"><i class="fab fa-google"></i></div>
@@ -456,14 +456,35 @@ function getNextSundays(weeks = 4){
 }
 
 function buildSlotDate(date, hour){
-  // Build slot in Asia/Damascus timezone
+  // ابني الموعد بتوقيت دمشق UTC+3 بشكل دقيق
+  // ثم العرض بـ toLocaleTimeString بيحوّله تلقائياً لتوقيت المستخدم المحلي
+  const y = date.getFullYear();
+  const mo = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
   const h = Math.floor(hour);
   const m = (hour - h) * 60;
-  // Damascus is UTC+3 (or +2 winter)
-  // For simplicity, we'll use local time but display in Damascus
-  const d = new Date(date);
-  d.setHours(h, m, 0, 0);
-  return d;
+  const hStr = String(h).padStart(2, '0');
+  const mStr = String(m).padStart(2, '0');
+  return new Date(`${y}-${mo}-${d}T${hStr}:${mStr}:00+03:00`);
+}
+
+// عرض الفترة بتوقيت المستخدم المحلي
+function getLocalTimeRangeStr(){
+  const today = new Date();
+  const y = today.getFullYear();
+  const mo = String(today.getMonth() + 1).padStart(2, '0');
+  const d = String(today.getDate()).padStart(2, '0');
+  const start = new Date(`${y}-${mo}-${d}T19:00:00+03:00`);
+  const end = new Date(`${y}-${mo}-${d}T21:00:00+03:00`);
+  const opts = { hour: '2-digit', minute: '2-digit' };
+  return `${start.toLocaleTimeString('ar-EG-u-nu-latn', opts)} - ${end.toLocaleTimeString('ar-EG-u-nu-latn', opts)}`;
+}
+
+function getLocalTzLabel(){
+  try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    return tz.split('/').pop().replace(/_/g, ' ');
+  } catch(e){ return 'بتوقيتك'; }
 }
 
 function renderWeek(){
@@ -610,6 +631,12 @@ function showToast(msg, type='ok'){
 
 // ── Init ──
 async function init(){
+  // املأ info card بتوقيت المستخدم المحلي
+  const hoursEl = document.getElementById('localHoursRange');
+  const tzEl = document.getElementById('localTzLabel');
+  if(hoursEl) hoursEl.textContent = getLocalTimeRangeStr();
+  if(tzEl) tzEl.textContent = 'بتوقيتك (' + getLocalTzLabel() + ')';
+
   const hasExisting = await checkExistingBooking();
   if(!hasExisting){
     await loadBookedSlots();
