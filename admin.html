@@ -785,20 +785,60 @@ document.getElementById('autoGenBtn').addEventListener('click', async () => {
 
   const btn = document.getElementById('autoGenBtn');
   btn.disabled = true;
-  btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> جاري التوليد... (قد يستغرق دقيقة)';
+  btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> جاري إطلاق الطلب...';
 
-  const { data, error } = await supabase.rpc('auto_generate_weekly_events');
+  // الخطوة 1: أطلق الطلب
+  const { data: reqData, error: reqErr } = await supabase.rpc('request_weekly_events_ai');
 
-  btn.disabled = false;
-  btn.innerHTML = '<i class="fas fa-robot"></i> توليد أحداث الأسبوع تلقائياً';
-
-  if(error || data?.error){
-    showToast(error?.message || data?.error || 'فشل التوليد', 'err');
-    console.log('Auto-gen response:', data);
+  if(reqErr || reqData?.error){
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-robot"></i> توليد أحداث الأسبوع تلقائياً';
+    showToast(reqErr?.message || reqData?.error || 'فشل إطلاق الطلب', 'err');
     return;
   }
-  showToast(`تم توليد ${data.events_added} حدث ✅`, 'ok');
-  loadEvents();
+
+  const requestId = reqData.request_id;
+  let attempts = 0;
+  const maxAttempts = 30; // 30 محاولة × 3 ثواني = 90 ثانية
+
+  // الخطوة 2: poll حتى يجي الرد
+  const poll = setInterval(async () => {
+    attempts++;
+    btn.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> Claude يعمل... (${attempts}/${maxAttempts})`;
+
+    const { data, error } = await supabase.rpc('check_weekly_events_ai', { p_request_id: requestId });
+
+    if(error){
+      clearInterval(poll);
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-robot"></i> توليد أحداث الأسبوع تلقائياً';
+      showToast(error.message, 'err');
+      return;
+    }
+
+    if(data.status === 'pending'){
+      if(attempts >= maxAttempts){
+        clearInterval(poll);
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-robot"></i> توليد أحداث الأسبوع تلقائياً';
+        showToast('انتهى الوقت — حاول مرة أخرى', 'err');
+      }
+      return;
+    }
+
+    clearInterval(poll);
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-robot"></i> توليد أحداث الأسبوع تلقائياً';
+
+    if(data.status === 'error'){
+      showToast('خطأ: ' + (data.message || data.body || 'unknown'), 'err');
+      console.log('AI error:', data);
+      return;
+    }
+
+    showToast(`تم توليد ${data.events_added} حدث ✅`, 'ok');
+    loadEvents();
+  }, 3000);
 });
 
 document.getElementById('saveEventBtn').addEventListener('click', async () => {
