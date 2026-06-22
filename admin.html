@@ -283,6 +283,9 @@ input,textarea{font-family:inherit;color:inherit}
     <button class="tab" data-section="settings" style="font-size:1rem;font-weight:600">
       <i class="fas fa-cog" style="color:#a78bfa"></i> إعدادات المواعيد
     </button>
+    <button class="tab" data-section="events" style="font-size:1rem;font-weight:600">
+      <i class="fas fa-calendar-alt" style="color:#ef4444"></i> الأحداث الاقتصادية
+    </button>
   </div>
 
   <!-- Payments Section -->
@@ -409,6 +412,108 @@ input,textarea{font-family:inherit;color:inherit}
       </button>
     </div>
     <div class="requests" id="subscribersList"></div>
+  </div>
+
+  <!-- Economic Events Section -->
+  <div id="eventsSection" style="display:none">
+    <div class="settings-card">
+      <div class="settings-head" style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <h2><i class="fas fa-calendar-alt" style="color:#ef4444"></i> إدارة الأحداث الاقتصادية</h2>
+          <p>الأحداث تظهر تلقائياً بأعلى صفحة الأخبار</p>
+        </div>
+        <button class="btn btn-approve" id="addEventBtn" style="padding:.75rem 1.4rem">
+          <i class="fas fa-plus"></i> إضافة حدث
+        </button>
+      </div>
+      <div id="eventsList" style="margin-top:1rem;display:flex;flex-direction:column;gap:.85rem"></div>
+    </div>
+  </div>
+
+  <!-- Event Modal -->
+  <div id="eventModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:1000;align-items:center;justify-content:center;padding:1rem">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.8rem;max-width:600px;width:100%;max-height:90vh;overflow-y:auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.4rem">
+        <h2 id="eventModalTitle" style="font-family:'Space Grotesk';font-size:1.2rem">إضافة حدث جديد</h2>
+        <button onclick="closeEventModal()" style="background:transparent;border:0;color:var(--txt3);font-size:1.4rem;cursor:pointer">×</button>
+      </div>
+      <div class="settings-grid">
+        <div class="settings-field">
+          <label>📋 اسم الحدث *</label>
+          <input type="text" id="evTitle" placeholder="مثلاً: قرار الفائدة الفيدرالي FOMC">
+        </div>
+        <div class="settings-field-row">
+          <div class="settings-field">
+            <label>📅 التاريخ والوقت *</label>
+            <input type="datetime-local" id="evDate">
+          </div>
+          <div class="settings-field">
+            <label>💰 العملة</label>
+            <select id="evCurrency">
+              <option value="USD">USD - الدولار</option>
+              <option value="EUR">EUR - اليورو</option>
+              <option value="GBP">GBP - الإسترليني</option>
+              <option value="JPY">JPY - الين</option>
+              <option value="CHF">CHF - الفرنك</option>
+              <option value="CAD">CAD - الكندي</option>
+              <option value="AUD">AUD - الأسترالي</option>
+              <option value="CNY">CNY - اليوان</option>
+            </select>
+          </div>
+        </div>
+        <div class="settings-field-row">
+          <div class="settings-field">
+            <label>⚠️ التأثير</label>
+            <select id="evImpact">
+              <option value="high">🔴 عالي</option>
+              <option value="medium" selected>🟠 متوسط</option>
+              <option value="low">🟢 منخفض</option>
+            </select>
+          </div>
+          <div class="settings-field">
+            <label>🎯 الأدوات المتأثرة (مفصولة بفاصلة)</label>
+            <input type="text" id="evInstruments" placeholder="NASDAQ, EURUSD, GOLD">
+          </div>
+        </div>
+        <div class="settings-field-row">
+          <div class="settings-field">
+            <label>📊 المتوقع</label>
+            <input type="text" id="evForecast" placeholder="4.5%">
+          </div>
+          <div class="settings-field">
+            <label>📉 السابق</label>
+            <input type="text" id="evPrevious" placeholder="4.5%">
+          </div>
+        </div>
+
+        <div class="settings-field">
+          <label style="display:flex;justify-content:space-between;align-items:center">
+            <span>🤖 تحليل AI للسيناريوهات</span>
+            <button id="genAiBtn" type="button" style="background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff;border:0;padding:.45rem .85rem;border-radius:7px;font-size:.78rem;font-weight:600;cursor:pointer">
+              <i class="fas fa-wand-magic-sparkles"></i> أنشئ بـ AI
+            </button>
+          </label>
+          <small>اضغط الزر بعد ملء التوقع والسابق — AI يكتب التحليل تلقائياً</small>
+        </div>
+        <div class="settings-field">
+          <label>📈 إذا كانت النتيجة أعلى من المتوقع</label>
+          <textarea id="evIfHigher" rows="3" style="background:rgba(255,255,255,.04);border:1.5px solid var(--border);border-radius:9px;padding:.75rem .9rem;color:var(--txt);font-family:inherit;resize:vertical"></textarea>
+        </div>
+        <div class="settings-field">
+          <label>📉 إذا كانت النتيجة أقل من المتوقع</label>
+          <textarea id="evIfLower" rows="3" style="background:rgba(255,255,255,.04);border:1.5px solid var(--border);border-radius:9px;padding:.75rem .9rem;color:var(--txt);font-family:inherit;resize:vertical"></textarea>
+        </div>
+
+        <div class="settings-actions">
+          <button class="btn btn-approve" id="saveEventBtn">
+            <i class="fas fa-save"></i> حفظ
+          </button>
+          <button class="btn" onclick="closeEventModal()" style="background:rgba(255,255,255,.05);color:var(--txt2);border:1px solid var(--border)">
+            <i class="fas fa-times"></i> إلغاء
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Booking Settings Section -->
@@ -587,11 +692,171 @@ document.querySelectorAll('[data-section]').forEach(tab => {
     document.getElementById('referralsSection').style.display = currentSection === 'referrals' ? 'block' : 'none';
     document.getElementById('subscribersSection').style.display = currentSection === 'subscribers' ? 'block' : 'none';
     document.getElementById('settingsSection').style.display = currentSection === 'settings' ? 'block' : 'none';
+    document.getElementById('eventsSection').style.display = currentSection === 'events' ? 'block' : 'none';
     if(currentSection === 'referrals') loadReferrals(currentRefTab);
     if(currentSection === 'subscribers') loadSubscribers(currentSubTab);
     if(currentSection === 'settings') loadBookingSettings();
+    if(currentSection === 'events') loadEvents();
   });
 });
+
+// ═══════════════════════════════════════════════
+// 📅 Economic Events Management
+// ═══════════════════════════════════════════════
+let editingEventId = null;
+
+async function loadEvents(){
+  const { data, error } = await supabase
+    .from('economic_events')
+    .select('*')
+    .order('event_date', { ascending: true });
+
+  const list = document.getElementById('eventsList');
+  if(error){ showToast('فشل تحميل الأحداث', 'err'); return; }
+  if(!data || data.length === 0){
+    list.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--txt3)">لا توجد أحداث. أضف أول حدث.</div>';
+    return;
+  }
+
+  list.innerHTML = data.map(e => {
+    const d = new Date(e.event_date);
+    const dateStr = d.toLocaleDateString('ar-EG-u-nu-latn',{day:'numeric',month:'short',year:'numeric'}) + ' • ' + d.toLocaleTimeString('ar-EG-u-nu-latn',{hour:'2-digit',minute:'2-digit'});
+    const impColor = {high:'#ef4444',medium:'#f59e0b',low:'#22c55e'}[e.impact] || '#888';
+    return `
+      <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-right:3px solid ${impColor};border-radius:10px;padding:1rem">
+        <div style="display:flex;justify-content:space-between;align-items:start;gap:1rem;flex-wrap:wrap">
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:600;font-size:.95rem;margin-bottom:.3rem"><span style="background:rgba(212,160,23,.15);color:var(--gold);padding:.15rem .5rem;border-radius:5px;font-size:.72rem;margin-left:.5rem">${e.currency||'USD'}</span>${escapeHtml(e.title)}</div>
+            <div style="color:var(--txt3);font-size:.82rem">${dateStr}</div>
+            <div style="font-size:.78rem;color:var(--txt2);margin-top:.4rem">المتوقع: <strong>${escapeHtml(e.forecast||'—')}</strong> | السابق: <strong>${escapeHtml(e.previous||'—')}</strong>${e.impact_if_higher ? ' | <span style="color:#22c55e">✓ تحليل AI</span>' : ''}</div>
+          </div>
+          <div style="display:flex;gap:.4rem">
+            <button onclick="editEvent('${e.id}')" style="background:rgba(167,139,250,.15);color:#c4b5fd;border:0;padding:.5rem .75rem;border-radius:7px;cursor:pointer;font-size:.82rem"><i class="fas fa-edit"></i></button>
+            <button onclick="deleteEvent('${e.id}')" style="background:rgba(239,68,68,.15);color:#fca5a5;border:0;padding:.5rem .75rem;border-radius:7px;cursor:pointer;font-size:.82rem"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function openEventModal(event){
+  editingEventId = event?.id || null;
+  document.getElementById('eventModalTitle').textContent = event ? 'تعديل الحدث' : 'إضافة حدث جديد';
+  document.getElementById('evTitle').value = event?.title || '';
+  document.getElementById('evDate').value = event ? new Date(event.event_date).toISOString().slice(0,16) : '';
+  document.getElementById('evCurrency').value = event?.currency || 'USD';
+  document.getElementById('evImpact').value = event?.impact || 'medium';
+  document.getElementById('evInstruments').value = (event?.affected_instruments||[]).join(', ');
+  document.getElementById('evForecast').value = event?.forecast || '';
+  document.getElementById('evPrevious').value = event?.previous || '';
+  document.getElementById('evIfHigher').value = event?.impact_if_higher || '';
+  document.getElementById('evIfLower').value = event?.impact_if_lower || '';
+  document.getElementById('eventModal').style.display = 'flex';
+}
+
+window.closeEventModal = () => {
+  document.getElementById('eventModal').style.display = 'none';
+  editingEventId = null;
+};
+
+window.editEvent = async (id) => {
+  const { data } = await supabase.from('economic_events').select('*').eq('id', id).single();
+  if(data) openEventModal(data);
+};
+
+window.deleteEvent = async (id) => {
+  if(!confirm('متأكد من حذف هذا الحدث؟')) return;
+  const { error } = await supabase.from('economic_events').delete().eq('id', id);
+  if(error){ showToast('فشل الحذف', 'err'); return; }
+  showToast('تم الحذف ✅', 'ok');
+  loadEvents();
+};
+
+document.getElementById('addEventBtn').addEventListener('click', () => openEventModal());
+
+document.getElementById('saveEventBtn').addEventListener('click', async () => {
+  const title = document.getElementById('evTitle').value.trim();
+  const dateVal = document.getElementById('evDate').value;
+  if(!title || !dateVal){ showToast('املأ الاسم والتاريخ', 'err'); return; }
+
+  const payload = {
+    title,
+    event_date: new Date(dateVal).toISOString(),
+    currency: document.getElementById('evCurrency').value,
+    impact: document.getElementById('evImpact').value,
+    forecast: document.getElementById('evForecast').value.trim() || null,
+    previous: document.getElementById('evPrevious').value.trim() || null,
+    impact_if_higher: document.getElementById('evIfHigher').value.trim() || null,
+    impact_if_lower: document.getElementById('evIfLower').value.trim() || null,
+    affected_instruments: document.getElementById('evInstruments').value.split(',').map(s=>s.trim()).filter(Boolean),
+    updated_at: new Date().toISOString()
+  };
+
+  const btn = document.getElementById('saveEventBtn');
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> جاري الحفظ...';
+
+  const { error } = editingEventId
+    ? await supabase.from('economic_events').update(payload).eq('id', editingEventId)
+    : await supabase.from('economic_events').insert(payload);
+
+  btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> حفظ';
+
+  if(error){ showToast('فشل الحفظ: ' + error.message, 'err'); return; }
+  showToast('تم الحفظ ✅', 'ok');
+  closeEventModal();
+  loadEvents();
+});
+
+document.getElementById('genAiBtn').addEventListener('click', async () => {
+  const title = document.getElementById('evTitle').value.trim();
+  if(!title){ showToast('اكتب اسم الحدث أولاً', 'err'); return; }
+
+  const btn = document.getElementById('genAiBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> جاري التحليل...';
+
+  const instruments = document.getElementById('evInstruments').value.split(',').map(s=>s.trim()).filter(Boolean);
+
+  const { data, error } = await supabase.rpc('generate_event_impact', {
+    p_title: title,
+    p_currency: document.getElementById('evCurrency').value,
+    p_forecast: document.getElementById('evForecast').value.trim() || null,
+    p_previous: document.getElementById('evPrevious').value.trim() || null,
+    p_instruments: instruments
+  });
+
+  btn.disabled = false;
+  btn.innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> أنشئ بـ AI';
+
+  if(error || data?.error){
+    showToast(error?.message || data?.error || 'فشل التحليل', 'err');
+    return;
+  }
+
+  // اقرأ raw وحاول تستخرج JSON
+  try {
+    const raw = data.raw || '';
+    const match = raw.match(/\{[\s\S]*\}/);
+    if(match){
+      const parsed = JSON.parse(match[0]);
+      document.getElementById('evIfHigher').value = parsed.if_higher || '';
+      document.getElementById('evIfLower').value = parsed.if_lower || '';
+      showToast('تم التحليل ✅', 'ok');
+    } else {
+      showToast('AI رد بصيغة غير متوقعة، الصق يدوياً من الرد', 'err');
+      console.log('AI raw:', raw);
+    }
+  } catch(e){
+    showToast('خطأ بقراءة الرد', 'err');
+    console.error(e);
+  }
+});
+
+function escapeHtml(s){
+  if(s == null) return '';
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+}
 
 // ═════════════════════════════════════════════════
 // 🎛️ Booking Settings
