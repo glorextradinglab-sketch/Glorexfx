@@ -422,9 +422,14 @@ input,textarea{font-family:inherit;color:inherit}
           <h2><i class="fas fa-calendar-alt" style="color:#ef4444"></i> إدارة الأحداث الاقتصادية</h2>
           <p>الأحداث تظهر تلقائياً بأعلى صفحة الأخبار</p>
         </div>
-        <button class="btn btn-approve" id="addEventBtn" style="padding:.75rem 1.4rem">
-          <i class="fas fa-plus"></i> إضافة حدث
-        </button>
+        <div style="display:flex;gap:.6rem;flex-wrap:wrap">
+          <button class="btn" id="autoGenBtn" style="background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff;padding:.75rem 1.4rem">
+            <i class="fas fa-robot"></i> توليد أحداث الأسبوع تلقائياً
+          </button>
+          <button class="btn btn-approve" id="addEventBtn" style="padding:.75rem 1.4rem">
+            <i class="fas fa-plus"></i> إضافة يدوي
+          </button>
+        </div>
       </div>
       <div id="eventsList" style="margin-top:1rem;display:flex;flex-direction:column;gap:.85rem"></div>
     </div>
@@ -774,6 +779,27 @@ window.deleteEvent = async (id) => {
 };
 
 document.getElementById('addEventBtn').addEventListener('click', () => openEventModal());
+
+document.getElementById('autoGenBtn').addEventListener('click', async () => {
+  if(!confirm('سيتم توليد أحداث الأسبوع القادم بالـ AI. قد يستغرق دقيقة. هل تريد المتابعة؟')) return;
+
+  const btn = document.getElementById('autoGenBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> جاري التوليد... (قد يستغرق دقيقة)';
+
+  const { data, error } = await supabase.rpc('auto_generate_weekly_events');
+
+  btn.disabled = false;
+  btn.innerHTML = '<i class="fas fa-robot"></i> توليد أحداث الأسبوع تلقائياً';
+
+  if(error || data?.error){
+    showToast(error?.message || data?.error || 'فشل التوليد', 'err');
+    console.log('Auto-gen response:', data);
+    return;
+  }
+  showToast(`تم توليد ${data.events_added} حدث ✅`, 'ok');
+  loadEvents();
+});
 
 document.getElementById('saveEventBtn').addEventListener('click', async () => {
   const title = document.getElementById('evTitle').value.trim();
