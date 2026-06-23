@@ -323,6 +323,64 @@ a{color:inherit;text-decoration:none}
   .welcome-h1{font-size:1.3rem}
   .actions,.actions-grid{grid-template-columns:1fr !important}
 }
+
+/* Economic Calendar */
+.econ-cal{background:linear-gradient(135deg,rgba(212,160,23,.05),rgba(167,139,250,.05));border:1px solid rgba(212,160,23,.3);border-radius:16px;padding:1.6rem;margin-top:2rem}
+.econ-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.3rem;padding-bottom:.9rem;border-bottom:1px solid rgba(255,255,255,.06)}
+.econ-head h2{font-family:'Space Grotesk';font-size:1.15rem;font-weight:700;display:flex;align-items:center;gap:.5rem;margin:0}
+.econ-head h2 i{color:var(--gold)}
+.econ-legend{display:flex;align-items:center;gap:1rem;font-size:.78rem;color:var(--txt3)}
+.imp-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-left:.25rem;vertical-align:middle}
+.imp-dot.high{background:#ef4444;box-shadow:0 0 8px #ef4444}
+.econ-list{display:flex;flex-direction:column;gap:.85rem}
+.econ-empty{text-align:center;color:var(--txt3);font-size:.92rem;padding:2rem 1rem}
+.econ-empty i{display:block;font-size:2rem;margin-bottom:.7rem;opacity:.4}
+.econ-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:11px;padding:1rem 1.2rem;transition:all .2s ease;border-right:3px solid #ef4444}
+.econ-card:hover{background:rgba(255,255,255,.05);border-color:rgba(212,160,23,.3)}
+.econ-card-head{display:flex;justify-content:space-between;align-items:start;gap:1rem;margin-bottom:.7rem;flex-wrap:wrap}
+.econ-title-wrap{flex:1;min-width:0}
+.econ-curr{display:inline-block;background:rgba(212,160,23,.15);color:var(--gold);padding:.2rem .55rem;border-radius:6px;font-size:.72rem;font-weight:700;margin-left:.5rem;vertical-align:middle}
+.econ-title{font-size:.98rem;font-weight:600;color:var(--txt);line-height:1.4}
+.econ-time{font-size:.82rem;color:var(--txt3);font-family:'Space Grotesk',monospace;white-space:nowrap}
+.econ-values{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin:.7rem 0}
+.econ-val{background:rgba(255,255,255,.03);border-radius:7px;padding:.55rem .7rem}
+.econ-val-lbl{font-size:.7rem;color:var(--txt3);margin-bottom:.2rem}
+.econ-val-num{font-size:.95rem;font-weight:700;font-family:'Space Grotesk',monospace}
+.econ-val.fcst .econ-val-num{color:#a78bfa}
+.econ-val.prev .econ-val-num{color:var(--txt2)}
+.econ-val.actual .econ-val-num{color:var(--gold)}
+.econ-analysis{margin-top:.85rem;display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+.econ-scenario{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:8px;padding:.7rem .85rem}
+.econ-scenario.higher{border-color:rgba(34,197,94,.2);background:rgba(34,197,94,.04)}
+.econ-scenario.lower{border-color:rgba(239,68,68,.2);background:rgba(239,68,68,.04)}
+.econ-scen-lbl{font-size:.78rem;font-weight:700;margin-bottom:.35rem;display:flex;align-items:center;gap:.3rem}
+.econ-scenario.higher .econ-scen-lbl{color:#86efac}
+.econ-scenario.lower .econ-scen-lbl{color:#fca5a5}
+.econ-scen-txt{font-size:.83rem;line-height:1.65;color:var(--txt2)}
+.econ-toggle{margin-top:.9rem;width:100%;background:rgba(212,160,23,.08);border:1px solid rgba(212,160,23,.25);color:var(--gold);padding:.55rem;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.4rem;transition:all .15s ease;font-family:inherit}
+.econ-toggle:hover{background:rgba(212,160,23,.15)}
+.econ-toggle i{transition:transform .2s ease}
+.econ-toggle.open i{transform:rotate(180deg)}
+.econ-pairs-wrap{display:none;margin-top:.85rem;padding-top:.85rem;border-top:1px dashed rgba(255,255,255,.1);grid-template-columns:1fr 1fr;gap:.7rem}
+.econ-pairs-wrap.show{display:grid}
+.econ-pairs-side{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:8px;padding:.65rem .8rem}
+.econ-pairs-side.higher{border-color:rgba(34,197,94,.2)}
+.econ-pairs-side.lower{border-color:rgba(239,68,68,.2)}
+.econ-pairs-side-lbl{font-size:.74rem;font-weight:700;margin-bottom:.5rem;color:var(--txt3)}
+.econ-pair-row{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.35rem}
+.econ-pair-row:last-child{margin-bottom:0}
+.pair-row-lbl{font-size:.72rem;font-weight:700;display:inline-flex;align-items:center;gap:.25rem;min-width:62px}
+.pair-row-lbl.up{color:#86efac}
+.pair-row-lbl.down{color:#fca5a5}
+.pair-row-list{display:flex;flex-wrap:wrap;gap:.28rem;flex:1}
+.pair-up{background:rgba(34,197,94,.12);color:#86efac;padding:.18rem .5rem;border-radius:5px;font-size:.72rem;font-weight:700;font-family:'Space Grotesk',monospace}
+.pair-down{background:rgba(239,68,68,.12);color:#fca5a5;padding:.18rem .5rem;border-radius:5px;font-size:.72rem;font-weight:700;font-family:'Space Grotesk',monospace}
+@media (max-width:640px){
+  .econ-cal{padding:1.1rem}
+  .econ-head{flex-direction:column;align-items:flex-start;gap:.6rem}
+  .econ-values{grid-template-columns:1fr 1fr;gap:.5rem}
+  .econ-analysis,.econ-pairs-wrap.show{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
@@ -441,6 +499,19 @@ a{color:inherit;text-decoration:none}
         <div class="action-t">شارك واربح 🎁</div>
         <div class="action-d">دعوة الأصدقاء = مكافآت</div>
       </a>
+    </div>
+  </section>
+
+  <!-- 📅 Economic Calendar (مجاني للجميع) -->
+  <section class="econ-cal" id="econCal">
+    <div class="econ-head">
+      <h2><i class="fas fa-calendar-alt"></i> أحداث الأسبوع المهمة</h2>
+      <div class="econ-legend">
+        <span class="imp-dot high"></span> الأحداث عالية التأثير فقط
+      </div>
+    </div>
+    <div class="econ-list" id="econList">
+      <div class="econ-empty"><i class="far fa-calendar"></i> جاري التحميل...</div>
     </div>
   </section>
 </main>
@@ -581,6 +652,84 @@ document.getElementById('logoutBtn').addEventListener('click', async ()=>{
 onAuthChange((event, session)=>{
   if (event === 'SIGNED_OUT') location.href = 'signin.html';
 });
+
+/* ── 📅 Economic Calendar ── */
+async function loadEconomicEvents(){
+  const now = new Date();
+  const weekEnd = new Date(now.getTime() + 7*24*60*60*1000);
+  const { data, error } = await supabase
+    .from('economic_events')
+    .select('*')
+    .eq('impact', 'high')
+    .gte('event_date', now.toISOString())
+    .lte('event_date', weekEnd.toISOString())
+    .order('event_date', { ascending: true });
+  const list = document.getElementById('econList');
+  if(error || !data || data.length === 0){
+    list.innerHTML = '<div class="econ-empty"><i class="far fa-calendar"></i> لا توجد أحداث مهمة هذا الأسبوع</div>';
+    return;
+  }
+  list.innerHTML = data.map(renderEventCard).join('');
+}
+function renderEventCard(e){
+  const d = new Date(e.event_date);
+  const dateStr = d.toLocaleDateString('ar-EG-u-nu-latn',{weekday:'short', day:'numeric', month:'short'});
+  const timeStr = d.toLocaleTimeString('ar-EG-u-nu-latn',{hour:'2-digit', minute:'2-digit'});
+  const upHi = (e.up_pairs_higher||[]).map(p => `<span class="pair-up">${escapeHtml(p)}</span>`).join('');
+  const dnHi = (e.down_pairs_higher||[]).map(p => `<span class="pair-down">${escapeHtml(p)}</span>`).join('');
+  const upLo = (e.up_pairs_lower||[]).map(p => `<span class="pair-up">${escapeHtml(p)}</span>`).join('');
+  const dnLo = (e.down_pairs_lower||[]).map(p => `<span class="pair-down">${escapeHtml(p)}</span>`).join('');
+  const hasPairs = !!(upHi || dnHi || upLo || dnLo);
+  return `
+    <article class="econ-card high">
+      <div class="econ-card-head">
+        <div class="econ-title-wrap">
+          <span class="econ-curr">${escapeHtml(e.currency||'USD')}</span>
+          <span class="econ-title">${escapeHtml(e.title)}</span>
+        </div>
+        <div class="econ-time">${dateStr} • ${timeStr}</div>
+      </div>
+      <div class="econ-values">
+        <div class="econ-val prev"><div class="econ-val-lbl">السابق</div><div class="econ-val-num">${escapeHtml(e.previous||'—')}</div></div>
+        <div class="econ-val fcst"><div class="econ-val-lbl">المتوقع</div><div class="econ-val-num">${escapeHtml(e.forecast||'—')}</div></div>
+        <div class="econ-val actual"><div class="econ-val-lbl">الفعلي</div><div class="econ-val-num">${escapeHtml(e.actual||'—')}</div></div>
+      </div>
+      ${(e.impact_if_higher || e.impact_if_lower) ? `
+      <div class="econ-analysis">
+        <div class="econ-scenario higher">
+          <div class="econ-scen-lbl"><i class="fas fa-arrow-up"></i> إذا كانت أعلى من المتوقع</div>
+          <div class="econ-scen-txt">${escapeHtml(e.impact_if_higher||'—')}</div>
+        </div>
+        <div class="econ-scenario lower">
+          <div class="econ-scen-lbl"><i class="fas fa-arrow-down"></i> إذا كانت أقل من المتوقع</div>
+          <div class="econ-scen-txt">${escapeHtml(e.impact_if_lower||'—')}</div>
+        </div>
+      </div>` : ''}
+      ${hasPairs ? `
+        <button class="econ-toggle" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('show');this.querySelector('.lbl').textContent=this.classList.contains('open')?'إخفاء الأزواج':'الأزواج المتأثرة';">
+          <span class="lbl">الأزواج المتأثرة</span> <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="econ-pairs-wrap">
+          <div class="econ-pairs-side higher">
+            <div class="econ-pairs-side-lbl"><i class="fas fa-arrow-up"></i> لو كان أعلى</div>
+            ${upHi ? `<div class="econ-pair-row"><span class="pair-row-lbl up"><i class="fas fa-arrow-trend-up"></i> ترتفع</span><div class="pair-row-list">${upHi}</div></div>` : ''}
+            ${dnHi ? `<div class="econ-pair-row"><span class="pair-row-lbl down"><i class="fas fa-arrow-trend-down"></i> تنخفض</span><div class="pair-row-list">${dnHi}</div></div>` : ''}
+          </div>
+          <div class="econ-pairs-side lower">
+            <div class="econ-pairs-side-lbl"><i class="fas fa-arrow-down"></i> لو كان أقل</div>
+            ${upLo ? `<div class="econ-pair-row"><span class="pair-row-lbl up"><i class="fas fa-arrow-trend-up"></i> ترتفع</span><div class="pair-row-list">${upLo}</div></div>` : ''}
+            ${dnLo ? `<div class="econ-pair-row"><span class="pair-row-lbl down"><i class="fas fa-arrow-trend-down"></i> تنخفض</span><div class="pair-row-list">${dnLo}</div></div>` : ''}
+          </div>
+        </div>` : ''}
+    </article>
+  `;
+}
+function escapeHtml(s){
+  if(s == null) return '';
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+}
+loadEconomicEvents();
+}
 </script>
 </body>
 </html>

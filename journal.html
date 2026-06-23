@@ -359,7 +359,10 @@ function updateStats(){
   const planned = allTrades.filter(t=>t.status==='planned').length;
   const be = allTrades.filter(t=>t.status==='breakeven').length;
   const winRate = closed.length ? Math.round(wins/closed.length*100) : 0;
-  const totalPnl = allTrades.reduce((sum,t)=>sum+Number(t.pnl||0), 0);
+  const totalPnl = allTrades.reduce((sum,t)=>{
+    const v = Math.abs(Number(t.pnl||0));
+    return sum + (t.status==='loss' ? -v : t.status==='win' ? v : Number(t.pnl||0));
+  }, 0);
   const avgConf = total ? Math.round(allTrades.reduce((sum,t)=>sum+(t.confluence_pct||0),0)/total) : 0;
 
   document.getElementById('s-total').textContent = total;
@@ -397,7 +400,9 @@ function render(){
 
   content.innerHTML = '<div class="trades">' + trades.map(t=>{
     const tier = confluenceTier(t.confluence_pct||0);
-    const pnlClass = (t.pnl>0)?'pos':(t.pnl<0)?'neg':'neut';
+    const absPnl = Math.abs(Number(t.pnl||0));
+    const sPnl = t.status==='loss' ? -absPnl : t.status==='win' ? absPnl : Number(t.pnl||0);
+    const pnlClass = sPnl>0?'pos':sPnl<0?'neg':'neut';
     return `
     <div class="trade" data-id="${t.id}">
       <div class="trade-row" onclick="toggleTrade('${t.id}')">
@@ -410,7 +415,7 @@ function render(){
           <div class="trade-date">${fmtDate(t.date)} • ${sessionAr(t.session)}</div>
         </div>
         <div class="confluence-tag ${tier}">${t.confluence_pct||0}%</div>
-        <div class="pnl ${pnlClass}">${t.status==='planned' ? '—' : fmtMoney(t.pnl)}</div>
+        <div class="pnl ${pnlClass}">${t.status==='planned' ? '—' : fmtMoney(sPnl)}</div>
         <i class="fas fa-chevron-down chevron"></i>
       </div>
 
@@ -443,7 +448,7 @@ function render(){
         ${(t.rr_actual || t.pnl || t.risk_pct) ? `
         <div class="result-info">
           ${t.rr_actual ? `<div class="ri-item"><div class="ri-lbl">نسبة المخاطرة/الربح</div><div class="ri-val">${t.rr_actual}</div></div><div class="ri-sep"></div>` : ''}
-          ${t.pnl ? `<div class="ri-item"><div class="ri-lbl">الربح/الخسارة</div><div class="ri-val ${t.pnl>0?'pos':'neg'}">${t.pnl>0?'+':'-'}$${Math.abs(t.pnl).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</div></div><div class="ri-sep"></div>` : ''}
+          ${t.pnl ? `<div class="ri-item"><div class="ri-lbl">الربح/الخسارة</div><div class="ri-val ${sPnl>0?'pos':'neg'}">${sPnl>0?'+':'-'}$${Math.abs(sPnl).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</div></div><div class="ri-sep"></div>` : ''}
           ${t.risk_pct ? `<div class="ri-item"><div class="ri-lbl">المخاطرة</div><div class="ri-val">${t.risk_pct}%</div></div>` : ''}
         </div>` : ''}
 

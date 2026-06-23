@@ -215,8 +215,14 @@ button{cursor:pointer;font-family:inherit;border:none;background:none;color:inhe
 .econ-scenario.lower .econ-scen-lbl{color:#fca5a5}
 .econ-scen-txt{font-size:.83rem;line-height:1.65;color:var(--txt2)}
 
-.econ-inst{margin-top:.6rem;display:flex;flex-wrap:wrap;gap:.3rem}
-.econ-inst-chip{background:rgba(167,139,250,.1);color:#c4b5fd;padding:.2rem .55rem;border-radius:5px;font-size:.72rem;font-weight:600}
+.econ-pairs{margin-top:.55rem;padding-top:.55rem;border-top:1px dashed rgba(255,255,255,.08);display:flex;flex-direction:column;gap:.35rem}
+.econ-pair-row{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.pair-row-lbl{font-size:.72rem;font-weight:700;display:inline-flex;align-items:center;gap:.25rem;min-width:62px}
+.pair-row-lbl.up{color:#86efac}
+.pair-row-lbl.down{color:#fca5a5}
+.pair-row-list{display:flex;flex-wrap:wrap;gap:.28rem;flex:1}
+.pair-up{background:rgba(34,197,94,.12);color:#86efac;padding:.18rem .5rem;border-radius:5px;font-size:.72rem;font-weight:700;font-family:'Space Grotesk',monospace}
+.pair-down{background:rgba(239,68,68,.12);color:#fca5a5;padding:.18rem .5rem;border-radius:5px;font-size:.72rem;font-weight:700;font-family:'Space Grotesk',monospace}
 
 @media (max-width:640px){
   .econ-cal{padding:1.1rem}
@@ -268,21 +274,6 @@ button{cursor:pointer;font-family:inherit;border:none;background:none;color:inhe
       <i class="fas fa-plus"></i> طلب جديد
     </button>
   </div>
-
-  <!-- 📅 Economic Calendar -->
-  <section class="econ-cal" id="econCal">
-    <div class="econ-head">
-      <h2><i class="fas fa-calendar-alt"></i> أحداث الأسبوع المهمة</h2>
-      <div class="econ-legend">
-        <span class="imp-dot high"></span> عالي
-        <span class="imp-dot medium"></span> متوسط
-        <span class="imp-dot low"></span> منخفض
-      </div>
-    </div>
-    <div class="econ-list" id="econList">
-      <div class="econ-empty"><i class="far fa-calendar"></i> لا توجد أحداث مجدولة هذا الأسبوع</div>
-    </div>
-  </section>
 
   <div class="tabs">
     <button class="tab active" data-view="feed">
@@ -920,7 +911,6 @@ async function init(){
   await setupUserMenu(session.user);
 
   await load();
-  await loadEconomicEvents();
 }
 
 // ═══════════════════════════════════════════════
@@ -933,6 +923,7 @@ async function loadEconomicEvents(){
   const { data, error } = await supabase
     .from('economic_events')
     .select('*')
+    .eq('impact', 'high')
     .gte('event_date', now.toISOString())
     .lte('event_date', weekEnd.toISOString())
     .order('event_date', { ascending: true });
@@ -950,7 +941,12 @@ function renderEventCard(e){
   const d = new Date(e.event_date);
   const dateStr = d.toLocaleDateString('ar-EG-u-nu-latn',{weekday:'short', day:'numeric', month:'short'});
   const timeStr = d.toLocaleTimeString('ar-EG-u-nu-latn',{hour:'2-digit', minute:'2-digit'});
-  const instChips = (e.affected_instruments||[]).map(i => `<span class="econ-inst-chip">${escapeHtml(i)}</span>`).join('');
+
+  const upHi = (e.up_pairs_higher||[]).map(p => `<span class="pair-up">${escapeHtml(p)}</span>`).join('');
+  const dnHi = (e.down_pairs_higher||[]).map(p => `<span class="pair-down">${escapeHtml(p)}</span>`).join('');
+  const upLo = (e.up_pairs_lower||[]).map(p => `<span class="pair-up">${escapeHtml(p)}</span>`).join('');
+  const dnLo = (e.down_pairs_lower||[]).map(p => `<span class="pair-down">${escapeHtml(p)}</span>`).join('');
+  const fallback = (e.affected_instruments||[]).map(i => `<span class="pair-up">${escapeHtml(i)}</span>`).join('');
 
   return `
     <article class="econ-card ${e.impact}">
@@ -971,13 +967,22 @@ function renderEventCard(e){
         <div class="econ-scenario higher">
           <div class="econ-scen-lbl"><i class="fas fa-arrow-up"></i> إذا كانت أعلى من المتوقع</div>
           <div class="econ-scen-txt">${escapeHtml(e.impact_if_higher||'—')}</div>
+          ${(upHi || dnHi) ? `
+            <div class="econ-pairs">
+              ${upHi ? `<div class="econ-pair-row"><span class="pair-row-lbl up"><i class="fas fa-arrow-trend-up"></i> ترتفع</span><div class="pair-row-list">${upHi}</div></div>` : ''}
+              ${dnHi ? `<div class="econ-pair-row"><span class="pair-row-lbl down"><i class="fas fa-arrow-trend-down"></i> تنخفض</span><div class="pair-row-list">${dnHi}</div></div>` : ''}
+            </div>` : (!upLo && !dnLo && fallback ? `<div class="econ-pairs"><div class="econ-pair-row"><div class="pair-row-list">${fallback}</div></div></div>` : '')}
         </div>
         <div class="econ-scenario lower">
           <div class="econ-scen-lbl"><i class="fas fa-arrow-down"></i> إذا كانت أقل من المتوقع</div>
           <div class="econ-scen-txt">${escapeHtml(e.impact_if_lower||'—')}</div>
+          ${(upLo || dnLo) ? `
+            <div class="econ-pairs">
+              ${upLo ? `<div class="econ-pair-row"><span class="pair-row-lbl up"><i class="fas fa-arrow-trend-up"></i> ترتفع</span><div class="pair-row-list">${upLo}</div></div>` : ''}
+              ${dnLo ? `<div class="econ-pair-row"><span class="pair-row-lbl down"><i class="fas fa-arrow-trend-down"></i> تنخفض</span><div class="pair-row-list">${dnLo}</div></div>` : ''}
+            </div>` : ''}
         </div>
       </div>` : ''}
-      ${instChips ? `<div class="econ-inst">${instChips}</div>` : ''}
     </article>
   `;
 }

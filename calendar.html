@@ -389,13 +389,20 @@ function dayKey(date){
   return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
 }
 
+function signedPnl(t){
+  const v = Math.abs(Number(t.pnl||0));
+  if(t.status === 'loss') return -v;
+  if(t.status === 'win') return v;
+  return Number(t.pnl||0);
+}
+
 function tradesByDay(trades){
   const map = {};
   trades.forEach(t=>{
     const k = t.date.slice(0,10); // YYYY-MM-DD
     if(!map[k]) map[k] = { trades:[], pnl:0, wins:0, losses:0, be:0, planned:0 };
     map[k].trades.push(t);
-    map[k].pnl += Number(t.pnl||0);
+    map[k].pnl += signedPnl(t);
     if(t.status==='win') map[k].wins++;
     else if(t.status==='loss') map[k].losses++;
     else if(t.status==='breakeven') map[k].be++;
@@ -456,7 +463,7 @@ function renderCalendar(){
       inner += '<div></div>';
     }
 
-    container.innerHTML += `<div class="${cls}" ${data?`data-key="${key}"`:''}>${inner}</div>`;
+    container.innerHTML += `<div class="${cls}" data-key="${key}">${inner}</div>`;
   }
 
   // Next month overflow to complete the grid
@@ -466,8 +473,9 @@ function renderCalendar(){
     container.innerHTML += `<div class="day out"><div class="day-num">${d}</div></div>`;
   }
 
-  // Bind click handlers
-  container.querySelectorAll('.day.has-trades').forEach(el=>{
+  // Bind click handlers — كل أيام الشهر قابلة للنقر (حتا الفاضية)
+  container.querySelectorAll('.day:not(.out)').forEach(el=>{
+    el.style.cursor = 'pointer';
     el.addEventListener('click', ()=> openDay(el.dataset.key));
   });
 
@@ -546,15 +554,30 @@ function renderWeeklySummary(byDay, y, m){
 
 function openDay(key){
   const trades = allTrades.filter(t => t.date.slice(0,10) === key);
-  if(trades.length === 0) return;
-
   const date = new Date(key);
   const dateAr = new Intl.DateTimeFormat('ar-EG-u-nu-latn',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(date);
   document.getElementById('modalTitle').innerHTML = `<i class="far fa-calendar"></i> ${dateAr}`;
 
+  // يوم فاضي → اعرض زر إضافة صفقة لهذا التاريخ
+  if(trades.length === 0){
+    document.getElementById('modalSummary').innerHTML = `
+      <div style="text-align:center;width:100%;padding:1.2rem 0">
+        <div style="font-size:.95rem;color:var(--txt3);margin-bottom:.9rem">
+          <i class="far fa-folder-open" style="font-size:1.8rem;display:block;margin-bottom:.6rem;opacity:.5"></i>
+          لا توجد صفقات بهذا اليوم
+        </div>
+        <a href="checklist.html?date=${key}" class="btn btn-p" style="display:inline-flex;align-items:center;gap:.5rem;background:var(--gold);color:#000;padding:.7rem 1.3rem;border-radius:9px;text-decoration:none;font-weight:700">
+          <i class="fas fa-plus"></i> إضافة صفقة بتاريخ ${dateAr}
+        </a>
+      </div>`;
+    document.getElementById('modalTrades').innerHTML = '';
+    document.getElementById('modalBg').classList.add('show');
+    return;
+  }
+
   let pnl=0, wins=0, losses=0;
   trades.forEach(t=>{
-    pnl += Number(t.pnl||0);
+    pnl += signedPnl(t);
     if(t.status==='win') wins++;
     if(t.status==='loss') losses++;
   });
@@ -575,7 +598,8 @@ function openDay(key){
     </div>`;
 
   document.getElementById('modalTrades').innerHTML = trades.map((t, idx)=>{
-    const pnlClass = t.pnl>0?'pos':t.pnl<0?'neg':'neut';
+    const tPnl = signedPnl(t);
+    const pnlClass = tPnl>0?'pos':tPnl<0?'neg':'neut';
     const sessionAr = {NY:'نيويورك',London:'لندن',Asia:'آسيا',Other:'أخرى'}[t.session] || '—';
     const dirAr = d => {
       if(d==='Bullish') return '<span style="color:#10b981">صاعد ↑</span>';
@@ -603,7 +627,7 @@ function openDay(key){
           </div>
           <div class="mt-right">
             <div class="mt-conf">${t.confluence_pct||0}%</div>
-            <div class="mt-pnl ${pnlClass}">${t.status==='planned'?'—':fmtMoney(t.pnl)}</div>
+            <div class="mt-pnl ${pnlClass}">${t.status==='planned'?'—':fmtMoney(tPnl)}</div>
             <i class="fas fa-chevron-down mt-chev"></i>
           </div>
         </div>
