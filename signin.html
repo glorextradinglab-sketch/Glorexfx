@@ -11,6 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <style>
 /* ============================================================
    GLOREX — Sign In Page (Premium)
@@ -357,6 +358,9 @@ body.light .auth-form-wrap{background:#fafafa}
         <a class="forgot-link" href="#">نسيت كلمة المرور؟</a>
       </div>
 
+      <!-- Cloudflare Turnstile CAPTCHA -->
+      <div class="cf-turnstile fade-up d3" data-sitekey="0x4AAAAAADqWkdBGCnP8l3wV" data-theme="dark" data-language="ar" style="margin:.5rem 0;display:flex;justify-content:center"></div>
+
       <button type="submit" class="btn-submit fade-up d3">
         تسجيل الدخول <i class="fas fa-arrow-left"></i>
       </button>
@@ -435,14 +439,22 @@ document.getElementById('signinForm').addEventListener('submit', async e=>{
   const email    = document.getElementById('email').value.trim();
   const password = document.getElementById('password').value;
 
+  // التحقق من Turnstile CAPTCHA
+  const captchaToken = window.turnstile?.getResponse();
+  if (!captchaToken) {
+    toast('يرجى إكمال التحقق من الـ CAPTCHA أولاً', 'error');
+    return;
+  }
+
   btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> جاري التحقق...';
   btn.disabled = true;
 
-  const { data, error } = await signIn({ email, password });
+  const { data, error } = await signIn({ email, password, captchaToken });
 
   if (error) {
     btn.innerHTML = 'تسجيل الدخول <i class="fas fa-arrow-left"></i>';
     btn.disabled = false;
+    window.turnstile?.reset();
     toast(translateError(error), 'error');
     return;
   }

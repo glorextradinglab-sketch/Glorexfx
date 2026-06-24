@@ -17,22 +17,27 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
    AUTH HELPERS
 ============================================================ */
 
-/* Sign up with email/password */
-export async function signUp({ email, password, firstName, lastName }) {
+/* Sign up with email/password (مع Turnstile CAPTCHA) */
+export async function signUp({ email, password, firstName, lastName, captchaToken }) {
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
       data: { first_name: firstName, last_name: lastName, full_name: `${firstName} ${lastName}` },
       emailRedirectTo: `${location.origin}/dashboard.html`,
+      captchaToken,
     },
   });
   return { data, error };
 }
 
-/* Sign in with email/password */
-export async function signIn({ email, password }) {
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+/* Sign in with email/password (مع Turnstile CAPTCHA) */
+export async function signIn({ email, password, captchaToken }) {
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+    options: { captchaToken },
+  });
   return { data, error };
 }
 
