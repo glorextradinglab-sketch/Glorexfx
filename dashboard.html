@@ -537,13 +537,19 @@ else {
   document.getElementById('userAvatar').textContent = initial;
   document.getElementById('welcomeName').textContent = firstName;
 
-  /* ── تحقق إذا المستخدم Admin → عرض رابط Admin ── */
+  /* ── تحقق إذا المستخدم Admin + Welcome page check ── */
   try {
     const { data: profile } = await supabase
       .from('profiles')
-      .select('is_admin')
+      .select('is_admin, welcome_seen_at')
       .eq('id', user.id)
       .single();
+
+    // أول مرة دخول؟ وجّه لصفحة Welcome
+    if (profile && !profile.welcome_seen_at) {
+      location.replace('welcome.html');
+      return;
+    }
 
     const isAdmin = !!profile?.is_admin;
     if(isAdmin){

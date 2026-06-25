@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>أهلاً بك في GLOREX</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold:#D4A017;--gold-l:#F0C030;--gold-d:#A07810;
+  --bg:#080808;--surface:#0d0d0d;--card:#111111;
+  --border:rgba(255,255,255,0.08);
+  --txt:#fff;--txt2:#ccc;--txt3:#999;--txt4:#666;
+  --success:#10b981;--info:#3b82f6;--purple:#a78bfa;
+  --ease:cubic-bezier(.4,0,.2,1);--base:.3s;
+}
+body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden}
+
+/* Loading */
+.boot{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg);z-index:9999;flex-direction:column;gap:1rem}
+.boot.hide{opacity:0;pointer-events:none;transition:opacity .4s}
+.boot-logo{width:60px;height:60px;border-radius:15px;background:linear-gradient(135deg,var(--gold),var(--gold-d));display:flex;align-items:center;justify-content:center;color:#000;font-family:'Space Grotesk';font-weight:700;font-size:1.8rem;animation:logo-pulse 1.4s ease-in-out infinite;box-shadow:0 8px 30px rgba(212,160,23,.4)}
+@keyframes logo-pulse{50%{transform:scale(1.08);box-shadow:0 8px 50px rgba(212,160,23,.7)}}
+
+/* BG */
+.bg-mesh{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 900px 700px at 80% 0%,rgba(212,160,23,.12),transparent 60%),radial-gradient(ellipse 600px 800px at 0% 100%,rgba(167,139,250,.08),transparent 60%)}
+
+/* Top bar */
+.topbar{position:sticky;top:0;z-index:100;background:rgba(8,8,8,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:.95rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{display:flex;align-items:center;gap:.6rem}
+.brand-logo{width:40px;height:40px;border-radius:11px;background:#fff;border:1.5px solid rgba(212,160,23,.5);display:flex;align-items:center;justify-content:center;overflow:hidden;padding:3px}
+.brand-logo img{width:100%;height:100%;object-fit:contain}
+.brand-name{font-family:'Space Grotesk';font-weight:700;font-size:1.05rem;letter-spacing:1.5px}
+.skip-btn{padding:.5rem 1rem;background:transparent;border:1px solid var(--border);color:var(--txt3);border-radius:9px;font-size:.85rem;text-decoration:none;font-family:inherit;cursor:pointer;transition:all .2s ease}
+.skip-btn:hover{background:rgba(255,255,255,.05);color:var(--txt)}
+
+/* Main */
+main{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:2rem 1.5rem 4rem}
+
+/* Hero */
+.hero{text-align:center;padding:3rem 1rem 2.5rem;animation:fadeUp .8s var(--ease)}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.4rem 1rem;background:linear-gradient(135deg,rgba(212,160,23,.15),rgba(212,160,23,.05));border:1px solid rgba(212,160,23,.3);border-radius:999px;color:var(--gold);font-size:.8rem;font-weight:600;margin-bottom:1.4rem}
+.hero-confetti{font-size:3.5rem;margin-bottom:1rem;display:inline-block;animation:bounce 2s ease-in-out infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.hero-title{font-family:'Space Grotesk';font-size:2.5rem;font-weight:700;line-height:1.2;margin-bottom:.8rem;background:linear-gradient(135deg,#fff 0%,var(--gold-l) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-subtitle{font-size:1.05rem;color:var(--txt2);max-width:580px;margin:0 auto;line-height:1.7}
+.tier-badge{display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1rem;border-radius:999px;font-size:.85rem;font-weight:700;margin-top:1rem;font-family:'Space Grotesk'}
+.tier-free{background:rgba(160,160,160,.15);border:1px solid rgba(160,160,160,.3);color:var(--txt2)}
+.tier-basic{background:rgba(167,139,250,.15);border:1px solid rgba(167,139,250,.35);color:var(--purple)}
+.tier-premium{background:linear-gradient(135deg,rgba(212,160,23,.2),rgba(212,160,23,.08));border:1px solid rgba(212,160,23,.4);color:var(--gold)}
+
+/* Section */
+.section{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:2rem;margin-bottom:1.5rem;animation:fadeUp .8s var(--ease) backwards}
+.section:nth-child(2){animation-delay:.1s}
+.section:nth-child(3){animation-delay:.2s}
+.section:nth-child(4){animation-delay:.3s}
+.section-head{display:flex;align-items:center;gap:.7rem;margin-bottom:1.3rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.section-icon{width:42px;height:42px;border-radius:11px;background:rgba(212,160,23,.12);border:1px solid rgba(212,160,23,.25);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:1.1rem}
+.section-title{font-family:'Space Grotesk';font-size:1.15rem;font-weight:700}
+.section-sub{font-size:.85rem;color:var(--txt3);margin-top:.15rem}
+
+/* Steps */
+.steps{display:flex;flex-direction:column;gap:.85rem}
+.step{display:flex;align-items:center;gap:1rem;padding:1rem 1.2rem;background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:12px;transition:all .25s ease;text-decoration:none;color:inherit}
+.step:hover{background:rgba(212,160,23,.05);border-color:rgba(212,160,23,.3);transform:translateX(-3px)}
+.step-num{width:36px;height:36px;border-radius:50%;background:rgba(212,160,23,.12);color:var(--gold);font-family:'Space Grotesk';font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(212,160,23,.3)}
+.step-content{flex:1;min-width:0}
+.step-title{font-weight:600;font-size:.98rem;margin-bottom:.2rem}
+.step-desc{font-size:.83rem;color:var(--txt3);line-height:1.5}
+.step-arrow{color:var(--gold);opacity:.6;font-size:1.1rem;transition:transform .2s}
+.step:hover .step-arrow{transform:translateX(-4px);opacity:1}
+
+/* Features grid */
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.85rem}
+.feature{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:12px;padding:1.2rem;transition:all .25s ease}
+.feature:hover{background:rgba(255,255,255,.04);border-color:rgba(212,160,23,.25);transform:translateY(-2px)}
+.feature.premium{background:linear-gradient(135deg,rgba(212,160,23,.06),rgba(212,160,23,.01));border-color:rgba(212,160,23,.3)}
+.feature-icon{font-size:1.4rem;color:var(--gold);margin-bottom:.7rem;display:block}
+.feature-title{font-weight:700;font-size:.95rem;margin-bottom:.3rem}
+.feature-desc{font-size:.82rem;color:var(--txt3);line-height:1.5}
+
+/* Tip box */
+.tip{background:linear-gradient(135deg,rgba(59,130,246,.08),rgba(59,130,246,.02));border:1px solid rgba(59,130,246,.25);border-radius:12px;padding:1rem 1.2rem;display:flex;gap:.8rem;align-items:flex-start}
+.tip i{color:var(--info);font-size:1.1rem;flex-shrink:0;margin-top:.15rem}
+.tip-text{font-size:.88rem;color:var(--txt2);line-height:1.65}
+
+/* CTA */
+.cta-section{text-align:center;padding:2rem 1rem 0}
+.cta-btn{display:inline-flex;align-items:center;gap:.6rem;padding:1.1rem 2.5rem;background:linear-gradient(135deg,var(--gold),var(--gold-d));color:#000;border:none;border-radius:13px;font-family:inherit;font-weight:700;font-size:1.05rem;text-decoration:none;cursor:pointer;box-shadow:0 8px 30px rgba(212,160,23,.35);transition:all .25s var(--ease)}
+.cta-btn:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(212,160,23,.5)}
+.cta-hint{margin-top:1rem;color:var(--txt3);font-size:.82rem}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* Mobile */
+@media (max-width:640px){
+  .topbar{padding:.8rem 1rem}
+  main{padding:1.5rem 1rem 3rem}
+  .hero{padding:2rem .5rem 1.5rem}
+  .hero-title{font-size:1.8rem}
+  .hero-subtitle{font-size:.95rem}
+  .section{padding:1.4rem;border-radius:14px}
+  .section-head{gap:.6rem}
+  .section-icon{width:36px;height:36px;font-size:.95rem}
+  .section-title{font-size:1rem}
+  .step{padding:.85rem 1rem;gap:.8rem}
+  .step-num{width:32px;height:32px;font-size:.9rem}
+  .step-title{font-size:.9rem}
+  .step-desc{font-size:.78rem}
+  .features{grid-template-columns:1fr}
+  .cta-btn{padding:1rem 2rem;font-size:.98rem;width:100%}
+}
+</style>
+</head>
+<body>
+
+<div class="boot" id="boot">
+  <div class="boot-logo">G</div>
+  <div class="boot-txt">جاري التحميل...</div>
+</div>
+
+<div class="bg-mesh"></div>
+
+<header class="topbar">
+  <a href="dashboard.html" class="brand">
+    <div class="brand-logo"><img src="glorex_bull_gold.png" alt="GLOREX"/></div>
+    <div class="brand-name">GLOREX</div>
+  </a>
+  <a href="dashboard.html" class="skip-btn">تخطّي ←</a>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge"><i class="fas fa-sparkles"></i> حساب جديد</div>
+    <div class="hero-confetti">🎉</div>
+    <h1 class="hero-title">أهلاً بك في GLOREX، <span id="welcomeName">صديقي</span>!</h1>
+    <p class="hero-subtitle" id="welcomeSub">يسعدنا انضمامك إلينا. خليني أعرّفك على المنصة بسرعة عشان تبدأ تداولك بثقة.</p>
+    <div class="tier-badge tier-free" id="tierBadge"><i class="fas fa-user"></i> <span id="tierLabel">Free Tier</span></div>
+  </section>
+
+  <!-- STEPS -->
+  <section class="section">
+    <div class="section-head">
+      <div class="section-icon"><i class="fas fa-rocket"></i></div>
+      <div>
+        <div class="section-title">ابدأ بهذه الخطوات</div>
+        <div class="section-sub">4 خطوات بسيطة ترتبك في 5 دقائق</div>
+      </div>
+    </div>
+
+    <div class="steps">
+      <a href="checklist.html" class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">جرّب قائمة الفحص قبل الدخول</div>
+          <div class="step-desc">القائمة تساعدك تتأكد من جودة الصفقة قبل الدخول وتمنعك من القرارات العاطفية</div>
+        </div>
+        <i class="fas fa-arrow-left step-arrow"></i>
+      </a>
+
+      <a href="journal.html" class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">سجّل أول صفقة</div>
+          <div class="step-desc">سجل صفقاتك (حقيقية أو تجريبية) عشان تشوف إحصائياتك تتحسن مع الوقت</div>
+        </div>
+        <i class="fas fa-arrow-left step-arrow"></i>
+      </a>
+
+      <a href="calendar.html" class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">شوف تقويم صفقاتك</div>
+          <div class="step-desc">رؤية شهرية لأدائك — أيام رابحة، خاسرة، صافي الربح</div>
+        </div>
+        <i class="fas fa-arrow-left step-arrow"></i>
+      </a>
+
+      <a href="news.html" class="step" id="stepNews">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-title">اطلب أول تقرير أخبار AI</div>
+          <div class="step-desc">احصل على تحليل ذكي لأي زوج عملة أو مؤشر بضغطة زر</div>
+        </div>
+        <i class="fas fa-arrow-left step-arrow"></i>
+      </a>
+    </div>
+  </section>
+
+  <!-- FEATURES (based on tier) -->
+  <section class="section" id="featuresSection">
+    <div class="section-head">
+      <div class="section-icon"><i class="fas fa-gem"></i></div>
+      <div>
+        <div class="section-title">ميزاتك المتاحة</div>
+        <div class="section-sub" id="featuresSub">استكشف ما يمكنك فعله</div>
+      </div>
+    </div>
+
+    <div class="features" id="featuresGrid">
+      <!-- Filled by JS -->
+    </div>
+  </section>
+
+  <!-- TIP -->
+  <section class="section">
+    <div class="tip">
+      <i class="fas fa-lightbulb"></i>
+      <div class="tip-text">
+        <strong style="color:var(--info)">نصيحة:</strong> ابدأ بـ <strong>قائمة الفحص</strong> قبل أي صفقة، حتى لو حسيت الصفقة "أكيدة". المتداولون الناجحون يلتزمون بنظام واضح، لا مشاعر.
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <a href="dashboard.html" class="cta-btn">
+      <i class="fas fa-rocket"></i>
+      ادخل للوحة التحكم
+      <i class="fas fa-arrow-left"></i>
+    </a>
+    <div class="cta-hint">يمكنك دائماً الرجوع لهذه الصفحة من قائمة المساعدة</div>
+  </div>
+
+</main>
+
+<script type="module">
+import { requireAuth, supabase } from './supabase-client.js?v=20260625';
+
+const session = await requireAuth();
+if (!session) { /* requireAuth handles redirect */ }
+else {
+  const user = session.user;
+  const meta = user.user_metadata || {};
+  const firstName = meta.first_name || meta.full_name?.split(' ')[0] || user.email.split('@')[0];
+
+  document.getElementById('welcomeName').textContent = firstName;
+
+  // Fetch profile to get tier
+  let tier = 'free';
+  try {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('subscription_tier')
+      .eq('id', user.id)
+      .single();
+    tier = profile?.subscription_tier || 'free';
+  } catch(e) { console.warn(e); }
+
+  // Update tier badge
+  const tierBadge = document.getElementById('tierBadge');
+  const tierLabel = document.getElementById('tierLabel');
+  const welcomeSub = document.getElementById('welcomeSub');
+
+  if (tier === 'premium') {
+    tierBadge.className = 'tier-badge tier-premium';
+    tierBadge.innerHTML = '<i class="fas fa-crown"></i> <span>Premium 👑</span>';
+    welcomeSub.textContent = 'باشتراكك بـ Premium، عندك وصول كامل لكل الميزات بما فيها جلسات 1:1 معي. خليني أوريك من وين تبدأ.';
+  } else if (tier === 'basic') {
+    tierBadge.className = 'tier-badge tier-basic';
+    tierBadge.innerHTML = '<i class="fas fa-star"></i> <span>Basic ⭐</span>';
+    welcomeSub.textContent = 'باشتراكك بـ Basic، عندك أدوات احترافية تساعدك ترفع نسبة نجاحك. خليني أعرّفك عليها.';
+  } else {
+    tierBadge.className = 'tier-badge tier-free';
+    tierBadge.innerHTML = '<i class="fas fa-user"></i> <span>Free Tier</span>';
+    welcomeSub.textContent = 'يسعدنا انضمامك. جرّب الميزات المجانية، ولما تكون جاهز للتطور — رقّي اشتراكك.';
+  }
+
+  // Build features grid
+  const featuresGrid = document.getElementById('featuresGrid');
+  const featuresSub = document.getElementById('featuresSub');
+
+  const allFeatures = [
+    { icon: 'fa-tasks', title: 'قائمة الفحص', desc: 'تحقق من جودة الصفقة قبل الدخول', tier: 'basic' },
+    { icon: 'fa-book-open', title: 'سجل صفقات لا محدود', desc: 'سجل وحلل كل صفقاتك', tier: 'basic' },
+    { icon: 'fa-calendar', title: 'تقويم الأداء', desc: 'رؤية شهرية للأرباح والخسائر', tier: 'basic' },
+    { icon: 'fa-newspaper', title: 'تنبيهات FOMC / NFP', desc: 'الأخبار القوية لا تفوتك', tier: 'basic' },
+    { icon: 'fa-robot', title: '50 تقرير AI شهرياً', desc: 'تحليلات ذكية للأسواق', tier: 'basic' },
+    { icon: 'fa-graduation-cap', title: 'الدروس + الفيديوهات', desc: 'تعلم من صفقاتي اليومية', tier: 'basic' },
+    { icon: 'fa-brain', title: '200 تقرير AI شهرياً', desc: '4× أكثر من Basic', tier: 'premium' },
+    { icon: 'fa-video', title: 'مكالمة 1:1 شهرياً', desc: 'جلسة خاصة معي لمراجعة صفقاتك', tier: 'premium' },
+    { icon: 'fa-chart-line', title: 'تحليل خبير لصفقاتك', desc: 'مراجعة شخصية بصفقاتك', tier: 'premium' },
+    { icon: 'fa-headset', title: 'أولوية الدعم الفني', desc: 'رد سريع على أسئلتك', tier: 'premium' },
+  ];
+
+  let features = [];
+  if (tier === 'premium') {
+    features = allFeatures;
+    featuresSub.textContent = 'عندك وصول لكل الميزات — Premium';
+  } else if (tier === 'basic') {
+    features = allFeatures.filter(f => f.tier === 'basic');
+    featuresSub.textContent = `${features.length} ميزات بـ Basic`;
+  } else {
+    features = [
+      { icon: 'fa-calculator', title: 'حاسبة المخاطر', desc: 'احسب حجم الصفقة المناسب', tier: 'basic' },
+      { icon: 'fa-calendar-day', title: 'التقويم الاقتصادي', desc: 'أحداث الأسبوع المهمة (مجاناً)', tier: 'basic' },
+      { icon: 'fa-eye', title: 'معاينة الميزات المدفوعة', desc: 'شوف شو رح تحصل عليه', tier: 'basic' },
+    ];
+    featuresSub.textContent = 'الميزات المتاحة في الباقة المجانية';
+  }
+
+  featuresGrid.innerHTML = features.map(f => `
+    <div class="feature ${f.tier === 'premium' ? 'premium' : ''}">
+      <i class="fas ${f.icon} feature-icon"></i>
+      <div class="feature-title">${f.title}</div>
+      <div class="feature-desc">${f.desc}</div>
+    </div>
+  `).join('');
+
+  // Hide news step for free tier
+  if (tier === 'free') {
+    document.getElementById('stepNews').style.opacity = '0.5';
+  }
+
+  // Mark welcome as seen (in profile)
+  try {
+    await supabase.from('profiles')
+      .update({ welcome_seen_at: new Date().toISOString() })
+      .eq('id', user.id);
+  } catch(e) { /* welcome_seen_at column might not exist yet */ }
+
+  // Hide boot
+  setTimeout(()=>{
+    document.getElementById('boot').classList.add('hide');
+    setTimeout(()=> document.getElementById('boot').remove(), 400);
+  }, 200);
+}
+</script>
+
+</body>
+</html>

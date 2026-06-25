@@ -341,7 +341,7 @@ document.getElementById('signupForm').addEventListener('submit', async e=>{
 
   // تحقق من ?next= بـ URL — لو موجود ارجع للصفحة المطلوبة
   const params = new URLSearchParams(location.search);
-  const nextUrl = params.get('next') || 'dashboard.html';
+  const nextUrl = params.get('next') || 'welcome.html';
 
   if (data.session) {
     /* Email confirmation disabled → user is logged in */
