@@ -11,6 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -165,6 +166,7 @@ input,textarea{font-family:inherit;color:inherit}
   .main{padding:1.5rem 1rem 3rem}
   .topbar{padding:.8rem 1rem}
   .info-val{word-break:normal !important;overflow-wrap:break-word}
+  #analyticsSection > div[style*="grid-template-columns:2fr 1fr"]{grid-template-columns:1fr !important}
 }
 
 /* Booking Settings */
@@ -265,7 +267,10 @@ input,textarea{font-family:inherit;color:inherit}
 
   <!-- Section Tabs (Payments vs Bookings vs Referrals) -->
   <div class="tabs" style="margin-bottom:.6rem;border-bottom:none;border-bottom:1px solid var(--border);padding-bottom:.3rem">
-    <button class="tab active" data-section="payments" style="font-size:1rem;font-weight:600">
+    <button class="tab active" data-section="analytics" style="font-size:1rem;font-weight:600">
+      <i class="fas fa-chart-line" style="color:#22c55e"></i> التحليلات
+    </button>
+    <button class="tab" data-section="payments" style="font-size:1rem;font-weight:600">
       <i class="fas fa-credit-card"></i> طلبات الدفع
     </button>
     <button class="tab" data-section="bookings" style="font-size:1rem;font-weight:600">
@@ -288,8 +293,106 @@ input,textarea{font-family:inherit;color:inherit}
     </button>
   </div>
 
+  <!-- Analytics Section -->
+  <div id="analyticsSection">
+    <!-- KPI Cards Row 1: Revenue -->
+    <div class="stats" style="margin-bottom:1rem">
+      <div class="stat-card" style="background:linear-gradient(160deg,rgba(34,197,94,.08),rgba(34,197,94,.01));border-color:rgba(34,197,94,.3)">
+        <div class="stat-ico" style="background:rgba(34,197,94,.15);color:#22c55e"><i class="fas fa-sync-alt"></i></div>
+        <div class="stat-info">
+          <div class="stat-val" id="anMRR" style="color:#22c55e">—</div>
+          <div class="stat-lbl">MRR (الإيراد الشهري المتكرر)</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-ico gold"><i class="fas fa-dollar-sign"></i></div>
+        <div class="stat-info">
+          <div class="stat-val" id="anRevMonth">—</div>
+          <div class="stat-lbl">إيراد هذا الشهر</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-ico gold"><i class="fas fa-coins"></i></div>
+        <div class="stat-info">
+          <div class="stat-val" id="anRevTotal">—</div>
+          <div class="stat-lbl">إجمالي الإيرادات (كلي)</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-ico" style="background:rgba(167,139,250,.15);color:#a78bfa"><i class="fas fa-percentage"></i></div>
+        <div class="stat-info">
+          <div class="stat-val" id="anARPU">—</div>
+          <div class="stat-lbl">متوسط الدخل لكل مشترك</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI Cards Row 2: Users -->
+    <div class="stats" style="margin-bottom:1.4rem">
+      <div class="stat-card">
+        <div class="stat-ico info"><i class="fas fa-user-plus"></i></div>
+        <div class="stat-info">
+          <div class="stat-val" id="anNewToday">—</div>
+          <div class="stat-lbl">تسجيلات جديدة اليوم</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-ico info"><i class="fas fa-calendar-week"></i></div>
+        <div class="stat-info">
+          <div class="stat-val" id="anNewWeek">—</div>
+          <div class="stat-lbl">تسجيلات هذا الأسبوع</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-ico ok"><i class="fas fa-chart-line"></i></div>
+        <div class="stat-info">
+          <div class="stat-val" id="anConversion">—</div>
+          <div class="stat-lbl">معدل التحويل (Free→Paid)</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-ico" style="background:rgba(239,68,68,.15);color:#ef4444"><i class="fas fa-user-times"></i></div>
+        <div class="stat-info">
+          <div class="stat-val" id="anChurn">—</div>
+          <div class="stat-lbl">انسحابات هذا الشهر</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:1.2rem;margin-bottom:1.4rem">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.4rem">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+          <h3 style="font-size:1rem;font-weight:600">📈 الإيرادات (آخر 6 شهور)</h3>
+          <span style="color:var(--txt3);font-size:.8rem" id="anRevChartTotal"></span>
+        </div>
+        <canvas id="anRevChart" height="180"></canvas>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.4rem">
+        <h3 style="font-size:1rem;font-weight:600;margin-bottom:1rem">👥 توزيع المشتركين</h3>
+        <canvas id="anTierChart" height="180"></canvas>
+      </div>
+    </div>
+
+    <!-- Top Referrers -->
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.4rem;margin-bottom:1.4rem">
+      <h3 style="font-size:1rem;font-weight:600;margin-bottom:1rem"><i class="fas fa-trophy" style="color:#f5d76e"></i> أفضل 5 مُحيلين (هذا الشهر)</h3>
+      <div id="anTopReferrers" style="display:flex;flex-direction:column;gap:.6rem">
+        <div style="color:var(--txt3);text-align:center;padding:1rem">جاري التحميل...</div>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.4rem">
+      <h3 style="font-size:1rem;font-weight:600;margin-bottom:1rem"><i class="fas fa-history"></i> آخر النشاطات</h3>
+      <div id="anActivity" style="display:flex;flex-direction:column;gap:.5rem">
+        <div style="color:var(--txt3);text-align:center;padding:1rem">جاري التحميل...</div>
+      </div>
+    </div>
+  </div>
+
   <!-- Payments Section -->
-  <div id="paymentsSection">
+  <div id="paymentsSection" style="display:none">
     <div class="tabs">
       <button class="tab active" data-tab="pending">
         <i class="fas fa-clock"></i> قيد المراجعة
@@ -683,27 +786,214 @@ if(profErr || !profile?.is_admin){
   await loadBookings('pending');
   await updateBookingsBadge();
   await updateReferralsBadge();
+  await loadAnalytics();
 }
 
-// ── Section Tabs (Payments / Bookings) ──
-let currentSection = 'payments';
+// ── Section Tabs ──
+let currentSection = 'analytics';
 document.querySelectorAll('[data-section]').forEach(tab => {
   tab.addEventListener('click', () => {
     document.querySelectorAll('[data-section]').forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
     currentSection = tab.dataset.section;
+    document.getElementById('analyticsSection').style.display = currentSection === 'analytics' ? 'block' : 'none';
     document.getElementById('paymentsSection').style.display = currentSection === 'payments' ? 'block' : 'none';
     document.getElementById('bookingsSection').style.display = currentSection === 'bookings' ? 'block' : 'none';
     document.getElementById('referralsSection').style.display = currentSection === 'referrals' ? 'block' : 'none';
     document.getElementById('subscribersSection').style.display = currentSection === 'subscribers' ? 'block' : 'none';
     document.getElementById('settingsSection').style.display = currentSection === 'settings' ? 'block' : 'none';
     document.getElementById('eventsSection').style.display = currentSection === 'events' ? 'block' : 'none';
+    if(currentSection === 'analytics') loadAnalytics();
     if(currentSection === 'referrals') loadReferrals(currentRefTab);
     if(currentSection === 'subscribers') loadSubscribers(currentSubTab);
     if(currentSection === 'settings') loadBookingSettings();
     if(currentSection === 'events') loadEvents();
   });
 });
+
+// ═══════════════════════════════════════════════
+// 📊 Analytics Dashboard
+// ═══════════════════════════════════════════════
+let _anRevChart = null, _anTierChart = null;
+
+async function loadAnalytics(){
+  const now = new Date();
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
+  const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate()-7).toISOString();
+
+  // ── Subscribers tier breakdown
+  const { data: subs } = await supabase.from('profiles')
+    .select('subscription_tier, subscription_expires_at, created_at');
+
+  const active = (subs||[]).filter(s =>
+    s.subscription_tier && s.subscription_tier !== 'free' &&
+    s.subscription_expires_at && new Date(s.subscription_expires_at) > now
+  );
+  const basic = active.filter(s => s.subscription_tier === 'basic').length;
+  const premium = active.filter(s => s.subscription_tier === 'premium').length;
+  const freeCount = (subs||[]).length - basic - premium;
+
+  // MRR = basic*27 + premium*89
+  const mrr = basic * 27 + premium * 89;
+  document.getElementById('anMRR').textContent = '$' + mrr.toLocaleString();
+
+  // ARPU = MRR / total paid subscribers
+  const arpu = active.length > 0 ? (mrr / active.length).toFixed(0) : 0;
+  document.getElementById('anARPU').textContent = '$' + arpu;
+
+  // ── Revenue (from approved payments)
+  const { data: payments } = await supabase.from('payment_requests')
+    .select('amount, reviewed_at, plan, user_id, created_at')
+    .eq('status','approved')
+    .order('reviewed_at', { ascending: false });
+
+  const revMonth = (payments||[])
+    .filter(p => p.reviewed_at >= startOfMonth)
+    .reduce((s,p) => s + Number(p.amount||0), 0);
+  const revTotal = (payments||[]).reduce((s,p) => s + Number(p.amount||0), 0);
+
+  document.getElementById('anRevMonth').textContent = '$' + revMonth.toLocaleString();
+  document.getElementById('anRevTotal').textContent = '$' + revTotal.toLocaleString();
+
+  // ── New signups
+  const newToday = (subs||[]).filter(s => s.created_at >= startOfToday).length;
+  const newWeek = (subs||[]).filter(s => s.created_at >= startOfWeek).length;
+  document.getElementById('anNewToday').textContent = newToday;
+  document.getElementById('anNewWeek').textContent = newWeek;
+
+  // ── Conversion rate (paid / total signups)
+  const conv = (subs||[]).length > 0 ? ((active.length / subs.length) * 100).toFixed(1) : 0;
+  document.getElementById('anConversion').textContent = conv + '%';
+
+  // ── Churn (expired this month, not renewed)
+  const churned = (subs||[]).filter(s =>
+    s.subscription_tier && s.subscription_tier !== 'free' &&
+    s.subscription_expires_at &&
+    new Date(s.subscription_expires_at) < now &&
+    new Date(s.subscription_expires_at) >= new Date(startOfMonth)
+  ).length;
+  document.getElementById('anChurn').textContent = churned;
+
+  // ── Revenue chart (last 6 months)
+  const monthLabels = [], monthValues = [];
+  for(let i = 5; i >= 0; i--){
+    const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
+    const next = new Date(now.getFullYear(), now.getMonth()-i+1, 1);
+    const lbl = d.toLocaleDateString('ar-EG-u-nu-latn', { month:'short', year:'2-digit' });
+    const sum = (payments||[])
+      .filter(p => p.reviewed_at >= d.toISOString() && p.reviewed_at < next.toISOString())
+      .reduce((s,p) => s + Number(p.amount||0), 0);
+    monthLabels.push(lbl);
+    monthValues.push(sum);
+  }
+
+  const revCtx = document.getElementById('anRevChart').getContext('2d');
+  if(_anRevChart) _anRevChart.destroy();
+  _anRevChart = new Chart(revCtx, {
+    type: 'bar',
+    data: {
+      labels: monthLabels,
+      datasets: [{
+        label: 'الإيرادات ($)',
+        data: monthValues,
+        backgroundColor: 'rgba(245, 215, 110, 0.6)',
+        borderColor: '#f5d76e',
+        borderWidth: 1.5,
+        borderRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#999' } },
+        x: { grid: { display: false }, ticks: { color: '#999' } }
+      }
+    }
+  });
+  const total6 = monthValues.reduce((s,v)=>s+v, 0);
+  document.getElementById('anRevChartTotal').textContent = `إجمالي 6 شهور: $${total6.toLocaleString()}`;
+
+  // ── Tier distribution chart
+  const tierCtx = document.getElementById('anTierChart').getContext('2d');
+  if(_anTierChart) _anTierChart.destroy();
+  _anTierChart = new Chart(tierCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Free', 'Basic', 'Premium'],
+      datasets: [{
+        data: [freeCount, basic, premium],
+        backgroundColor: ['rgba(150,150,150,0.6)', 'rgba(96,165,250,0.7)', 'rgba(245,215,110,0.8)'],
+        borderColor: ['#666', '#60a5fa', '#f5d76e'],
+        borderWidth: 1.5
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom', labels: { color: '#ccc', font: { family: 'IBM Plex Sans Arabic' } } } }
+    }
+  });
+
+  // ── Top 5 referrers this month
+  const currentMonth = now.toISOString().slice(0,7);
+  const { data: comms } = await supabase.from('referral_commissions')
+    .select('referrer_id, amount')
+    .eq('commission_month', currentMonth);
+
+  const byRef = {};
+  (comms||[]).forEach(c => {
+    byRef[c.referrer_id] = (byRef[c.referrer_id] || 0) + Number(c.amount||0);
+  });
+  const top = Object.entries(byRef).sort((a,b) => b[1]-a[1]).slice(0,5);
+
+  const topEl = document.getElementById('anTopReferrers');
+  if(top.length === 0){
+    topEl.innerHTML = `<div style="color:var(--txt3);text-align:center;padding:1rem">ما في عمولات هذا الشهر بعد</div>`;
+  } else {
+    const refIds = top.map(([id])=>id);
+    const { data: refProfiles } = await supabase.from('profiles')
+      .select('id, email, full_name').in('id', refIds);
+    const nameMap = {};
+    (refProfiles||[]).forEach(p => nameMap[p.id] = p.full_name || p.email);
+
+    topEl.innerHTML = top.map(([id, amt], i) => `
+      <div style="display:flex;align-items:center;gap:.8rem;padding:.7rem .9rem;background:var(--surface);border-radius:10px">
+        <div style="width:32px;height:32px;border-radius:50%;background:${i===0?'#f5d76e':i===1?'#c0c0c0':i===2?'#cd7f32':'rgba(255,255,255,.1)'};color:#000;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:'Space Grotesk'">${i+1}</div>
+        <div style="flex:1">
+          <div style="font-weight:500">${nameMap[id] || 'مستخدم'}</div>
+          <div style="color:var(--txt3);font-size:.8rem">$${amt.toFixed(2)} عمولات</div>
+        </div>
+        <i class="fas fa-medal" style="color:${i===0?'#f5d76e':i===1?'#c0c0c0':i===2?'#cd7f32':'rgba(255,255,255,.2)'}"></i>
+      </div>
+    `).join('');
+  }
+
+  // ── Recent activity (last 10: payments + signups)
+  const activity = [];
+  (payments||[]).slice(0,5).forEach(p => activity.push({
+    type: 'payment', icon: 'check-circle', color: '#22c55e',
+    text: `دفعة مُعتمدة — ${p.plan === 'premium' ? 'Premium' : 'Basic'} ($${p.amount})`,
+    date: p.reviewed_at
+  }));
+  (subs||[]).sort((a,b)=> b.created_at.localeCompare(a.created_at)).slice(0,5).forEach(s => activity.push({
+    type: 'signup', icon: 'user-plus', color: '#60a5fa',
+    text: `تسجيل مستخدم جديد`,
+    date: s.created_at
+  }));
+  activity.sort((a,b) => b.date.localeCompare(a.date));
+
+  const actEl = document.getElementById('anActivity');
+  actEl.innerHTML = activity.slice(0,10).map(a => `
+    <div style="display:flex;align-items:center;gap:.8rem;padding:.6rem .9rem;background:var(--surface);border-radius:10px">
+      <div style="width:32px;height:32px;border-radius:50%;background:${a.color}22;color:${a.color};display:flex;align-items:center;justify-content:center"><i class="fas fa-${a.icon}"></i></div>
+      <div style="flex:1;font-size:.9rem">${a.text}</div>
+      <span style="color:var(--txt3);font-size:.8rem">${new Date(a.date).toLocaleDateString('ar-EG-u-nu-latn',{dateStyle:'short'})}</span>
+    </div>
+  `).join('') || '<div style="color:var(--txt3);text-align:center;padding:1rem">ما في نشاطات بعد</div>';
+}
 
 // ═══════════════════════════════════════════════
 // 📅 Economic Events Management
