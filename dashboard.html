@@ -538,42 +538,46 @@ else {
   document.getElementById('welcomeName').textContent = firstName;
 
   /* ── تحقق إذا المستخدم Admin + Welcome page check ── */
+  let _profileData = null;
   try {
     const { data: profile } = await supabase
       .from('profiles')
       .select('is_admin, welcome_seen_at')
       .eq('id', user.id)
       .single();
+    _profileData = profile;
+  } catch(e) {
+    console.warn('فشل فحص الـ profile', e);
+  }
 
-    // أول مرة دخول؟ وجّه لصفحة Welcome
-    if (profile && !profile.welcome_seen_at) {
-      location.replace('welcome.html');
-      return;
-    }
-
-    const isAdmin = !!profile?.is_admin;
+  // أول مرة دخول؟ وجّه لصفحة Welcome وأوقف التنفيذ
+  if (_profileData && !_profileData.welcome_seen_at) {
+    location.replace('welcome.html');
+  } else {
+    const isAdmin = !!_profileData?.is_admin;
     if(isAdmin){
-      const adminLink = document.getElementById('adminLink');
-      adminLink.style.display = 'flex';
+      try {
+        const adminLink = document.getElementById('adminLink');
+        if(adminLink) adminLink.style.display = 'flex';
 
-      // عد الطلبات pending وحطها بـ badge
-      const [{count: pendingPayments}, {count: pendingBookings}] = await Promise.all([
-        supabase.from('payment_requests').select('*', {count:'exact', head:true}).eq('status','pending'),
-        supabase.from('call_bookings').select('*', {count:'exact', head:true}).eq('status','pending')
-      ]);
-      const total = (pendingPayments||0) + (pendingBookings||0);
-      if(total > 0){
-        const badge = document.getElementById('adminBadge');
-        badge.textContent = total;
-        badge.style.display = 'inline-block';
-      }
+        // عد الطلبات pending وحطها بـ badge
+        const [{count: pendingPayments}, {count: pendingBookings}] = await Promise.all([
+          supabase.from('payment_requests').select('*', {count:'exact', head:true}).eq('status','pending'),
+          supabase.from('call_bookings').select('*', {count:'exact', head:true}).eq('status','pending')
+        ]);
+        const total = (pendingPayments||0) + (pendingBookings||0);
+        if(total > 0){
+          const badge = document.getElementById('adminBadge');
+          if(badge){
+            badge.textContent = total;
+            badge.style.display = 'inline-block';
+          }
+        }
+      } catch(e){ console.warn('فشل تحميل بيانات الأدمن', e); }
     }
 
     // 📱 Setup mobile bottom navigation
     setupBottomNav('dashboard.html', isAdmin);
-  } catch(e) {
-    console.warn('فشل فحص is_admin', e);
-    setupBottomNav('dashboard.html', false);
   }
 
   /* ── جيب باقة المستخدم وحدد الميزات المقفلة ── */
