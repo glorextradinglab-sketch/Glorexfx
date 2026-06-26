@@ -86,6 +86,9 @@ input{font-family:inherit;color:inherit}
 .share-btn.tg{background:rgba(36,161,222,.1);color:#24a1de}
 .share-btn.tw{background:rgba(0,0,0,.3);color:#fff;border:1px solid var(--border)}
 .share-btn.email{background:rgba(212,160,23,.1);color:var(--gold)}
+.share-btn.fb{background:rgba(24,119,242,.1);color:#1877f2}
+.share-btn.ig{background:linear-gradient(135deg,rgba(225,48,108,.12),rgba(193,53,132,.12),rgba(64,93,230,.12));color:#e1306c}
+.share-btn.copyMsg{background:rgba(255,255,255,.06);color:var(--txt2);border:1px solid var(--border)}
 .share-btn:hover{transform:translateY(-1px);opacity:.85}
 
 /* Stats Grid */
@@ -224,12 +227,21 @@ input{font-family:inherit;color:inherit}
       <a href="#" class="share-btn tg" id="shareTg" target="_blank">
         <i class="fab fa-telegram"></i> Telegram
       </a>
+      <a href="#" class="share-btn fb" id="shareFb" target="_blank">
+        <i class="fab fa-facebook"></i> Facebook
+      </a>
       <a href="#" class="share-btn tw" id="shareTw" target="_blank">
         <i class="fab fa-x-twitter"></i> X / Twitter
       </a>
+      <button class="share-btn ig" id="shareIg">
+        <i class="fab fa-instagram"></i> Instagram
+      </button>
       <a href="#" class="share-btn email" id="shareEmail">
         <i class="fas fa-envelope"></i> إيميل
       </a>
+      <button class="share-btn copyMsg" id="copyMsg">
+        <i class="fas fa-copy"></i> نسخ النص الجاهز
+      </button>
     </div>
   </div>
 
@@ -289,7 +301,7 @@ input{font-family:inherit;color:inherit}
       <div class="step">
         <div class="step-num">3</div>
         <strong>أنت تكسب</strong>
-        <p>تحصل على <strong style="color:var(--gold)">20% عمولة</strong> رصيد بحسابك — استخدمه لتجديد اشتراكك أو ترقيتو</p>
+        <p>تحصل على <strong style="color:var(--gold)">30% عمولة شهرياً</strong> رصيد بحسابك — يستخدم تلقائياً لتجديد اشتراكك 🔄</p>
       </div>
     </div>
   </div>
@@ -350,7 +362,25 @@ function updateShareLinks(){
   document.getElementById('shareWa').href = `https://wa.me/?text=${encodeURIComponent(msg)}`;
   document.getElementById('shareTg').href = `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(`🎁 جربت GLOREX؟ استخدم كودي ${myCode} وخذ خصم 15%`)}`;
   document.getElementById('shareTw').href = `https://x.com/intent/tweet?text=${encodeURIComponent(msg)}`;
+  document.getElementById('shareFb').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}&quote=${encodeURIComponent(msg)}`;
   document.getElementById('shareEmail').href = `mailto:?subject=${encodeURIComponent('جرب GLOREX — منصة تعليم التداول')}&body=${encodeURIComponent(msg)}`;
+
+  // Instagram: open app/website (no direct text share via URL)
+  document.getElementById('shareIg').onclick = async () => {
+    try {
+      await navigator.clipboard.writeText(msg);
+      toast('📋 تم نسخ النص — افتح Instagram والصقه بـ Story/DM/Bio', 'ok');
+      setTimeout(()=> window.open('https://www.instagram.com/', '_blank'), 600);
+    } catch(e){ toast('فشل النسخ', 'err'); }
+  };
+
+  // Copy ready message for any platform (TikTok, Snapchat, etc.)
+  document.getElementById('copyMsg').onclick = async () => {
+    try {
+      await navigator.clipboard.writeText(msg);
+      toast('📋 تم نسخ النص الجاهز — الصقه أي مكان (TikTok/Snap/Bio...)', 'ok');
+    } catch(e){ toast('فشل النسخ', 'err'); }
+  };
 }
 
 // ── نسخ ──
