@@ -888,54 +888,64 @@ async function loadAnalytics(){
     monthValues.push(sum);
   }
 
-  const revCtx = document.getElementById('anRevChart').getContext('2d');
-  if(_anRevChart) _anRevChart.destroy();
-  _anRevChart = new Chart(revCtx, {
-    type: 'bar',
-    data: {
-      labels: monthLabels,
-      datasets: [{
-        label: 'الإيرادات ($)',
-        data: monthValues,
-        backgroundColor: 'rgba(245, 215, 110, 0.6)',
-        borderColor: '#f5d76e',
-        borderWidth: 1.5,
-        borderRadius: 6
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#999' } },
-        x: { grid: { display: false }, ticks: { color: '#999' } }
+  // Chart.js قد لا يكون محمّل (CSP أو شبكة) — احم بقية الكود
+  try {
+    if (typeof Chart === 'undefined') throw new Error('Chart.js library not loaded');
+    const revCtx = document.getElementById('anRevChart').getContext('2d');
+    if(_anRevChart) _anRevChart.destroy();
+    _anRevChart = new Chart(revCtx, {
+      type: 'bar',
+      data: {
+        labels: monthLabels,
+        datasets: [{
+          label: 'الإيرادات ($)',
+          data: monthValues,
+          backgroundColor: 'rgba(245, 215, 110, 0.6)',
+          borderColor: '#f5d76e',
+          borderWidth: 1.5,
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#999' } },
+          x: { grid: { display: false }, ticks: { color: '#999' } }
+        }
       }
-    }
-  });
-  const total6 = monthValues.reduce((s,v)=>s+v, 0);
-  document.getElementById('anRevChartTotal').textContent = `إجمالي 6 شهور: $${total6.toLocaleString()}`;
+    });
+    const total6 = monthValues.reduce((s,v)=>s+v, 0);
+    document.getElementById('anRevChartTotal').textContent = `إجمالي 6 شهور: $${total6.toLocaleString()}`;
 
-  // ── Tier distribution chart
-  const tierCtx = document.getElementById('anTierChart').getContext('2d');
-  if(_anTierChart) _anTierChart.destroy();
-  _anTierChart = new Chart(tierCtx, {
-    type: 'doughnut',
-    data: {
-      labels: ['Free', 'Basic', 'Premium'],
-      datasets: [{
-        data: [freeCount, basic, premium],
-        backgroundColor: ['rgba(150,150,150,0.6)', 'rgba(96,165,250,0.7)', 'rgba(245,215,110,0.8)'],
-        borderColor: ['#666', '#60a5fa', '#f5d76e'],
-        borderWidth: 1.5
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { position: 'bottom', labels: { color: '#ccc', font: { family: 'IBM Plex Sans Arabic' } } } }
-    }
-  });
+    // ── Tier distribution chart
+    const tierCtx = document.getElementById('anTierChart').getContext('2d');
+    if(_anTierChart) _anTierChart.destroy();
+    _anTierChart = new Chart(tierCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Free', 'Basic', 'Premium'],
+        datasets: [{
+          data: [freeCount, basic, premium],
+          backgroundColor: ['rgba(150,150,150,0.6)', 'rgba(96,165,250,0.7)', 'rgba(245,215,110,0.8)'],
+          borderColor: ['#666', '#60a5fa', '#f5d76e'],
+          borderWidth: 1.5
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom', labels: { color: '#ccc', font: { family: 'IBM Plex Sans Arabic' } } } }
+      }
+    });
+  } catch(chartErr){
+    console.warn('فشل تحميل الرسوم البيانية:', chartErr);
+    // عرض بيانات نصية بدلاً من الـ charts الفارغة
+    const monthsText = monthLabels.map((l,i) => `${l}: $${monthValues[i]}`).join(' • ');
+    document.getElementById('anRevChart').outerHTML = `<div style="padding:1rem;color:var(--txt3);text-align:center">📊 ${monthsText || 'لا توجد بيانات'}</div>`;
+    document.getElementById('anTierChart').outerHTML = `<div style="padding:1rem;color:var(--txt3);text-align:center">Free: ${freeCount} • Basic: ${basic} • Premium: ${premium}</div>`;
+  }
 
   // ── Top 5 referrers this month
   const currentMonth = now.toISOString().slice(0,7);
