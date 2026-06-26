@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link rel="icon" type="image/png" href="glorex_bull_gold.png"/>
+<title>بروفايل المشترك — GLOREX Admin</title>
+<meta name="theme-color" content="#0a0a0a"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold:#D4A017;--gold-l:#F0C030;--gold-d:#A07810;
+  --bg:#080808;--surface:#0d0d0d;--card:#111111;
+  --border:rgba(255,255,255,0.08);
+  --txt:#fff;--txt2:#ccc;--txt3:#999;--txt4:#666;
+  --ok:#22c55e;--err:#ef4444;--warn:#f59e0b;--info:#3b82f6;
+  --ease:cubic-bezier(.4,0,.2,1);--base:.3s;
+}
+body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;font-family:inherit;border:none;background:none;color:inherit}
+input,select{font-family:inherit;color:inherit}
+
+.bg-mesh{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 900px 700px at 80% 0%,rgba(212,160,23,.08),transparent 60%)}
+
+.topbar{position:sticky;top:0;z-index:100;background:rgba(8,8,8,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:.95rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{display:flex;align-items:center;gap:.6rem;color:#f5d76e}
+.brand-logo{width:40px;height:40px;border-radius:11px;background:#fff;border:1.5px solid rgba(212,160,23,.5);padding:5px;overflow:hidden}
+.brand-logo img{width:100%;height:100%;object-fit:contain}
+.brand-name{font-family:'Space Grotesk';font-weight:700;font-size:1.25rem}
+.admin-pill{background:linear-gradient(135deg,var(--gold-l),var(--gold-d));color:#000;padding:.3rem .85rem;border-radius:999px;font-size:.7rem;font-weight:700}
+.btn-back{display:inline-flex;align-items:center;gap:.5rem;padding:.55rem 1rem;border:1px solid var(--border);border-radius:10px;color:var(--txt2);font-size:.85rem;transition:all .2s}
+.btn-back:hover{border-color:var(--gold);color:var(--gold)}
+
+.main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:2rem 2rem 5rem}
+
+/* Profile header */
+.profile-head{background:linear-gradient(160deg,#161106,#0d0a04);border:1px solid rgba(212,160,23,.3);border-radius:18px;padding:2rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
+.profile-avatar{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-family:'Space Grotesk';font-size:2.2rem;flex-shrink:0}
+.profile-info{flex:1;min-width:200px}
+.profile-name{font-family:'Space Grotesk';font-size:1.6rem;font-weight:700;margin-bottom:.3rem}
+.profile-email{color:var(--txt3);font-size:.9rem;margin-bottom:.5rem}
+.profile-meta{display:flex;gap:1rem;flex-wrap:wrap;font-size:.82rem;color:var(--txt4)}
+.profile-meta span{display:inline-flex;align-items:center;gap:.4rem}
+
+.tier-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.6rem 1.2rem;border-radius:999px;font-weight:700;font-size:.95rem}
+.tier-premium{background:linear-gradient(135deg,rgba(212,160,23,.18),rgba(160,120,16,.1));color:var(--gold-l);border:1px solid rgba(212,160,23,.4)}
+.tier-basic{background:rgba(96,165,250,.12);color:#60a5fa;border:1px solid rgba(96,165,250,.3)}
+.tier-free{background:rgba(255,255,255,.06);color:var(--txt3);border:1px solid var(--border)}
+
+/* Stats grid */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.2rem}
+.stat-ico{width:42px;height:42px;border-radius:11px;background:rgba(212,160,23,.1);color:var(--gold);display:flex;align-items:center;justify-content:center;margin-bottom:.8rem;font-size:1.05rem}
+.stat-ico.ok{background:rgba(34,197,94,.12);color:var(--ok)}
+.stat-ico.err{background:rgba(239,68,68,.12);color:var(--err)}
+.stat-ico.info{background:rgba(59,130,246,.12);color:var(--info)}
+.stat-val{font-family:'Space Grotesk';font-size:1.8rem;font-weight:700;line-height:1.1;margin-bottom:.2rem}
+.stat-lbl{color:var(--txt3);font-size:.82rem}
+
+/* Card sections */
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1.2rem}
+.card-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;flex-wrap:wrap;gap:.7rem}
+.card-h h3{font-size:1.05rem;font-weight:600;display:inline-flex;align-items:center;gap:.5rem}
+.card-h h3 i{color:var(--gold)}
+
+/* Info rows */
+.info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem 1.5rem}
+.info-row{display:flex;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.info-row:last-child{border-bottom:none}
+.info-lbl{color:var(--txt3);font-size:.85rem}
+.info-val{color:var(--txt);font-weight:500;font-size:.9rem}
+
+/* Activity items */
+.item{display:flex;align-items:center;gap:.9rem;padding:.85rem;background:var(--surface);border-radius:11px;margin-bottom:.6rem;font-size:.88rem}
+.item-ico{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.item-ico.ok{background:rgba(34,197,94,.12);color:var(--ok)}
+.item-ico.warn{background:rgba(245,158,11,.12);color:var(--warn)}
+.item-ico.err{background:rgba(239,68,68,.12);color:var(--err)}
+.item-ico.info{background:rgba(59,130,246,.12);color:var(--info)}
+.item-text{flex:1}
+.item-text strong{display:block;margin-bottom:.15rem}
+.item-text span{color:var(--txt3);font-size:.78rem}
+.item-amount{font-family:'Space Grotesk';font-weight:600}
+.item-amount.pos{color:var(--ok)}
+.item-amount.neg{color:var(--err)}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.75rem 1.2rem;border-radius:10px;font-weight:600;font-size:.88rem;transition:all .2s;border:1px solid transparent}
+.btn-primary{background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#000}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(212,160,23,.3)}
+.btn-secondary{background:rgba(255,255,255,.06);color:var(--txt);border-color:var(--border)}
+.btn-secondary:hover{background:rgba(255,255,255,.1)}
+.btn-danger{background:rgba(239,68,68,.1);color:var(--err);border-color:rgba(239,68,68,.3)}
+.btn-danger:hover{background:rgba(239,68,68,.2)}
+.actions-bar{display:flex;gap:.6rem;flex-wrap:wrap}
+
+.empty{text-align:center;padding:2rem 1rem;color:var(--txt3)}
+.empty i{font-size:1.8rem;margin-bottom:.6rem;display:block;opacity:.5}
+
+.loader{display:flex;justify-content:center;padding:4rem;color:var(--txt3)}
+.spinner{width:36px;height:36px;border:3px solid rgba(255,255,255,.1);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Modal */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;display:none;align-items:center;justify-content:center;padding:1rem}
+.modal.show{display:flex}
+.modal-content{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.8rem;max-width:440px;width:100%}
+.modal-content h3{font-size:1.1rem;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.field{margin-bottom:1rem}
+.field label{display:block;color:var(--txt3);font-size:.85rem;margin-bottom:.4rem}
+.field input,.field select{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:.7rem .9rem;color:var(--txt)}
+.field input:focus,.field select:focus{outline:none;border-color:var(--gold)}
+
+/* Toast */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--border);padding:1rem 1.4rem;border-radius:12px;z-index:300;opacity:0;pointer-events:none;transition:all .3s}
+.toast.show{opacity:1;bottom:30px}
+.toast.ok{border-color:rgba(34,197,94,.4)}
+.toast.err{border-color:rgba(239,68,68,.4)}
+
+@media (max-width:920px){
+  .main{padding:1.2rem 1rem 3rem}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .info-grid{grid-template-columns:1fr}
+  .topbar{padding:.8rem 1rem}
+  .profile-head{padding:1.4rem}
+  .profile-avatar{width:70px;height:70px;font-size:1.7rem}
+  .profile-name{font-size:1.3rem}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-mesh"></div>
+
+<header class="topbar">
+  <a href="admin.html" class="brand">
+    <div class="brand-logo"><img src="glorex_bull_gold.png" alt="GLOREX"/></div>
+    <div class="brand-name">GLOREX <span class="admin-pill">ADMIN</span></div>
+  </a>
+  <a href="admin.html" class="btn-back">
+    <i class="fas fa-arrow-right"></i> رجوع للوحة
+  </a>
+</header>
+
+<main class="main">
+
+  <div id="loader" class="loader"><div class="spinner"></div></div>
+
+  <div id="content" style="display:none">
+    <!-- Profile Header -->
+    <div class="profile-head">
+      <div class="profile-avatar" id="profAvatar">U</div>
+      <div class="profile-info">
+        <div class="profile-name" id="profName">—</div>
+        <div class="profile-email" id="profEmail">—</div>
+        <div class="profile-meta">
+          <span><i class="fas fa-calendar"></i> انضم: <strong id="profJoined" style="color:var(--txt2);font-weight:500">—</strong></span>
+          <span id="profWelcomeWrap"><i class="fas fa-check"></i> شاف الترحيب: <strong id="profWelcome" style="color:var(--txt2);font-weight:500">—</strong></span>
+        </div>
+      </div>
+      <div id="profTierBadge" class="tier-badge tier-free">
+        <i class="fas fa-user"></i> Free
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-ico ok"><i class="fas fa-dollar-sign"></i></div>
+        <div class="stat-val" id="statTotalPaid">$0</div>
+        <div class="stat-lbl">إجمالي المدفوع</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-ico"><i class="fas fa-wallet"></i></div>
+        <div class="stat-val" id="statBalance">$0</div>
+        <div class="stat-lbl">رصيد متاح</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-ico info"><i class="fas fa-users"></i></div>
+        <div class="stat-val" id="statRefs">0</div>
+        <div class="stat-lbl">عدد الإحالات</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-ico"><i class="fas fa-chart-line"></i></div>
+        <div class="stat-val" id="statTrades">0</div>
+        <div class="stat-lbl">صفقات مسجّلة</div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="card">
+      <div class="card-h">
+        <h3><i class="fas fa-bolt"></i> إجراءات</h3>
+      </div>
+      <div class="actions-bar">
+        <button class="btn btn-primary" id="btnExtend">
+          <i class="fas fa-calendar-plus"></i> تمديد الاشتراك
+        </button>
+        <button class="btn btn-secondary" id="btnChangeTier">
+          <i class="fas fa-exchange-alt"></i> تغيير الباقة
+        </button>
+        <button class="btn btn-secondary" id="btnSendEmail">
+          <i class="fas fa-envelope"></i> إرسال إيميل
+        </button>
+        <button class="btn btn-secondary" id="btnAddCredit">
+          <i class="fas fa-plus-circle"></i> إضافة رصيد
+        </button>
+      </div>
+    </div>
+
+    <!-- Subscription Details -->
+    <div class="card">
+      <div class="card-h"><h3><i class="fas fa-crown"></i> تفاصيل الاشتراك</h3></div>
+      <div class="info-grid">
+        <div class="info-row"><span class="info-lbl">الباقة الحالية</span><span class="info-val" id="subTier">—</span></div>
+        <div class="info-row"><span class="info-lbl">بدأ بـ</span><span class="info-val" id="subStart">—</span></div>
+        <div class="info-row"><span class="info-lbl">ينتهي بـ</span><span class="info-val" id="subEnd">—</span></div>
+        <div class="info-row"><span class="info-lbl">متبقي</span><span class="info-val" id="subRemain">—</span></div>
+      </div>
+    </div>
+
+    <!-- Payment History -->
+    <div class="card">
+      <div class="card-h">
+        <h3><i class="fas fa-credit-card"></i> سجل المدفوعات</h3>
+        <span style="color:var(--txt3);font-size:.85rem" id="paymentCount"></span>
+      </div>
+      <div id="paymentsList"></div>
+    </div>
+
+    <!-- Account Credits -->
+    <div class="card">
+      <div class="card-h">
+        <h3><i class="fas fa-coins"></i> حركات الرصيد</h3>
+        <span style="color:var(--txt3);font-size:.85rem" id="creditsCount"></span>
+      </div>
+      <div id="creditsList"></div>
+    </div>
+
+    <!-- Referrals (people they referred) -->
+    <div class="card">
+      <div class="card-h">
+        <h3><i class="fas fa-gift"></i> الإحالات (مَن جلب)</h3>
+        <span style="color:var(--txt3);font-size:.85rem" id="referredCount"></span>
+      </div>
+      <div id="referredList"></div>
+    </div>
+
+    <!-- Referrer (who referred them) -->
+    <div class="card" id="referrerCard" style="display:none">
+      <div class="card-h"><h3><i class="fas fa-user-check"></i> المُحيل (مَن أتى به)</h3></div>
+      <div id="referrerInfo"></div>
+    </div>
+  </div>
+
+</main>
+
+<!-- Modal for actions -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <h3 id="modalTitle">عنوان</h3>
+    <div id="modalBody"></div>
+    <div style="display:flex;gap:.6rem;margin-top:1.2rem">
+      <button class="btn btn-primary" id="modalConfirm" style="flex:1">تأكيد</button>
+      <button class="btn btn-secondary" id="modalCancel">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">رسالة</div>
+
+<script type="module">
+import { requireAuth, supabase } from './supabase-client.js?v=20260626';
+
+const session = await requireAuth();
+if (!session) { /* redirect handled */ }
+else {
+  const user = session.user;
+  const subscriberId = new URLSearchParams(location.search).get('id');
+
+  if (!subscriberId) {
+    document.getElementById('loader').innerHTML = '<div style="color:var(--err)">معرف المشترك مفقود من الرابط</div>';
+  } else {
+    // Check admin
+    const { data: meProfile } = await supabase
+      .from('profiles').select('is_admin').eq('id', user.id).single();
+    if (!meProfile?.is_admin) {
+      document.getElementById('loader').innerHTML = '<div style="color:var(--err)">⛔ غير مصرح — صلاحية أدمن مطلوبة</div>';
+    } else {
+      await loadAll(subscriberId);
+    }
+  }
+}
+
+function toast(msg, type='ok'){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast show ${type}`;
+  setTimeout(()=> t.classList.remove('show'), 3000);
+}
+
+function fmtDate(d){
+  if(!d) return '—';
+  return new Date(d).toLocaleDateString('ar-EG-u-nu-latn',{year:'numeric',month:'2-digit',day:'2-digit'});
+}
+
+function fmtMoney(n){
+  const v = Number(n||0);
+  return (v < 0 ? '-' : '') + '$' + Math.abs(v).toFixed(2);
+}
+
+let _subscriberData = null;
+
+async function loadAll(id){
+  // Profile
+  const { data: p, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', id)
+    .single();
+  if (error || !p) {
+    document.getElementById('loader').innerHTML = `<div style="color:var(--err)">فشل جلب البروفايل: ${error?.message || 'غير موجود'}</div>`;
+    return;
+  }
+  _subscriberData = p;
+
+  document.getElementById('loader').style.display = 'none';
+  document.getElementById('content').style.display = 'block';
+
+  // Render profile head
+  const initial = (p.full_name?.[0] || p.email?.[0] || 'U').toUpperCase();
+  document.getElementById('profAvatar').textContent = initial;
+  document.getElementById('profName').textContent = p.full_name || '—';
+  document.getElementById('profEmail').textContent = p.email || '—';
+  document.getElementById('profJoined').textContent = fmtDate(p.created_at);
+  document.getElementById('profWelcome').textContent = p.welcome_seen_at ? fmtDate(p.welcome_seen_at) : 'لم يشاهد';
+
+  const tier = p.subscription_tier || 'free';
+  const tierBadge = document.getElementById('profTierBadge');
+  tierBadge.className = 'tier-badge tier-' + tier;
+  tierBadge.innerHTML = tier === 'premium'
+    ? '<i class="fas fa-crown"></i> Premium'
+    : tier === 'basic'
+      ? '<i class="fas fa-star"></i> Basic'
+      : '<i class="fas fa-user"></i> Free';
+
+  // Subscription details
+  document.getElementById('subTier').textContent = tier === 'premium' ? 'Premium ($89/شهر)' : tier === 'basic' ? 'Basic ($27/شهر)' : 'مجاني';
+  document.getElementById('subStart').textContent = fmtDate(p.subscription_started_at);
+  document.getElementById('subEnd').textContent = fmtDate(p.subscription_expires_at);
+
+  const now = new Date();
+  if (p.subscription_expires_at) {
+    const days = Math.ceil((new Date(p.subscription_expires_at) - now) / (1000*60*60*24));
+    const remainEl = document.getElementById('subRemain');
+    remainEl.textContent = days > 0 ? `${days} يوم` : 'منتهي';
+    remainEl.style.color = days <= 0 ? 'var(--err)' : days <= 7 ? 'var(--warn)' : 'var(--ok)';
+  } else {
+    document.getElementById('subRemain').textContent = '—';
+  }
+
+  // Load payments
+  const { data: payments } = await supabase
+    .from('payment_requests')
+    .select('*')
+    .eq('user_id', id)
+    .order('created_at', { ascending: false });
+
+  const approved = (payments||[]).filter(x => x.status === 'approved');
+  const totalPaid = approved.reduce((s,x) => s + Number(x.amount||0), 0);
+  document.getElementById('statTotalPaid').textContent = '$' + totalPaid.toLocaleString();
+  document.getElementById('paymentCount').textContent = `${(payments||[]).length} دفعة`;
+
+  const payList = document.getElementById('paymentsList');
+  if ((payments||[]).length === 0) {
+    payList.innerHTML = '<div class="empty"><i class="fas fa-receipt"></i>لا توجد مدفوعات</div>';
+  } else {
+    payList.innerHTML = payments.map(x => {
+      const cls = x.status === 'approved' ? 'ok' : x.status === 'rejected' ? 'err' : 'warn';
+      const ico = x.status === 'approved' ? 'check' : x.status === 'rejected' ? 'times' : 'clock';
+      const lbl = x.status === 'approved' ? 'مُعتمدة' : x.status === 'rejected' ? 'مرفوضة' : 'قيد المراجعة';
+      return `<div class="item">
+        <div class="item-ico ${cls}"><i class="fas fa-${ico}"></i></div>
+        <div class="item-text">
+          <strong>${x.plan === 'premium' ? 'Premium' : 'Basic'} • ${x.method || '—'} • ${lbl}</strong>
+          <span>${fmtDate(x.created_at)} • ${x.duration_months || 1} شهر</span>
+        </div>
+        <span class="item-amount ${x.status==='approved'?'pos':''}">${x.status==='approved'?'+':''}${fmtMoney(x.amount)}</span>
+      </div>`;
+    }).join('');
+  }
+
+  // Load credits
+  const { data: credits } = await supabase
+    .from('account_credits')
+    .select('*')
+    .eq('user_id', id)
+    .order('created_at', { ascending: false });
+
+  const balance = (credits||[]).reduce((s,x) => s + Number(x.amount||0), 0);
+  document.getElementById('statBalance').textContent = fmtMoney(balance);
+  document.getElementById('creditsCount').textContent = `${(credits||[]).length} حركة • الرصيد: ${fmtMoney(balance)}`;
+
+  const credList = document.getElementById('creditsList');
+  if ((credits||[]).length === 0) {
+    credList.innerHTML = '<div class="empty"><i class="fas fa-coins"></i>لا توجد حركات رصيد</div>';
+  } else {
+    credList.innerHTML = credits.slice(0, 20).map(c => {
+      const amt = Number(c.amount||0);
+      const isPos = amt >= 0;
+      return `<div class="item">
+        <div class="item-ico ${isPos?'ok':'err'}"><i class="fas fa-${isPos?'arrow-down':'arrow-up'}"></i></div>
+        <div class="item-text">
+          <strong>${c.type === 'referral_commission' ? 'عمولة إحالة' : c.type === 'auto_renewal' ? 'تجديد تلقائي' : c.type || 'حركة'}</strong>
+          <span>${c.description || ''} • ${fmtDate(c.created_at)}</span>
+        </div>
+        <span class="item-amount ${isPos?'pos':'neg'}">${isPos?'+':''}${fmtMoney(amt)}</span>
+      </div>`;
+    }).join('');
+  }
+
+  // Load referrals where this user is referrer (people they brought)
+  const { data: brought } = await supabase
+    .from('referrals')
+    .select('*')
+    .eq('referrer_id', id)
+    .order('created_at', { ascending: false });
+
+  document.getElementById('statRefs').textContent = (brought||[]).length;
+  document.getElementById('referredCount').textContent = `${(brought||[]).length} إحالة`;
+
+  const refList = document.getElementById('referredList');
+  if ((brought||[]).length === 0) {
+    refList.innerHTML = '<div class="empty"><i class="fas fa-user-friends"></i>لم يجلب أحداً بعد</div>';
+  } else {
+    const ids = brought.map(b => b.referred_id);
+    const { data: people } = await supabase.from('profiles').select('id,email,full_name').in('id', ids);
+    const map = {};
+    (people||[]).forEach(x => map[x.id] = x);
+    refList.innerHTML = brought.map(b => {
+      const ref = map[b.referred_id] || {};
+      const isActive = b.status === 'active';
+      return `<div class="item">
+        <div class="item-ico ${isActive?'ok':'warn'}"><i class="fas fa-user"></i></div>
+        <div class="item-text">
+          <strong>${ref.full_name || ref.email || '—'}</strong>
+          <span>${b.status} • ${fmtDate(b.created_at)}</span>
+        </div>
+        <a href="admin-subscriber.html?id=${b.referred_id}" style="color:var(--gold);font-size:.8rem">عرض ←</a>
+      </div>`;
+    }).join('');
+  }
+
+  // Who referred this user?
+  const { data: incoming } = await supabase
+    .from('referrals')
+    .select('*')
+    .eq('referred_id', id)
+    .limit(1);
+  if ((incoming||[]).length > 0) {
+    const r = incoming[0];
+    const { data: refProfile } = await supabase
+      .from('profiles').select('id,email,full_name').eq('id', r.referrer_id).single();
+    document.getElementById('referrerCard').style.display = 'block';
+    document.getElementById('referrerInfo').innerHTML = `
+      <div class="item">
+        <div class="item-ico info"><i class="fas fa-user-check"></i></div>
+        <div class="item-text">
+          <strong>${refProfile?.full_name || refProfile?.email || '—'}</strong>
+          <span>كود الإحالة: ${r.code} • تاريخ الإحالة: ${fmtDate(r.created_at)}</span>
+        </div>
+        <a href="admin-subscriber.html?id=${r.referrer_id}" style="color:var(--gold);font-size:.85rem">عرض ←</a>
+      </div>`;
+  }
+
+  // Trades count
+  const { count: tradeCount } = await supabase
+    .from('trades')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', id);
+  document.getElementById('statTrades').textContent = tradeCount || 0;
+}
+
+// ─── Actions ───
+const modal = document.getElementById('modal');
+const modalTitle = document.getElementById('modalTitle');
+const modalBody = document.getElementById('modalBody');
+const modalConfirm = document.getElementById('modalConfirm');
+const modalCancel = document.getElementById('modalCancel');
+
+function openModal(title, bodyHtml, onConfirm){
+  modalTitle.innerHTML = title;
+  modalBody.innerHTML = bodyHtml;
+  modal.classList.add('show');
+  modalConfirm.onclick = async () => {
+    await onConfirm();
+  };
+}
+modalCancel.onclick = () => modal.classList.remove('show');
+modal.onclick = (e) => { if(e.target === modal) modal.classList.remove('show'); };
+
+// Extend subscription
+document.getElementById('btnExtend').onclick = () => {
+  openModal(
+    '<i class="fas fa-calendar-plus"></i> تمديد الاشتراك',
+    `<div class="field"><label>عدد الشهور</label>
+       <input type="number" id="extMonths" value="1" min="1" max="24"/></div>`,
+    async () => {
+      const months = parseInt(document.getElementById('extMonths').value) || 1;
+      const cur = _subscriberData.subscription_expires_at;
+      const base = (cur && new Date(cur) > new Date()) ? new Date(cur) : new Date();
+      const newEnd = new Date(base);
+      newEnd.setMonth(newEnd.getMonth() + months);
+      const { error } = await supabase.from('profiles')
+        .update({ subscription_expires_at: newEnd.toISOString() })
+        .eq('id', _subscriberData.id);
+      modal.classList.remove('show');
+      if (error) toast('فشل: ' + error.message, 'err');
+      else { toast(`تم تمديد ${months} شهر ✅`); setTimeout(()=>location.reload(), 800); }
+    }
+  );
+};
+
+// Change tier
+document.getElementById('btnChangeTier').onclick = () => {
+  openModal(
+    '<i class="fas fa-exchange-alt"></i> تغيير الباقة',
+    `<div class="field"><label>الباقة الجديدة</label>
+       <select id="newTier">
+         <option value="free">Free</option>
+         <option value="basic">Basic</option>
+         <option value="premium">Premium</option>
+       </select></div>`,
+    async () => {
+      const tier = document.getElementById('newTier').value;
+      const { error } = await supabase.from('profiles')
+        .update({ subscription_tier: tier })
+        .eq('id', _subscriberData.id);
+      modal.classList.remove('show');
+      if (error) toast('فشل: ' + error.message, 'err');
+      else { toast(`تم تغيير الباقة إلى ${tier} ✅`); setTimeout(()=>location.reload(), 800); }
+    }
+  );
+};
+
+// Add credit manually
+document.getElementById('btnAddCredit').onclick = () => {
+  openModal(
+    '<i class="fas fa-plus-circle"></i> إضافة رصيد يدوي',
+    `<div class="field"><label>المبلغ ($)</label>
+       <input type="number" id="creditAmt" value="10" step="0.01"/></div>
+     <div class="field"><label>السبب/الوصف</label>
+       <input type="text" id="creditDesc" placeholder="مثلاً: تعويض"/></div>`,
+    async () => {
+      const amt = parseFloat(document.getElementById('creditAmt').value);
+      const desc = document.getElementById('creditDesc').value || 'رصيد يدوي من الأدمن';
+      if (!amt) { toast('المبلغ غير صالح', 'err'); return; }
+      const { error } = await supabase.from('account_credits').insert({
+        user_id: _subscriberData.id,
+        amount: amt,
+        type: 'admin_manual',
+        description: desc
+      });
+      modal.classList.remove('show');
+      if (error) toast('فشل: ' + error.message, 'err');
+      else { toast(`تم إضافة ${fmtMoney(amt)} للرصيد ✅`); setTimeout(()=>location.reload(), 800); }
+    }
+  );
+};
+
+// Send email (opens mailto)
+document.getElementById('btnSendEmail').onclick = () => {
+  if (_subscriberData?.email) {
+    location.href = `mailto:${_subscriberData.email}?subject=GLOREX%20-%20`;
+  }
+};
+</script>
+</body>
+</html>

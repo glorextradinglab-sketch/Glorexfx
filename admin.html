@@ -1356,7 +1356,7 @@ async function loadSubscribers(filter){
     const joinedDate = p.created_at ? new Date(p.created_at).toLocaleDateString('ar-EG-u-nu-latn', { year:'numeric', month:'2-digit', day:'2-digit' }) : '—';
 
     return `
-      <div class="request" style="border:1px solid var(--border);border-radius:14px;padding:1.1rem;margin-bottom:.8rem;background:linear-gradient(180deg,rgba(255,255,255,.02),transparent)">
+      <a href="admin-subscriber.html?id=${p.id}" class="request" style="display:block;border:1px solid var(--border);border-radius:14px;padding:1.1rem;margin-bottom:.8rem;background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);text-decoration:none;color:inherit;transition:all .2s;cursor:pointer" onmouseover="this.style.borderColor='rgba(212,160,23,.4)'" onmouseout="this.style.borderColor='var(--border)'">
         <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
           <div style="width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#D4A017,#A07810);display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-family:'Space Grotesk';flex-shrink:0">${initial}</div>
           <div style="flex:1;min-width:200px">
@@ -1371,8 +1371,9 @@ async function loadSubscribers(filter){
           <div><span style="color:var(--txt4)">انضم:</span> <span style="color:var(--txt2)">${joinedDate}</span></div>
           <div><span style="color:var(--txt4)">ينتهي:</span> <span style="color:var(--txt2)">${endDateStr}</span></div>
           <div style="margin-right:auto"><span style="color:var(--txt4)">متبقي:</span> <span style="color:${expiryColor};font-weight:700">${expiryText}</span></div>
+          <div style="color:var(--gold);font-size:.8rem"><i class="fas fa-arrow-left"></i> التفاصيل</div>
         </div>
-      </div>
+      </a>
     `;
   }).join('');
 }
