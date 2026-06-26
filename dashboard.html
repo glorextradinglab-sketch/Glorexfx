@@ -325,7 +325,8 @@ a{color:inherit;text-decoration:none}
 }
 
 /* Economic Calendar */
-.econ-cal{background:linear-gradient(0deg,rgba(212,160,23,.07) 0%,rgba(212,160,23,.02) 30%,rgba(255,255,255,.01) 100%);border:1px solid var(--border);border-bottom:1px solid rgba(212,160,23,.35);border-radius:16px;padding:1.6rem;margin-top:2rem;box-shadow:0 4px 30px -10px rgba(212,160,23,.25)}
+.econ-cal{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:16px;padding:1.6rem;margin-top:2rem;position:relative}
+.econ-cal::after{content:'';position:absolute;left:10%;right:10%;bottom:-18px;height:24px;background:radial-gradient(ellipse at center, rgba(212,160,23,.18), transparent 70%);filter:blur(8px);pointer-events:none;z-index:-1}
 .econ-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.3rem;padding-bottom:.9rem;border-bottom:1px solid rgba(255,255,255,.06)}
 .econ-head h2{font-family:'Space Grotesk';font-size:1.15rem;font-weight:700;display:flex;align-items:center;gap:.5rem;margin:0}
 .econ-head h2 i{color:var(--gold)}
