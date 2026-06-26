@@ -25,7 +25,7 @@ if(window.caches) caches.keys().then(ks => ks.forEach(k => caches.delete(k)));
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
   --gold:#D4A017;--gold-l:#F0C030;--gold-d:#A07810;
-  --bg:#080808;--surface:#0d0d0d;--card:#111111;
+  --bg:#040404;--surface:#0a0a0a;--card:#0e0e0e;
   --border:rgba(255,255,255,0.08);
   --txt:#fff;--txt2:#ccc;--txt3:#999;--txt4:#666;
   --ease:cubic-bezier(.4,0,.2,1);--base:.3s;
@@ -330,7 +330,8 @@ a{color:inherit;text-decoration:none}
 .econ-list{display:flex;flex-direction:column;gap:.85rem}
 .econ-empty{text-align:center;color:var(--txt3);font-size:.92rem;padding:2rem 1rem}
 .econ-empty i{display:block;font-size:2rem;margin-bottom:.7rem;opacity:.4}
-.econ-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:11px;padding:1rem 1.2rem;transition:all .2s ease;border-right:3px solid #ef4444}
+.econ-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:11px;padding:1rem 1.2rem;transition:all .2s ease;border-right:3px solid #22c55e}
+.econ-card.is-past{border-right-color:#ef4444}
 .econ-card:hover{background:rgba(255,255,255,.05);border-color:rgba(212,160,23,.3)}
 .econ-card-head{display:flex;justify-content:space-between;align-items:start;gap:1rem;margin-bottom:.7rem;flex-wrap:wrap}
 .econ-title-wrap{flex:1;min-width:0}
@@ -703,7 +704,7 @@ function renderEventCard(e, isPast){
   const pastStyle = isPast ? 'opacity:.7' : '';
   const doneBadge = isPast ? `<span style="background:rgba(34,197,94,.18);color:#22c55e;padding:.3rem .75rem;border-radius:999px;font-size:.75rem;font-weight:700;display:inline-flex;align-items:center;gap:.35rem;border:1px solid rgba(34,197,94,.35);margin-inline-start:.6rem;flex-shrink:0;white-space:nowrap"><i class="fas fa-check-circle"></i> تم</span>` : '';
   return `
-    <article class="econ-card high" style="${pastStyle}">
+    <article class="econ-card high ${isPast ? 'is-past' : ''}" style="${pastStyle}">
       <div class="econ-card-head">
         <div class="econ-title-wrap" style="display:flex;align-items:center;flex-wrap:wrap;gap:.4rem">
           <span class="econ-curr">${escapeHtml(e.currency||'USD')}</span>
