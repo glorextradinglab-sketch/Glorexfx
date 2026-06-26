@@ -814,8 +814,6 @@ document.querySelectorAll('[data-section]').forEach(tab => {
 // ═══════════════════════════════════════════════
 // 📊 Analytics Dashboard
 // ═══════════════════════════════════════════════
-let _anRevChart = null, _anTierChart = null;
-
 async function loadAnalytics(){
   const now = new Date();
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
@@ -892,8 +890,8 @@ async function loadAnalytics(){
   try {
     if (typeof Chart === 'undefined') throw new Error('Chart.js library not loaded');
     const revCtx = document.getElementById('anRevChart').getContext('2d');
-    if(_anRevChart) _anRevChart.destroy();
-    _anRevChart = new Chart(revCtx, {
+    if(window._anRevChart) window._anRevChart.destroy();
+    window._anRevChart = new Chart(revCtx, {
       type: 'bar',
       data: {
         labels: monthLabels,
@@ -921,8 +919,8 @@ async function loadAnalytics(){
 
     // ── Tier distribution chart
     const tierCtx = document.getElementById('anTierChart').getContext('2d');
-    if(_anTierChart) _anTierChart.destroy();
-    _anTierChart = new Chart(tierCtx, {
+    if(window._anTierChart) window._anTierChart.destroy();
+    window._anTierChart = new Chart(tierCtx, {
       type: 'doughnut',
       data: {
         labels: ['Free', 'Basic', 'Premium'],
