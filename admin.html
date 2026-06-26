@@ -527,7 +527,7 @@ input,textarea{font-family:inherit;color:inherit}
         </div>
         <div style="display:flex;gap:.6rem;flex-wrap:wrap">
           <button class="btn" id="autoGenBtn" style="background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff;padding:.75rem 1.4rem">
-            <i class="fas fa-robot"></i> توليد أحداث الأسبوع تلقائياً
+            <i class="fas fa-robot"></i> توليد أحداث الشهر تلقائياً
           </button>
           <button class="btn btn-approve" id="addEventBtn" style="padding:.75rem 1.4rem">
             <i class="fas fa-plus"></i> إضافة يدوي
@@ -1081,7 +1081,7 @@ window.deleteEvent = async (id) => {
 document.getElementById('addEventBtn').addEventListener('click', () => openEventModal());
 
 document.getElementById('autoGenBtn').addEventListener('click', async () => {
-  if(!confirm('سيتم توليد أحداث الأسبوع القادم بالـ AI. قد يستغرق دقيقة. هل تريد المتابعة؟')) return;
+  if(!confirm('سيتم توليد أحداث الشهر القادم بالـ AI. قد يستغرق دقيقة. هل تريد المتابعة؟')) return;
 
   const btn = document.getElementById('autoGenBtn');
   btn.disabled = true;
@@ -1092,7 +1092,7 @@ document.getElementById('autoGenBtn').addEventListener('click', async () => {
 
   if(reqErr || reqData?.error){
     btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-robot"></i> توليد أحداث الأسبوع تلقائياً';
+    btn.innerHTML = '<i class="fas fa-robot"></i> توليد أحداث الشهر تلقائياً';
     showToast(reqErr?.message || reqData?.error || 'فشل إطلاق الطلب', 'err');
     return;
   }
@@ -1111,7 +1111,7 @@ document.getElementById('autoGenBtn').addEventListener('click', async () => {
     if(error){
       clearInterval(poll);
       btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-robot"></i> توليد أحداث الأسبوع تلقائياً';
+      btn.innerHTML = '<i class="fas fa-robot"></i> توليد أحداث الشهر تلقائياً';
       showToast(error.message, 'err');
       return;
     }
@@ -1120,7 +1120,7 @@ document.getElementById('autoGenBtn').addEventListener('click', async () => {
       if(attempts >= maxAttempts){
         clearInterval(poll);
         btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-robot"></i> توليد أحداث الأسبوع تلقائياً';
+        btn.innerHTML = '<i class="fas fa-robot"></i> توليد أحداث الشهر تلقائياً';
         showToast('انتهى الوقت — حاول مرة أخرى', 'err');
       }
       return;
@@ -1128,7 +1128,7 @@ document.getElementById('autoGenBtn').addEventListener('click', async () => {
 
     clearInterval(poll);
     btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-robot"></i> توليد أحداث الأسبوع تلقائياً';
+    btn.innerHTML = '<i class="fas fa-robot"></i> توليد أحداث الشهر تلقائياً';
 
     if(data.status === 'error'){
       showToast('خطأ: ' + (data.message || data.body || 'unknown'), 'err');
