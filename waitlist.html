@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link rel="icon" type="image/png" href="glorex_bull_gold.png"/>
+<link rel="apple-touch-icon" href="glorex_bull_gold.png"/>
+<title>انضم لأول دفعة GLOREX — قائمة الانتظار</title>
+<meta name="theme-color" content="#040404"/>
+<meta name="description" content="نحن نختار يدوياً أول 100 متداول عربي. قدّم طلبك الآن قبل 25 يوليو 2026."/>
+<meta property="og:title" content="GLOREX — قائمة الانتظار الحصرية"/>
+<meta property="og:description" content="أول 100 متداول عربي. اختيار يدوي. خصم 50% + جلسة 1-on-1."/>
+<meta property="og:image" content="/glorex_bull_gold.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold:#D4A017;--gold-l:#F0C030;--gold-d:#A07810;
+  --bg:#040404;--surface:#0a0a0a;--card:#0e0e0e;
+  --border:rgba(255,255,255,0.08);
+  --txt:#fff;--txt2:#ccc;--txt3:#999;--txt4:#666;
+  --ok:#22c55e;--err:#ef4444;
+  --ease:cubic-bezier(.4,0,.2,1);--base:.3s;
+}
+html,body{background:var(--bg);color:var(--txt);min-height:100vh;font-family:'IBM Plex Sans Arabic',sans-serif;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;font-family:inherit;border:none;background:none;color:inherit}
+input,textarea,select{font-family:inherit;color:inherit}
+
+/* Background mesh */
+.bg-mesh{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 900px 700px at 80% 0%,rgba(212,160,23,.12),transparent 60%),radial-gradient(ellipse 600px 800px at 0% 100%,rgba(160,120,16,.1),transparent 60%)}
+
+/* Topbar */
+.topbar{position:sticky;top:0;z-index:100;background:rgba(4,4,4,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:.7rem;color:#f5d76e;text-decoration:none}
+.brand-logo{width:42px;height:42px;border-radius:12px;background:#fff;border:1.5px solid rgba(212,160,23,.5);padding:5px;display:flex;align-items:center;justify-content:center}
+.brand-logo img{width:100%;height:100%;object-fit:contain}
+.brand-name{font-family:'Space Grotesk';font-weight:700;font-size:1.3rem;letter-spacing:-.02em}
+.coming-pill{background:linear-gradient(135deg,var(--gold-l),var(--gold-d));color:#000;padding:.35rem 1rem;border-radius:999px;font-size:.75rem;font-weight:700;letter-spacing:.5px}
+
+/* Main */
+.main{position:relative;z-index:1;max-width:880px;margin:0 auto;padding:3rem 2rem 5rem}
+
+/* Hero */
+.hero{text-align:center;padding:2.5rem 0 3.5rem;position:relative}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:.5rem;background:rgba(212,160,23,.1);border:1px solid rgba(212,160,23,.3);border-radius:999px;padding:.55rem 1.2rem;color:var(--gold);font-size:.85rem;font-weight:600;margin-bottom:1.5rem}
+.hero-eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--gold-l);animation:pulse 1.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+.hero h1{font-family:'Space Grotesk';font-weight:700;font-size:clamp(2.2rem,6vw,3.8rem);line-height:1.15;margin-bottom:1.2rem;letter-spacing:-.02em}
+.hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:clamp(1rem,2.4vw,1.2rem);color:var(--txt3);max-width:620px;margin:0 auto 2.5rem;line-height:1.7}
+.hero-cta{display:inline-flex;align-items:center;gap:.7rem;background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#000;padding:1.1rem 2.4rem;border-radius:14px;font-weight:700;font-size:1.05rem;transition:all var(--base) var(--ease);box-shadow:0 10px 30px -8px rgba(212,160,23,.5)}
+.hero-cta:hover{transform:translateY(-2px);box-shadow:0 14px 36px -8px rgba(212,160,23,.7)}
+.hero-meta{display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;margin-top:1.4rem;color:var(--txt4);font-size:.85rem}
+.hero-meta span{display:inline-flex;align-items:center;gap:.4rem}
+.hero-meta i{color:var(--gold)}
+
+/* Benefits */
+.benefits{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin:4rem 0;max-width:720px;margin-left:auto;margin-right:auto}
+.benefit{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.4rem;display:flex;gap:1rem;align-items:flex-start;transition:all var(--base) var(--ease)}
+.benefit:hover{border-color:rgba(212,160,23,.3);transform:translateY(-2px)}
+.benefit-ico{width:42px;height:42px;border-radius:11px;background:linear-gradient(135deg,rgba(212,160,23,.18),rgba(160,120,16,.08));color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.benefit-text strong{display:block;font-weight:600;margin-bottom:.3rem;font-size:.95rem}
+.benefit-text p{color:var(--txt3);font-size:.82rem;line-height:1.5}
+
+/* Stats banner */
+.stats-banner{background:linear-gradient(135deg,rgba(212,160,23,.08),rgba(160,120,16,.04));border:1px solid rgba(212,160,23,.25);border-radius:18px;padding:2rem;margin:3rem 0;display:flex;align-items:center;justify-content:space-around;flex-wrap:wrap;gap:2rem}
+.stat{text-align:center}
+.stat-val{font-family:'Space Grotesk';font-size:2.4rem;font-weight:700;color:var(--gold-l);line-height:1}
+.stat-lbl{color:var(--txt3);font-size:.82rem;margin-top:.4rem}
+
+/* Form section */
+.form-section{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:2.5rem;margin-top:3rem;scroll-margin-top:80px}
+.form-head{text-align:center;margin-bottom:2.5rem;padding-bottom:1.8rem;border-bottom:1px solid var(--border)}
+.form-head h2{font-family:'Space Grotesk';font-size:1.8rem;font-weight:700;margin-bottom:.6rem}
+.form-head p{color:var(--txt3);font-size:.95rem;line-height:1.6}
+
+.field{margin-bottom:1.8rem}
+.field-num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:rgba(212,160,23,.15);color:var(--gold);font-size:.85rem;font-weight:700;margin-left:.6rem;font-family:'Space Grotesk'}
+.field-label{display:flex;align-items:center;gap:.4rem;font-weight:600;font-size:1rem;margin-bottom:.9rem}
+.field-hint{color:var(--txt4);font-size:.8rem;font-weight:400;margin-right:auto}
+
+.option-group{display:grid;gap:.6rem;grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+.option{background:var(--surface);border:1.5px solid var(--border);border-radius:11px;padding:.95rem 1rem;text-align:center;font-size:.92rem;font-weight:500;transition:all .2s var(--ease);cursor:pointer;color:var(--txt2)}
+.option:hover{border-color:rgba(212,160,23,.3);background:rgba(212,160,23,.04)}
+.option.selected{border-color:var(--gold);background:rgba(212,160,23,.15);color:var(--gold-l);font-weight:600;box-shadow:inset 0 0 0 1px var(--gold)}
+.option i{margin-left:.4rem}
+
+.text-input{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:11px;padding:.95rem 1.1rem;font-size:.95rem;color:var(--txt);transition:border-color .2s}
+.text-input:focus{outline:none;border-color:var(--gold)}
+.text-input::placeholder{color:var(--txt4)}
+textarea.text-input{min-height:120px;resize:vertical;line-height:1.6}
+
+.submit-btn{width:100%;background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#000;padding:1.2rem;border-radius:13px;font-weight:700;font-size:1.05rem;transition:all .25s var(--ease);margin-top:1.5rem;display:flex;align-items:center;justify-content:center;gap:.6rem}
+.submit-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 14px 36px -8px rgba(212,160,23,.5)}
+.submit-btn:disabled{opacity:.6;cursor:not-allowed}
+
+.field-error{color:var(--err);font-size:.82rem;margin-top:.5rem;display:none}
+.field-error.show{display:block}
+
+/* Success state */
+.success-card{display:none;text-align:center;padding:3rem 2rem}
+.success-card.show{display:block}
+.success-ico{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,rgba(34,197,94,.2),rgba(34,197,94,.05));border:2px solid rgba(34,197,94,.3);color:var(--ok);display:flex;align-items:center;justify-content:center;font-size:2.6rem;margin:0 auto 1.5rem}
+.success-card h2{font-family:'Space Grotesk';font-size:1.8rem;font-weight:700;margin-bottom:.7rem;color:var(--gold-l)}
+.success-card p{color:var(--txt2);line-height:1.7;margin-bottom:.6rem}
+.success-num{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem;margin:1.6rem auto;display:inline-block;min-width:200px}
+.success-num small{display:block;color:var(--txt4);font-size:.75rem;margin-bottom:.3rem}
+.success-num strong{font-family:'Space Grotesk';font-size:1.5rem;color:var(--gold-l)}
+
+/* Footer */
+.footer{text-align:center;padding:3rem 2rem 2rem;color:var(--txt4);font-size:.85rem;border-top:1px solid var(--border);margin-top:4rem;position:relative;z-index:1}
+.footer-links{display:flex;justify-content:center;gap:1.5rem;margin-bottom:1rem;flex-wrap:wrap}
+.footer-links a{color:var(--txt3);transition:color .2s}
+.footer-links a:hover{color:var(--gold)}
+
+/* Toast */
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--card);border:1px solid var(--border);padding:1rem 1.5rem;border-radius:12px;z-index:200;opacity:0;transition:all .3s var(--ease);max-width:90%;font-size:.9rem}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.err{border-color:rgba(239,68,68,.4);color:#fca5a5}
+
+@media (max-width:680px){
+  .topbar{padding:.9rem 1rem}
+  .main{padding:2rem 1.2rem 3rem}
+  .form-section{padding:1.8rem 1.3rem}
+  .benefits{grid-template-columns:1fr}
+  .stats-banner{padding:1.5rem;gap:1.2rem}
+  .stat-val{font-size:1.8rem}
+  .field-hint{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-mesh"></div>
+
+<header class="topbar">
+  <a href="#" class="brand">
+    <div class="brand-logo"><img src="glorex_bull_gold.png" alt="GLOREX"/></div>
+    <div class="brand-name">GLOREX</div>
+  </a>
+  <span class="coming-pill">قريباً جداً</span>
+</header>
+
+<main class="main">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-eyebrow">
+      <span class="dot"></span>
+      حصري — قائمة الانتظار الآن مفتوحة
+    </div>
+    <h1>أول 100 متداول عربي<br/><em>سيغيّرون قواعد التداول</em></h1>
+    <p class="hero-sub">
+      نحن نختار <strong style="color:var(--txt)">يدوياً</strong> — مش الكل يقبل.
+      منصة تداول عربية كاملة بـ AI، تحليل أخبار يومي، Trading Journal ذكي، وجلسات 1-on-1 معي شخصياً.
+    </p>
+    <a href="#apply" class="hero-cta">
+      <i class="fas fa-paper-plane"></i>
+      قدّم طلبك الآن
+    </a>
+    <div class="hero-meta">
+      <span><i class="fas fa-calendar"></i> ينتهي التقديم 25 يوليو</span>
+      <span><i class="fas fa-rocket"></i> الإطلاق: 28 يوليو 2026</span>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="stats-banner">
+    <div class="stat">
+      <div class="stat-val" id="statApplied">—</div>
+      <div class="stat-lbl">قدّم طلبه</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">100</div>
+      <div class="stat-lbl">مقعد متاح</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">50%</div>
+      <div class="stat-lbl">خصم للمختارين</div>
+    </div>
+  </section>
+
+  <!-- Benefits -->
+  <section class="benefits">
+    <div class="benefit">
+      <div class="benefit-ico"><i class="fas fa-tag"></i></div>
+      <div class="benefit-text">
+        <strong>خصم 50% لـ 3 شهور</strong>
+        <p>سعر خاص للمؤسسين الأوائل لا يتكرر</p>
+      </div>
+    </div>
+    <div class="benefit">
+      <div class="benefit-ico"><i class="fas fa-video"></i></div>
+      <div class="benefit-text">
+        <strong>جلسة 1-on-1 مجانية</strong>
+        <p>45 دقيقة معي شخصياً لمراجعة استراتيجيتك</p>
+      </div>
+    </div>
+    <div class="benefit">
+      <div class="benefit-ico"><i class="fas fa-rocket"></i></div>
+      <div class="benefit-text">
+        <strong>وصول مبكر للمنصة</strong>
+        <p>تجرّب الموقع قبل الإطلاق الرسمي بأسبوع</p>
+      </div>
+    </div>
+    <div class="benefit">
+      <div class="benefit-ico"><i class="fas fa-crown"></i></div>
+      <div class="benefit-text">
+        <strong>شهادة "Founding Member"</strong>
+        <p>مكانة خاصة دائمة بحساب GLOREX</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Form -->
+  <section class="form-section" id="apply">
+
+    <!-- Form view -->
+    <div id="formView">
+      <div class="form-head">
+        <h2>📋 قدّم طلبك</h2>
+        <p>5 أسئلة سريعة + معلوماتك. لا تستغرق أكتر من دقيقتين.</p>
+      </div>
+
+      <form id="applyForm" novalidate>
+
+        <!-- Q1: Level -->
+        <div class="field">
+          <label class="field-label">
+            <span class="field-num">1</span>
+            شو مستواك بالتداول؟
+          </label>
+          <div class="option-group" data-field="level">
+            <div class="option" data-value="beginner"><i class="fas fa-seedling"></i> مبتدئ</div>
+            <div class="option" data-value="intermediate"><i class="fas fa-chart-line"></i> متوسط</div>
+            <div class="option" data-value="advanced"><i class="fas fa-trophy"></i> متقدم</div>
+          </div>
+          <div class="field-error" id="err-level">اختار مستوى</div>
+        </div>
+
+        <!-- Q2: Pain point -->
+        <div class="field">
+          <label class="field-label">
+            <span class="field-num">2</span>
+            شو أكتر شي بتعاني منه بالتداول؟
+          </label>
+          <div class="option-group" data-field="pain_point">
+            <div class="option" data-value="risk"><i class="fas fa-shield-alt"></i> إدارة المخاطر</div>
+            <div class="option" data-value="analysis"><i class="fas fa-chart-area"></i> التحليل الفني</div>
+            <div class="option" data-value="psychology"><i class="fas fa-brain"></i> الانضباط النفسي</div>
+            <div class="option" data-value="discipline"><i class="fas fa-bolt"></i> الالتزام بالخطة</div>
+          </div>
+          <div class="field-error" id="err-pain_point">اختار خياراً</div>
+        </div>
+
+        <!-- Q3: Experience -->
+        <div class="field">
+          <label class="field-label">
+            <span class="field-num">3</span>
+            كم تداولت من سنة؟
+          </label>
+          <div class="option-group" data-field="experience">
+            <div class="option" data-value="none">لم أبدأ بعد</div>
+            <div class="option" data-value="lt1">أقل من سنة</div>
+            <div class="option" data-value="1-3">1-3 سنوات</div>
+            <div class="option" data-value="gt3">أكتر من 3 سنوات</div>
+          </div>
+          <div class="field-error" id="err-experience">اختار خياراً</div>
+        </div>
+
+        <!-- Q4: Why join -->
+        <div class="field">
+          <label class="field-label">
+            <span class="field-num">4</span>
+            ليش بدك تنضم لـ GLOREX؟
+            <span class="field-hint">(3-5 سطور — هاد الأهم بتقييمك)</span>
+          </label>
+          <textarea
+            class="text-input"
+            id="why_join"
+            placeholder="مثلاً: بدي أتعلم بشكل منظّم، أو بدي أحسّن انضباطي، أو بدي شخص يتابع معي..."
+            minlength="20"
+            maxlength="500"
+          ></textarea>
+          <div class="field-error" id="err-why_join">اكتب على الأقل 20 حرف</div>
+        </div>
+
+        <!-- Q5: VIP interest -->
+        <div class="field">
+          <label class="field-label">
+            <span class="field-num">5</span>
+            تهمك باقة VIP؟
+            <span class="field-hint">(متابعة شخصية معي على واتساب — مقاعد محدودة)</span>
+          </label>
+          <div class="option-group" data-field="vip_interest">
+            <div class="option" data-value="yes"><i class="fas fa-check"></i> نعم، مهتم جداً</div>
+            <div class="option" data-value="maybe"><i class="fas fa-question"></i> ربما</div>
+            <div class="option" data-value="no"><i class="fas fa-times"></i> لا</div>
+          </div>
+          <div class="field-error" id="err-vip_interest">اختار خياراً</div>
+        </div>
+
+        <!-- Q6: Full name -->
+        <div class="field">
+          <label class="field-label">
+            <span class="field-num">6</span>
+            اسمك الكامل
+          </label>
+          <input type="text" class="text-input" id="full_name" placeholder="مثلاً: أحمد محمد"/>
+          <div class="field-error" id="err-full_name">اكتب اسمك</div>
+        </div>
+
+        <!-- Q7: Email -->
+        <div class="field">
+          <label class="field-label">
+            <span class="field-num">7</span>
+            إيميلك
+          </label>
+          <input type="email" class="text-input" id="email" placeholder="you@example.com"/>
+          <div class="field-error" id="err-email">إيميل غير صالح</div>
+        </div>
+
+        <!-- Q8: WhatsApp (optional) -->
+        <div class="field">
+          <label class="field-label">
+            <span class="field-num">8</span>
+            رقم الواتساب
+            <span class="field-hint">(اختياري — للتواصل السريع)</span>
+          </label>
+          <input type="tel" class="text-input" id="whatsapp" placeholder="+966 5XX XXX XXX" dir="ltr"/>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn">
+          <i class="fas fa-paper-plane"></i>
+          إرسال طلبي
+        </button>
+      </form>
+    </div>
+
+    <!-- Success view -->
+    <div class="success-card" id="successView">
+      <div class="success-ico"><i class="fas fa-check"></i></div>
+      <h2>تم استلام طلبك! 🎉</h2>
+      <p>أهلاً بك بأول دفعة من <strong style="color:var(--gold-l)">GLOREX</strong>.</p>
+      <p>سنراجع طلبك خلال الأيام القادمة، ونبعتلك إيميل يوم <strong style="color:var(--gold-l)">28 يوليو</strong> لو تم اختيارك.</p>
+      <div class="success-num">
+        <small>رقم تطبيقك</small>
+        <strong id="appNumber">#0</strong>
+      </div>
+      <p style="font-size:.88rem;color:var(--txt3)">تابعنا على <a href="https://instagram.com/glorex" style="color:var(--gold);text-decoration:underline" target="_blank">Instagram</a> للمزيد من التحديثات</p>
+    </div>
+
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-links">
+    <a href="https://instagram.com/glorex" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+    <a href="https://twitter.com/glorex" target="_blank"><i class="fab fa-x-twitter"></i> X</a>
+    <a href="https://t.me/glorex" target="_blank"><i class="fab fa-telegram"></i> Telegram</a>
+  </div>
+  <p>© 2026 GLOREX Trading Lab — التداول الاحترافي بالعربي</p>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { supabase } from './supabase-client.js?v=20260628';
+
+const state = { level:null, pain_point:null, experience:null, vip_interest:null };
+
+// Option groups
+document.querySelectorAll('.option-group').forEach(group => {
+  const field = group.dataset.field;
+  group.querySelectorAll('.option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      group.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      state[field] = opt.dataset.value;
+      document.getElementById('err-' + field).classList.remove('show');
+    });
+  });
+});
+
+// Live applicant count
+async function loadCount(){
+  try {
+    const { count } = await supabase.from('waitlist_applications')
+      .select('*', { count: 'exact', head: true });
+    if (count !== null) {
+      document.getElementById('statApplied').textContent = count.toLocaleString('ar-EG-u-nu-latn');
+    }
+  } catch(e) { /* ignore — RLS may block, default to — */ }
+}
+loadCount();
+
+function showError(fieldId, msg) {
+  const el = document.getElementById('err-' + fieldId);
+  if (msg) el.textContent = msg;
+  el.classList.add('show');
+}
+
+function clearErrors() {
+  document.querySelectorAll('.field-error').forEach(e => e.classList.remove('show'));
+}
+
+function toast(msg, type='ok'){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (type === 'err' ? 'err' : '');
+  setTimeout(() => t.classList.remove('show'), 4000);
+}
+
+document.getElementById('applyForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  clearErrors();
+
+  const why = document.getElementById('why_join').value.trim();
+  const name = document.getElementById('full_name').value.trim();
+  const email = document.getElementById('email').value.trim().toLowerCase();
+  const whatsapp = document.getElementById('whatsapp').value.trim() || null;
+
+  let hasError = false;
+
+  if (!state.level) { showError('level'); hasError = true; }
+  if (!state.pain_point) { showError('pain_point'); hasError = true; }
+  if (!state.experience) { showError('experience'); hasError = true; }
+  if (why.length < 20) { showError('why_join'); hasError = true; }
+  if (!state.vip_interest) { showError('vip_interest'); hasError = true; }
+  if (!name) { showError('full_name'); hasError = true; }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('email'); hasError = true; }
+
+  if (hasError) {
+    toast('فيه حقول ناقصة — راجع النموذج', 'err');
+    document.querySelector('.field-error.show').scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> جاري الإرسال...';
+
+  try {
+    const { data, error } = await supabase.rpc('submit_waitlist_application', {
+      p_level: state.level,
+      p_pain_point: state.pain_point,
+      p_experience: state.experience,
+      p_why_join: why,
+      p_vip_interest: state.vip_interest,
+      p_full_name: name,
+      p_email: email,
+      p_whatsapp: whatsapp
+    });
+
+    if (error) throw error;
+    if (!data?.success) {
+      toast(data?.error || 'حدث خطأ، حاول مرة أخرى', 'err');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال طلبي';
+      return;
+    }
+
+    // Success!
+    document.getElementById('formView').style.display = 'none';
+    document.getElementById('successView').classList.add('show');
+    document.getElementById('appNumber').textContent = '#' + (data.application_number || '?');
+    document.getElementById('successView').scrollIntoView({behavior:'smooth', block:'center'});
+
+  } catch (err) {
+    console.error(err);
+    toast('فشل الإرسال: ' + (err.message || 'خطأ غير معروف'), 'err');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال طلبي';
+  }
+});
+</script>
+
+</body>
+</html>
