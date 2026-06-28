@@ -58,13 +58,15 @@ input,textarea,select{font-family:inherit;color:inherit}
 .hero-meta span{display:inline-flex;align-items:center;gap:.4rem}
 .hero-meta i{color:var(--gold)}
 
-/* Benefits */
-.benefits{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin:4rem 0;max-width:720px;margin-left:auto;margin-right:auto}
-.benefit{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.4rem;display:flex;gap:1rem;align-items:flex-start;transition:all var(--base) var(--ease)}
-.benefit:hover{border-color:rgba(212,160,23,.3);transform:translateY(-2px)}
-.benefit-ico{width:42px;height:42px;border-radius:11px;background:linear-gradient(135deg,rgba(212,160,23,.18),rgba(160,120,16,.08));color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
-.benefit-text strong{display:block;font-weight:600;margin-bottom:.3rem;font-size:.95rem}
-.benefit-text p{color:var(--txt3);font-size:.82rem;line-height:1.5}
+/* Video placeholder */
+.video-section{margin:3.5rem 0;max-width:720px;margin-left:auto;margin-right:auto}
+.video-placeholder{background:linear-gradient(160deg,rgba(212,160,23,.06),rgba(160,120,16,.02));border:1.5px dashed rgba(212,160,23,.3);border-radius:18px;padding:3rem 2rem;display:flex;flex-direction:column;align-items:center;text-align:center;gap:1.2rem;transition:all var(--base) var(--ease);position:relative;overflow:hidden}
+.video-placeholder::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at center,rgba(212,160,23,.08),transparent 60%);pointer-events:none}
+.video-placeholder:hover{border-color:rgba(212,160,23,.5)}
+.video-ico{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));color:#000;display:flex;align-items:center;justify-content:center;font-size:2rem;box-shadow:0 10px 30px -8px rgba(212,160,23,.4);position:relative;z-index:1}
+.video-text{position:relative;z-index:1}
+.video-text strong{display:block;font-family:'Space Grotesk';font-size:1.3rem;color:var(--gold-l);margin-bottom:.5rem}
+.video-text p{color:var(--txt3);font-size:.95rem;line-height:1.6;max-width:480px}
 
 /* Stats banner */
 .stats-banner{background:linear-gradient(135deg,rgba(212,160,23,.08),rgba(160,120,16,.04));border:1px solid rgba(212,160,23,.25);border-radius:18px;padding:2rem;margin:3rem 0;display:flex;align-items:center;justify-content:space-around;flex-wrap:wrap;gap:2rem}
@@ -179,8 +181,8 @@ textarea.text-input{min-height:120px;resize:vertical;line-height:1.6}
       قدّم طلبك الآن
     </a>
     <div class="hero-meta">
-      <span><i class="fas fa-calendar"></i> ينتهي التقديم 25 يوليو</span>
-      <span><i class="fas fa-rocket"></i> الإطلاق: 28 يوليو 2026</span>
+      <span><i class="fas fa-calendar"></i> ينتهي التقديم 25/07/2026</span>
+      <span><i class="fas fa-rocket"></i> الإطلاق: 28/07/2026</span>
     </div>
   </section>
 
@@ -200,34 +202,13 @@ textarea.text-input{min-height:120px;resize:vertical;line-height:1.6}
     </div>
   </section>
 
-  <!-- Benefits -->
-  <section class="benefits">
-    <div class="benefit">
-      <div class="benefit-ico"><i class="fas fa-tag"></i></div>
-      <div class="benefit-text">
-        <strong>خصم 50% لـ 3 شهور</strong>
-        <p>سعر خاص للمؤسسين الأوائل لا يتكرر</p>
-      </div>
-    </div>
-    <div class="benefit">
-      <div class="benefit-ico"><i class="fas fa-video"></i></div>
-      <div class="benefit-text">
-        <strong>جلسة شخصية مجانية</strong>
-        <p>45 دقيقة معي شخصياً لمراجعة استراتيجيتك</p>
-      </div>
-    </div>
-    <div class="benefit">
-      <div class="benefit-ico"><i class="fas fa-rocket"></i></div>
-      <div class="benefit-text">
-        <strong>وصول مبكر للمنصة</strong>
-        <p>تجرّب الموقع قبل الإطلاق الرسمي بأسبوع</p>
-      </div>
-    </div>
-    <div class="benefit">
-      <div class="benefit-ico"><i class="fas fa-crown"></i></div>
-      <div class="benefit-text">
-        <strong>شهادة "عضو مؤسس"</strong>
-        <p>مكانة خاصة دائمة بحساب GLOREX</p>
+  <!-- Video placeholder (سيتم استبداله بالفيديو لاحقاً) -->
+  <section class="video-section">
+    <div class="video-placeholder">
+      <div class="video-ico"><i class="fas fa-play"></i></div>
+      <div class="video-text">
+        <strong>🎬 فيديو تعريفي قريباً</strong>
+        <p>شاهد كل التفاصيل عن GLOREX وليش رح يغيّر طريقة تداولك</p>
       </div>
     </div>
   </section>
@@ -331,7 +312,6 @@ textarea.text-input{min-height:120px;resize:vertical;line-height:1.6}
               <div class="option" data-value="500-2k">500 - 2000 دولار</div>
               <div class="option" data-value="2k-10k">2000 - 10000 دولار</div>
               <div class="option" data-value="gt10k">أكتر من 10000 دولار</div>
-              <div class="option" data-value="private">أفضّل عدم الإفصاح</div>
             </div>
             <div class="field-error" id="err-capital_range">اختار خياراً</div>
           </div>
@@ -427,7 +407,7 @@ textarea.text-input{min-height:120px;resize:vertical;line-height:1.6}
         <small>رقم تطبيقك</small>
         <strong id="appNumber">#0</strong>
       </div>
-      <p style="font-size:.88rem;color:var(--txt3)">تابعنا على <a href="https://instagram.com/glorex" style="color:var(--gold);text-decoration:underline" target="_blank">Instagram</a> للمزيد من التحديثات</p>
+      <p style="font-size:.88rem;color:var(--txt3)">رح يوصلك إيميل تأكيدي خلال دقائق</p>
     </div>
 
   </section>
@@ -435,11 +415,6 @@ textarea.text-input{min-height:120px;resize:vertical;line-height:1.6}
 </main>
 
 <footer class="footer">
-  <div class="footer-links">
-    <a href="https://instagram.com/glorex" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
-    <a href="https://twitter.com/glorex" target="_blank"><i class="fab fa-x-twitter"></i> X</a>
-    <a href="https://t.me/glorex" target="_blank"><i class="fab fa-telegram"></i> Telegram</a>
-  </div>
   <p>© 2026 GLOREX Trading Lab — التداول الاحترافي بالعربي</p>
 </footer>
 

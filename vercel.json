@@ -1,10 +1,26 @@
 {
   "rewrites": [
-    { "source": "/", "destination": "/waitlist.html" }
+    { "source": "/", "destination": "/waitlist.html" },
+    { "source": "/admin-glorex-2026", "destination": "/signin.html" }
   ],
   "redirects": [
     { "source": "/glorex_landing.html", "destination": "/waitlist.html", "permanent": false },
-    { "source": "/glorex_landing", "destination": "/waitlist.html", "permanent": false }
+    { "source": "/glorex_landing", "destination": "/waitlist.html", "permanent": false },
+    { "source": "/signin.html", "destination": "/waitlist.html", "permanent": false },
+    { "source": "/signup.html", "destination": "/waitlist.html", "permanent": false },
+    { "source": "/dashboard.html", "destination": "/waitlist.html", "permanent": false },
+    { "source": "/news.html", "destination": "/waitlist.html", "permanent": false },
+    { "source": "/journal.html", "destination": "/waitlist.html", "permanent": false },
+    { "source": "/checklist.html", "destination": "/waitlist.html", "permanent": false },
+    { "source": "/calendar.html", "destination": "/waitlist.html", "permanent": false },
+    { "source": "/lessons.html", "destination": "/waitlist.html", "permanent": false },
+    { "source": "/chat.html", "destination": "/waitlist.html", "permanent": false },
+    { "source": "/referral.html", "destination": "/waitlist.html", "permanent": false },
+    { "source": "/bookings.html", "destination": "/waitlist.html", "permanent": false },
+    { "source": "/calculator.html", "destination": "/waitlist.html", "permanent": false },
+    { "source": "/profile.html", "destination": "/waitlist.html", "permanent": false },
+    { "source": "/checkout.html", "destination": "/waitlist.html", "permanent": false },
+    { "source": "/welcome.html", "destination": "/waitlist.html", "permanent": false }
   ],
   "headers": [
     {
