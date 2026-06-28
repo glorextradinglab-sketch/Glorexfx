@@ -80,8 +80,24 @@ input,textarea,select{font-family:inherit;color:inherit}
 
 .field{margin-bottom:1.8rem}
 .field-num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:rgba(212,160,23,.15);color:var(--gold);font-size:.85rem;font-weight:700;margin-left:.6rem;font-family:'Space Grotesk'}
-.field-label{display:flex;align-items:center;gap:.4rem;font-weight:600;font-size:1rem;margin-bottom:.9rem}
+.field-label{display:flex;align-items:center;gap:.4rem;font-weight:600;font-size:1.1rem;margin-bottom:1.2rem;line-height:1.5}
 .field-hint{color:var(--txt4);font-size:.8rem;font-weight:400;margin-right:auto}
+
+/* Multi-step form */
+.progress-wrap{margin-bottom:2rem}
+.progress-info{display:flex;justify-content:space-between;color:var(--txt3);font-size:.85rem;margin-bottom:.5rem}
+.progress-info b{color:var(--gold-l);font-family:'Space Grotesk'}
+.progress-bar{height:6px;background:var(--surface);border-radius:999px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold-d),var(--gold-l));border-radius:999px;transition:width .4s var(--ease);width:12.5%}
+.step{display:none;animation:fadeIn .35s var(--ease)}
+.step.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.step-actions{display:flex;gap:.8rem;margin-top:2rem}
+.btn-next{flex:1;background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#000;padding:1rem;border-radius:12px;font-weight:700;font-size:1rem;transition:all .2s var(--ease);display:flex;align-items:center;justify-content:center;gap:.5rem}
+.btn-next:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 28px -8px rgba(212,160,23,.5)}
+.btn-next:disabled{opacity:.5;cursor:not-allowed}
+.btn-back{padding:1rem 1.4rem;background:var(--surface);border:1px solid var(--border);color:var(--txt2);border-radius:12px;font-weight:500;font-size:.9rem;transition:all .2s}
+.btn-back:hover{background:rgba(255,255,255,.06);color:var(--txt)}
 
 .option-group{display:grid;gap:.6rem;grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
 .option{background:var(--surface);border:1.5px solid var(--border);border-radius:11px;padding:.95rem 1rem;text-align:center;font-size:.92rem;font-weight:500;transition:all .2s var(--ease);cursor:pointer;color:var(--txt2)}
@@ -156,7 +172,7 @@ textarea.text-input{min-height:120px;resize:vertical;line-height:1.6}
     <h1>أول 100 متداول عربي<br/><em>سيغيّرون قواعد التداول</em></h1>
     <p class="hero-sub">
       نحن نختار <strong style="color:var(--txt)">يدوياً</strong> — مش الكل يقبل.
-      منصة تداول عربية كاملة بـ AI، تحليل أخبار يومي، Trading Journal ذكي، وجلسات 1-on-1 معي شخصياً.
+      منصة تداول عربية كاملة بالذكاء الاصطناعي، تحليل أخبار يومي، سجل تداول ذكي، وجلسات شخصية معي.
     </p>
     <a href="#apply" class="hero-cta">
       <i class="fas fa-paper-plane"></i>
@@ -196,7 +212,7 @@ textarea.text-input{min-height:120px;resize:vertical;line-height:1.6}
     <div class="benefit">
       <div class="benefit-ico"><i class="fas fa-video"></i></div>
       <div class="benefit-text">
-        <strong>جلسة 1-on-1 مجانية</strong>
+        <strong>جلسة شخصية مجانية</strong>
         <p>45 دقيقة معي شخصياً لمراجعة استراتيجيتك</p>
       </div>
     </div>
@@ -210,7 +226,7 @@ textarea.text-input{min-height:120px;resize:vertical;line-height:1.6}
     <div class="benefit">
       <div class="benefit-ico"><i class="fas fa-crown"></i></div>
       <div class="benefit-text">
-        <strong>شهادة "Founding Member"</strong>
+        <strong>شهادة "عضو مؤسس"</strong>
         <p>مكانة خاصة دائمة بحساب GLOREX</p>
       </div>
     </div>
@@ -226,118 +242,178 @@ textarea.text-input{min-height:120px;resize:vertical;line-height:1.6}
         <p>5 أسئلة سريعة + معلوماتك. لا تستغرق أكتر من دقيقتين.</p>
       </div>
 
+      <!-- Progress bar -->
+      <div class="progress-wrap">
+        <div class="progress-info">
+          <span>سؤال <b id="currentStep">1</b> من <b>8</b></span>
+          <span id="progressPct">12%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
       <form id="applyForm" novalidate>
 
-        <!-- Q1: Level -->
-        <div class="field">
-          <label class="field-label">
-            <span class="field-num">1</span>
-            شو مستواك بالتداول؟
-          </label>
-          <div class="option-group" data-field="level">
-            <div class="option" data-value="beginner"><i class="fas fa-seedling"></i> مبتدئ</div>
-            <div class="option" data-value="intermediate"><i class="fas fa-chart-line"></i> متوسط</div>
-            <div class="option" data-value="advanced"><i class="fas fa-trophy"></i> متقدم</div>
+        <!-- Step 1: Level -->
+        <div class="step active" data-step="1">
+          <div class="field">
+            <label class="field-label">
+              <span class="field-num">1</span>
+              شو مستواك بالتداول؟
+            </label>
+            <div class="option-group" data-field="level">
+              <div class="option" data-value="beginner"><i class="fas fa-seedling"></i> مبتدئ</div>
+              <div class="option" data-value="intermediate"><i class="fas fa-chart-line"></i> متوسط</div>
+              <div class="option" data-value="advanced"><i class="fas fa-trophy"></i> متقدم</div>
+            </div>
+            <div class="field-error" id="err-level">اختار مستوى</div>
           </div>
-          <div class="field-error" id="err-level">اختار مستوى</div>
-        </div>
-
-        <!-- Q2: Pain point -->
-        <div class="field">
-          <label class="field-label">
-            <span class="field-num">2</span>
-            شو أكتر شي بتعاني منه بالتداول؟
-          </label>
-          <div class="option-group" data-field="pain_point">
-            <div class="option" data-value="risk"><i class="fas fa-shield-alt"></i> إدارة المخاطر</div>
-            <div class="option" data-value="analysis"><i class="fas fa-chart-area"></i> التحليل الفني</div>
-            <div class="option" data-value="psychology"><i class="fas fa-brain"></i> الانضباط النفسي</div>
-            <div class="option" data-value="discipline"><i class="fas fa-bolt"></i> الالتزام بالخطة</div>
+          <div class="step-actions">
+            <button type="button" class="btn-next" data-next>
+              التالي <i class="fas fa-arrow-left"></i>
+            </button>
           </div>
-          <div class="field-error" id="err-pain_point">اختار خياراً</div>
         </div>
 
-        <!-- Q3: Experience -->
-        <div class="field">
-          <label class="field-label">
-            <span class="field-num">3</span>
-            كم تداولت من سنة؟
-          </label>
-          <div class="option-group" data-field="experience">
-            <div class="option" data-value="none">لم أبدأ بعد</div>
-            <div class="option" data-value="lt1">أقل من سنة</div>
-            <div class="option" data-value="1-3">1-3 سنوات</div>
-            <div class="option" data-value="gt3">أكتر من 3 سنوات</div>
+        <!-- Step 2: Pain point -->
+        <div class="step" data-step="2">
+          <div class="field">
+            <label class="field-label">
+              <span class="field-num">2</span>
+              شو أكتر شي بتعاني منه بالتداول؟
+            </label>
+            <div class="option-group" data-field="pain_point">
+              <div class="option" data-value="risk"><i class="fas fa-shield-alt"></i> إدارة المخاطر</div>
+              <div class="option" data-value="analysis"><i class="fas fa-chart-area"></i> التحليل الفني</div>
+              <div class="option" data-value="psychology"><i class="fas fa-brain"></i> الانضباط النفسي</div>
+              <div class="option" data-value="discipline"><i class="fas fa-bolt"></i> الالتزام بالخطة</div>
+            </div>
+            <div class="field-error" id="err-pain_point">اختار خياراً</div>
           </div>
-          <div class="field-error" id="err-experience">اختار خياراً</div>
-        </div>
-
-        <!-- Q4: Why join -->
-        <div class="field">
-          <label class="field-label">
-            <span class="field-num">4</span>
-            ليش بدك تنضم لـ GLOREX؟
-            <span class="field-hint">(3-5 سطور — هاد الأهم بتقييمك)</span>
-          </label>
-          <textarea
-            class="text-input"
-            id="why_join"
-            placeholder="مثلاً: بدي أتعلم بشكل منظّم، أو بدي أحسّن انضباطي، أو بدي شخص يتابع معي..."
-            minlength="20"
-            maxlength="500"
-          ></textarea>
-          <div class="field-error" id="err-why_join">اكتب على الأقل 20 حرف</div>
-        </div>
-
-        <!-- Q5: VIP interest -->
-        <div class="field">
-          <label class="field-label">
-            <span class="field-num">5</span>
-            تهمك باقة VIP؟
-            <span class="field-hint">(متابعة شخصية معي على واتساب — مقاعد محدودة)</span>
-          </label>
-          <div class="option-group" data-field="vip_interest">
-            <div class="option" data-value="yes"><i class="fas fa-check"></i> نعم، مهتم جداً</div>
-            <div class="option" data-value="maybe"><i class="fas fa-question"></i> ربما</div>
-            <div class="option" data-value="no"><i class="fas fa-times"></i> لا</div>
+          <div class="step-actions">
+            <button type="button" class="btn-back" data-back>السابق</button>
+            <button type="button" class="btn-next" data-next>التالي <i class="fas fa-arrow-left"></i></button>
           </div>
-          <div class="field-error" id="err-vip_interest">اختار خياراً</div>
         </div>
 
-        <!-- Q6: Full name -->
-        <div class="field">
-          <label class="field-label">
-            <span class="field-num">6</span>
-            اسمك الكامل
-          </label>
-          <input type="text" class="text-input" id="full_name" placeholder="مثلاً: أحمد محمد"/>
-          <div class="field-error" id="err-full_name">اكتب اسمك</div>
+        <!-- Step 3: Experience -->
+        <div class="step" data-step="3">
+          <div class="field">
+            <label class="field-label">
+              <span class="field-num">3</span>
+              كم تداولت من سنة؟
+            </label>
+            <div class="option-group" data-field="experience">
+              <div class="option" data-value="none">لم أبدأ بعد</div>
+              <div class="option" data-value="lt1">أقل من سنة</div>
+              <div class="option" data-value="1-3">1-3 سنوات</div>
+              <div class="option" data-value="gt3">أكتر من 3 سنوات</div>
+            </div>
+            <div class="field-error" id="err-experience">اختار خياراً</div>
+          </div>
+          <div class="step-actions">
+            <button type="button" class="btn-back" data-back>السابق</button>
+            <button type="button" class="btn-next" data-next>التالي <i class="fas fa-arrow-left"></i></button>
+          </div>
         </div>
 
-        <!-- Q7: Email -->
-        <div class="field">
-          <label class="field-label">
-            <span class="field-num">7</span>
-            إيميلك
-          </label>
-          <input type="email" class="text-input" id="email" placeholder="you@example.com"/>
-          <div class="field-error" id="err-email">إيميل غير صالح</div>
+        <!-- Step 4: Capital -->
+        <div class="step" data-step="4">
+          <div class="field">
+            <label class="field-label">
+              <span class="field-num">4</span>
+              كم رأس مالك المتاح للتداول؟
+              <span class="field-hint">(سرّي تماماً، يساعدنا نختار الباقة المناسبة)</span>
+            </label>
+            <div class="option-group" data-field="capital_range">
+              <div class="option" data-value="lt500">أقل من 500 دولار</div>
+              <div class="option" data-value="500-2k">500 - 2000 دولار</div>
+              <div class="option" data-value="2k-10k">2000 - 10000 دولار</div>
+              <div class="option" data-value="gt10k">أكتر من 10000 دولار</div>
+              <div class="option" data-value="private">أفضّل عدم الإفصاح</div>
+            </div>
+            <div class="field-error" id="err-capital_range">اختار خياراً</div>
+          </div>
+          <div class="step-actions">
+            <button type="button" class="btn-back" data-back>السابق</button>
+            <button type="button" class="btn-next" data-next>التالي <i class="fas fa-arrow-left"></i></button>
+          </div>
         </div>
 
-        <!-- Q8: WhatsApp (optional) -->
-        <div class="field">
-          <label class="field-label">
-            <span class="field-num">8</span>
-            رقم الواتساب
-            <span class="field-hint">(اختياري — للتواصل السريع)</span>
-          </label>
-          <input type="tel" class="text-input" id="whatsapp" placeholder="+966 5XX XXX XXX" dir="ltr"/>
+        <!-- Step 5: Why join -->
+        <div class="step" data-step="5">
+          <div class="field">
+            <label class="field-label">
+              <span class="field-num">5</span>
+              ليش بدك تنضم لـ GLOREX؟
+              <span class="field-hint">(3-5 سطور — هاد الأهم بتقييمك)</span>
+            </label>
+            <textarea
+              class="text-input"
+              id="why_join"
+              placeholder="مثلاً: بدي أتعلم بشكل منظّم، أو بدي أحسّن انضباطي، أو بدي شخص يتابع معي..."
+              minlength="20"
+              maxlength="500"
+            ></textarea>
+            <div class="field-error" id="err-why_join">اكتب على الأقل 20 حرف</div>
+          </div>
+          <div class="step-actions">
+            <button type="button" class="btn-back" data-back>السابق</button>
+            <button type="button" class="btn-next" data-next>التالي <i class="fas fa-arrow-left"></i></button>
+          </div>
         </div>
 
-        <button type="submit" class="submit-btn" id="submitBtn">
-          <i class="fas fa-paper-plane"></i>
-          إرسال طلبي
-        </button>
+        <!-- Step 6: Full name -->
+        <div class="step" data-step="6">
+          <div class="field">
+            <label class="field-label">
+              <span class="field-num">6</span>
+              اسمك الكامل
+            </label>
+            <input type="text" class="text-input" id="full_name" placeholder="مثلاً: أحمد محمد"/>
+            <div class="field-error" id="err-full_name">اكتب اسمك</div>
+          </div>
+          <div class="step-actions">
+            <button type="button" class="btn-back" data-back>السابق</button>
+            <button type="button" class="btn-next" data-next>التالي <i class="fas fa-arrow-left"></i></button>
+          </div>
+        </div>
+
+        <!-- Step 7: Email -->
+        <div class="step" data-step="7">
+          <div class="field">
+            <label class="field-label">
+              <span class="field-num">7</span>
+              إيميلك
+            </label>
+            <input type="email" class="text-input" id="email" placeholder="you@example.com" dir="ltr"/>
+            <div class="field-error" id="err-email">إيميل غير صالح</div>
+          </div>
+          <div class="step-actions">
+            <button type="button" class="btn-back" data-back>السابق</button>
+            <button type="button" class="btn-next" data-next>التالي <i class="fas fa-arrow-left"></i></button>
+          </div>
+        </div>
+
+        <!-- Step 8: WhatsApp + Submit -->
+        <div class="step" data-step="8">
+          <div class="field">
+            <label class="field-label">
+              <span class="field-num">8</span>
+              رقم الواتساب
+              <span class="field-hint">(اختياري — للتواصل السريع)</span>
+            </label>
+            <input type="tel" class="text-input" id="whatsapp" placeholder="+966 5XX XXX XXX" dir="ltr"/>
+          </div>
+          <div class="step-actions">
+            <button type="button" class="btn-back" data-back>السابق</button>
+            <button type="submit" class="btn-next" id="submitBtn">
+              <i class="fas fa-paper-plane"></i> إرسال طلبي
+            </button>
+          </div>
+        </div>
+
       </form>
     </div>
 
@@ -372,7 +448,9 @@ textarea.text-input{min-height:120px;resize:vertical;line-height:1.6}
 <script type="module">
 import { supabase } from './supabase-client.js?v=20260628';
 
-const state = { level:null, pain_point:null, experience:null, vip_interest:null };
+const state = { level:null, pain_point:null, experience:null, capital_range:null };
+const TOTAL_STEPS = 8;
+let currentStep = 1;
 
 // Option groups
 document.querySelectorAll('.option-group').forEach(group => {
@@ -385,6 +463,55 @@ document.querySelectorAll('.option-group').forEach(group => {
       document.getElementById('err-' + field).classList.remove('show');
     });
   });
+});
+
+// Step navigation
+function goToStep(n) {
+  if (n < 1 || n > TOTAL_STEPS) return;
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  const next = document.querySelector(`.step[data-step="${n}"]`);
+  if (next) next.classList.add('active');
+  currentStep = n;
+  document.getElementById('currentStep').textContent = n;
+  const pct = Math.round((n / TOTAL_STEPS) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+  document.getElementById('apply').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function validateStep(n) {
+  switch(n){
+    case 1: if(!state.level){ showError('level'); return false; } break;
+    case 2: if(!state.pain_point){ showError('pain_point'); return false; } break;
+    case 3: if(!state.experience){ showError('experience'); return false; } break;
+    case 4: if(!state.capital_range){ showError('capital_range'); return false; } break;
+    case 5: {
+      const why = document.getElementById('why_join').value.trim();
+      if(why.length < 20){ showError('why_join'); return false; }
+      break;
+    }
+    case 6: {
+      const name = document.getElementById('full_name').value.trim();
+      if(!name){ showError('full_name'); return false; }
+      break;
+    }
+    case 7: {
+      const email = document.getElementById('email').value.trim();
+      if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showError('email'); return false; }
+      break;
+    }
+  }
+  return true;
+}
+
+document.querySelectorAll('[data-next]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (validateStep(currentStep)) goToStep(currentStep + 1);
+  });
+});
+
+document.querySelectorAll('[data-back]').forEach(btn => {
+  btn.addEventListener('click', () => goToStep(currentStep - 1));
 });
 
 // Live applicant count
@@ -425,19 +552,10 @@ document.getElementById('applyForm').addEventListener('submit', async (e) => {
   const email = document.getElementById('email').value.trim().toLowerCase();
   const whatsapp = document.getElementById('whatsapp').value.trim() || null;
 
-  let hasError = false;
-
-  if (!state.level) { showError('level'); hasError = true; }
-  if (!state.pain_point) { showError('pain_point'); hasError = true; }
-  if (!state.experience) { showError('experience'); hasError = true; }
-  if (why.length < 20) { showError('why_join'); hasError = true; }
-  if (!state.vip_interest) { showError('vip_interest'); hasError = true; }
-  if (!name) { showError('full_name'); hasError = true; }
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('email'); hasError = true; }
-
-  if (hasError) {
-    toast('فيه حقول ناقصة — راجع النموذج', 'err');
-    document.querySelector('.field-error.show').scrollIntoView({behavior:'smooth', block:'center'});
+  // Final guard — all steps should have been validated
+  if (!state.level || !state.pain_point || !state.experience || !state.capital_range ||
+      why.length < 20 || !name || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    toast('فيه حقول ناقصة — رجع للوراء وكمّل', 'err');
     return;
   }
 
@@ -451,7 +569,7 @@ document.getElementById('applyForm').addEventListener('submit', async (e) => {
       p_pain_point: state.pain_point,
       p_experience: state.experience,
       p_why_join: why,
-      p_vip_interest: state.vip_interest,
+      p_capital_range: state.capital_range,
       p_full_name: name,
       p_email: email,
       p_whatsapp: whatsapp

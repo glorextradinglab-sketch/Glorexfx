@@ -2,6 +2,10 @@
   "rewrites": [
     { "source": "/", "destination": "/waitlist.html" }
   ],
+  "redirects": [
+    { "source": "/glorex_landing.html", "destination": "/waitlist.html", "permanent": false },
+    { "source": "/glorex_landing", "destination": "/waitlist.html", "permanent": false }
+  ],
   "headers": [
     {
       "source": "/(.*)",
