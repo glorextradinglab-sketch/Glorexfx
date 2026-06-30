@@ -44,6 +44,9 @@ main{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:2rem 1.5r
 
 /* Hero */
 .hero{text-align:center;padding:3rem 1rem 2.5rem;animation:fadeUp .8s var(--ease)}
+.hero-bull{width:140px;height:auto;margin:0 auto 1.5rem;display:block;filter:drop-shadow(0 8px 30px rgba(212,160,23,.4));animation:floatBull 4s ease-in-out infinite}
+@keyframes floatBull{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@media (max-width:680px){.hero-bull{width:110px}}
 .hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.4rem 1rem;background:linear-gradient(135deg,rgba(212,160,23,.15),rgba(212,160,23,.05));border:1px solid rgba(212,160,23,.3);border-radius:999px;color:var(--gold);font-size:.8rem;font-weight:600;margin-bottom:1.4rem}
 .hero-confetti{font-size:3.5rem;margin-bottom:1rem;display:inline-block;animation:bounce 2s ease-in-out infinite}
 @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
@@ -138,9 +141,9 @@ main{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:2rem 1.5r
 
   <!-- HERO -->
   <section class="hero">
+    <img src="glorex_bull_gold.png" alt="GLOREX Bull" class="hero-bull"/>
     <div class="hero-badge"><i class="fas fa-sparkles"></i> حساب جديد</div>
-    <div class="hero-confetti">🎉</div>
-    <h1 class="hero-title">أهلاً بك في GLOREX، <span id="welcomeName">صديقي</span>!</h1>
+    <h1 class="hero-title">أهلاً بك في GLOREXFX.COM، <span id="welcomeName">صديقي</span>!</h1>
     <p class="hero-subtitle" id="welcomeSub">يسعدنا انضمامك إلينا. خليني أعرّفك على المنصة بسرعة عشان تبدأ تداولك بثقة.</p>
     <div class="tier-badge tier-free" id="tierBadge"><i class="fas fa-user"></i> <span id="tierLabel">Free Tier</span></div>
   </section>

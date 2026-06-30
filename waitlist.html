@@ -46,6 +46,9 @@ input,textarea,select{font-family:inherit;color:inherit}
 
 /* Hero */
 .hero{text-align:center;padding:2.5rem 0 3.5rem;position:relative}
+.hero-bull{width:160px;height:auto;margin:0 auto 1.5rem;display:block;filter:drop-shadow(0 8px 30px rgba(212,160,23,.4));animation:floatBull 4s ease-in-out infinite}
+@keyframes floatBull{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@media (max-width:680px){.hero-bull{width:120px}}
 .hero-eyebrow{display:inline-flex;align-items:center;gap:.5rem;background:rgba(212,160,23,.1);border:1px solid rgba(212,160,23,.3);border-radius:999px;padding:.55rem 1.2rem;color:var(--gold);font-size:.85rem;font-weight:600;margin-bottom:1.5rem}
 .hero-eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--gold-l);animation:pulse 1.5s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
@@ -167,6 +170,7 @@ textarea.text-input{min-height:120px;resize:vertical;line-height:1.6}
 
   <!-- Hero -->
   <section class="hero">
+    <img src="glorex_bull_gold.png" alt="GLOREX Bull" class="hero-bull"/>
     <div class="hero-eyebrow">
       <span class="dot"></span>
       حصري — قائمة الانتظار الآن مفتوحة
