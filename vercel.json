@@ -1,7 +1,7 @@
 {
   "rewrites": [
     { "source": "/", "destination": "/waitlist.html" },
-    { "source": "/admin-glorex-2026", "destination": "/signin.html?next=/admin.html" }
+    { "source": "/admin-glorex-2026", "destination": "/signin.html" }
   ],
   "redirects": [
     { "source": "/glorex_landing.html", "destination": "/waitlist.html", "permanent": false },

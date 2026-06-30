@@ -380,13 +380,16 @@ body.light .auth-form-wrap{background:#fafafa}
 <script type="module">
 import { signIn, signInWithGoogle, resetPassword, translateError, getSession } from './supabase-client.js';
 
-/* لو مسجل دخول، روح للوجهة (next param) أو Dashboard */
+/* تحديد الوجهة: لو الرابط /admin-glorex-2026 → admin، غير هيك dashboard */
+function getNextUrl(){
+  if(location.pathname.startsWith('/admin-glorex-2026')) return '/admin.html';
+  return new URLSearchParams(location.search).get('next') || 'dashboard.html';
+}
+
+/* لو مسجل دخول، روح للوجهة المناسبة */
 (async()=>{
   const session = await getSession();
-  if(session){
-    const nextUrl = new URLSearchParams(location.search).get('next') || 'dashboard.html';
-    location.replace(nextUrl);
-  }
+  if(session) location.replace(getNextUrl());
 })();
 
 /* Password show/hide */
@@ -464,9 +467,7 @@ document.getElementById('signinForm').addEventListener('submit', async e=>{
 
   btn.innerHTML = '<i class="fas fa-check"></i> تم تسجيل الدخول';
   btn.style.background = 'linear-gradient(135deg,#22c55e,#16a34a)';
-  const params = new URLSearchParams(location.search);
-  const nextUrl = params.get('next') || 'dashboard.html';
-  setTimeout(()=> location.href = nextUrl, 800);
+  setTimeout(()=> location.href = getNextUrl(), 800);
 });
 </script>
 </body>
