@@ -196,9 +196,9 @@ button{cursor:pointer;font-family:inherit;border:none;background:none;color:inhe
   <!-- Duration Tabs -->
   <div class="duration-tabs-wrap">
     <div class="duration-tabs" role="tablist">
-      <button class="duration-tab active" data-duration="1">شهري</button>
-      <button class="duration-tab" data-duration="3">3 شهور <span class="save-pill">وفّر 15%</span></button>
-      <button class="duration-tab" data-duration="12">سنوي <span class="save-pill">وفّر 25%</span></button>
+      <button class="duration-tab active" data-duration="3">3 شهور</button>
+      <button class="duration-tab" data-duration="6">6 شهور <span class="save-pill">وفّر 10%</span></button>
+      <button class="duration-tab" data-duration="12">سنوي <span class="save-pill">وفّر 20%</span></button>
     </div>
   </div>
 
@@ -228,50 +228,45 @@ button{cursor:pointer;font-family:inherit;border:none;background:none;color:inhe
     <!-- BASIC -->
     <div class="plan featured" id="basicCard">
       <div class="plan-badge">الأكثر شيوعاً</div>
-      <div class="discount-tag">خصم 30% — لفترة محدودة</div>
       <div class="plan-name">Basic</div>
       <div class="plan-price">
-        <span class="old-price" id="basicOldPrice">$39</span>
-        <span class="price-amt" id="basicPrice">$27</span>
-        <span class="price-period" id="basicPeriod">/شهر</span>
+        <span class="price-amt" id="basicPrice">$150</span>
+        <span class="price-period" id="basicPeriod">/3 شهور</span>
       </div>
-      <div class="effective-monthly" id="basicMonthly">~$23/شهر فعلياً</div>
-      <div class="save-amount" id="basicSave">💰 وفّر $12 مقارنة بالشهري</div>
+      <div class="effective-monthly" id="basicMonthly">~$50/شهر فعلياً</div>
+      <div class="save-amount" id="basicSave"></div>
       <p class="plan-desc">كل اللي تحتاجه للتداول بنظام واضح</p>
       <ul class="plan-features">
-        <li><i class="fas fa-check"></i> كل ميزات Free</li>
-        <li><i class="fas fa-check"></i> قائمة الفحص + سجل صفقات غير محدود</li>
-        <li><i class="fas fa-check"></i> تنبيهات الأخبار القوية (FOMC، NFP، CPI)</li>
-        <li><i class="fas fa-check"></i> 50 تقرير AI شهرياً</li>
-        <li><i class="fas fa-check"></i> الدروس الاحترافية كاملة</li>
-        <li><i class="fas fa-check"></i> فيديوهات صفقاتي اليومية</li>
-        <li class="off"><i class="fas fa-times"></i> جلسة 1:1 شهرياً معي</li>
+        <li><i class="fas fa-check"></i> Trading Checklist (قائمة الفحص)</li>
+        <li><i class="fas fa-check"></i> Trading Journal (سجل صفقات غير محدود)</li>
+        <li><i class="fas fa-check"></i> AI تحليل أخبار يومي</li>
+        <li><i class="fas fa-check"></i> التقويم الاقتصادي الشهري</li>
+        <li><i class="fas fa-check"></i> Community Chat (مجتمع المتداولين)</li>
+        <li><i class="fas fa-check"></i> <strong style="color:var(--gold)">حاسبة المخاطر</strong></li>
+        <li><i class="fas fa-check"></i> <strong style="color:var(--gold)">دروس استراتيجية GLOREX</strong></li>
       </ul>
-      <button class="plan-btn btn-primary" data-plan="basic" data-amount="27">
+      <button class="plan-btn btn-primary" data-plan="basic" data-amount="150" data-duration="3">
         اشترك الآن <i class="fas fa-arrow-left"></i>
       </button>
     </div>
 
     <!-- PREMIUM -->
     <div class="plan" id="premiumCard">
-      <div class="discount-tag">خصم 30% — لفترة محدودة</div>
       <div class="plan-name">Premium</div>
       <div class="plan-price">
-        <span class="old-price" id="premiumOldPrice">$129</span>
-        <span class="price-amt" id="premiumPrice">$89</span>
-        <span class="price-period" id="premiumPeriod">/شهر</span>
+        <span class="price-amt" id="premiumPrice">$299</span>
+        <span class="price-period" id="premiumPeriod">/3 شهور</span>
       </div>
-      <div class="effective-monthly" id="premiumMonthly">~$76/شهر فعلياً</div>
-      <div class="save-amount" id="premiumSave">💰 وفّر $38 مقارنة بالشهري</div>
-      <p class="plan-desc">للمتداول الجاد اللي بدو كلشي</p>
+      <div class="effective-monthly" id="premiumMonthly">~$100/شهر فعلياً</div>
+      <div class="save-amount" id="premiumSave"></div>
+      <p class="plan-desc">للمتداول الجاد اللي بدو قفزة حقيقية</p>
       <ul class="plan-features">
         <li><i class="fas fa-check"></i> كل ميزات Basic</li>
-        <li><i class="fas fa-check"></i> أخبار AI — 200 طلب شهرياً</li>
-        <li><i class="fas fa-check"></i> <strong style="color:var(--gold)">جلسة 1:1 شهرياً معي للتطوير</strong></li>
-        <li><i class="fas fa-check"></i> تحليل خبير لصفقاتك</li>
-        <li><i class="fas fa-check"></i> أولوية الدعم الفني</li>
+        <li><i class="fas fa-check"></i> AI Trading Assistant غير محدود</li>
+        <li><i class="fas fa-check"></i> <strong style="color:var(--gold)">جلسة 1-on-1 شهرياً معي (نصف ساعة)</strong></li>
+        <li><i class="fas fa-check"></i> مراجعة صفقاتك أسبوعياً</li>
       </ul>
-      <button class="plan-btn btn-primary" data-plan="premium" data-amount="89">
+      <button class="plan-btn btn-primary" data-plan="premium" data-amount="299" data-duration="3">
         اشترك الآن <i class="fas fa-arrow-left"></i>
       </button>
     </div>
@@ -363,11 +358,11 @@ async function loadCurrentSubscription(){
       b.innerHTML = '<i class="fas fa-redo"></i> تجديد الاشتراك';
     });
 
-    // ضيف زر "تجديد" بالـ banner كمان
-    const amount = tier === 'basic' ? 27 : 89;
+    // ضيف زر "تجديد" بالـ banner كمان (3 شهور افتراضي)
+    const amount = tier === 'basic' ? 150 : 299;
     banner.style.cursor = 'pointer';
     banner.addEventListener('click', () => {
-      location.href = `checkout.html?plan=${tier}&amount=${amount}&renew=1`;
+      location.href = `checkout.html?plan=${tier}&amount=${amount}&duration=3&renew=1`;
     });
 
     // الباقات الثانية → عطّل الأزرار وغيّر النص
@@ -403,19 +398,19 @@ loadCurrentSubscription();
 // ── جدول الأسعار حسب المدة ──
 const PRICING = {
   basic: {
-    1:  { price: 27,  original: 39,  monthly: 27, save: 0 },
-    3:  { price: 69,  original: 81,  monthly: 23, save: 12 },
-    12: { price: 239, original: 324, monthly: 20, save: 85 }
+    3:  { price: 150, monthly: 50, save: 0 },
+    6:  { price: 270, monthly: 45, save: 30 },
+    12: { price: 480, monthly: 40, save: 120 }
   },
   premium: {
-    1:  { price: 89,  original: 129,  monthly: 89, save: 0 },
-    3:  { price: 229, original: 267,  monthly: 76, save: 38 },
-    12: { price: 799, original: 1068, monthly: 67, save: 269 }
+    3:  { price: 299, monthly: 100, save: 0 },
+    6:  { price: 540, monthly: 90, save: 58 },
+    12: { price: 960, monthly: 80, save: 236 }
   }
 };
 
-const PERIOD_TEXT = { 1: '/شهر', 3: '/3 شهور', 12: '/سنة' };
-let currentDuration = 1;
+const PERIOD_TEXT = { 3: '/3 شهور', 6: '/6 شهور', 12: '/سنة' };
+let currentDuration = 3;
 
 function updatePricing(duration){
   currentDuration = duration;
@@ -424,23 +419,28 @@ function updatePricing(duration){
   ['basic', 'premium'].forEach(plan => {
     const p = PRICING[plan][d];
     document.getElementById(`${plan}Price`).textContent = `$${p.price}`;
-    document.getElementById(`${plan}OldPrice`).textContent = `$${p.original}`;
     document.getElementById(`${plan}Period`).textContent = PERIOD_TEXT[d];
     document.getElementById(`${plan}Monthly`).textContent = `~$${p.monthly}/شهر فعلياً`;
-    document.getElementById(`${plan}Save`).textContent = `💰 وفّر $${p.save} مقارنة بالشهري`;
-
-    const card = document.getElementById(`${plan}Card`);
-    if(d === 1) card.classList.remove('show-save');
-    else card.classList.add('show-save');
+    const saveEl = document.getElementById(`${plan}Save`);
+    if (p.save > 0) {
+      saveEl.textContent = `💰 وفّر $${p.save} مقارنة بـ 3 شهور`;
+      saveEl.style.display = 'block';
+    } else {
+      saveEl.textContent = '';
+      saveEl.style.display = 'none';
+    }
 
     // حدّث الـ data-amount بالزر
-    const btn = card.querySelector('[data-plan]');
+    const btn = document.getElementById(`${plan}Card`)?.querySelector('[data-plan]');
     if(btn){
       btn.dataset.amount = p.price;
       btn.dataset.duration = d;
     }
   });
 }
+
+// نفّذ مرة بالبداية لتحديث الأسعار للمدة الافتراضية (3 شهور)
+updatePricing(3);
 
 // Tab handlers
 document.querySelectorAll('.duration-tab').forEach(tab => {

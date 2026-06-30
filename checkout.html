@@ -381,6 +381,13 @@ input{font-family:inherit;color:inherit}
           </div>
         </div>
 
+        <div style="background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.25);border-radius:10px;padding:.9rem 1rem;margin-bottom:1rem;display:flex;gap:.7rem;align-items:flex-start">
+          <i class="fas fa-exclamation-triangle" style="color:#ef4444;font-size:1rem;margin-top:.15rem"></i>
+          <div style="font-size:.85rem;color:#fca5a5;line-height:1.6">
+            <strong style="color:#fca5a5">تنبيه:</strong> الاشتراك نهائي — لا يوجد استرجاع للمبلغ بعد تأكيد الدفع. بالضغط على "إرسال للمراجعة" أنت توافق على هذا الشرط.
+          </div>
+        </div>
+
         <button class="submit-btn" id="submitBtn">
           <i class="fas fa-paper-plane"></i> إرسال للمراجعة
         </button>
@@ -400,7 +407,7 @@ input{font-family:inherit;color:inherit}
         </div>
         <div class="sum-row">
           <span>المدة</span>
-          <span>شهر واحد</span>
+          <span id="sumDuration">3 شهور</span>
         </div>
         <div class="sum-row">
           <span>السعر الأصلي</span>
@@ -495,20 +502,22 @@ const amount = parseFloat(params.get('amount'));
 const duration = parseInt(params.get('duration') || '1');
 const isRenew = params.get('renew') === '1';
 
-if(!plan || !amount || !['basic','premium'].includes(plan) || ![1,3,12].includes(duration)){
+if(!plan || !amount || !['basic','premium'].includes(plan) || ![3,6,12].includes(duration)){
   location.href = 'subscribe.html';
 }
 
 const planNames = { basic: 'Basic', premium: 'Premium' };
 const ORIGINAL_PRICES = {
-  basic: { 1: 39, 3: 81, 12: 324 },
-  premium: { 1: 129, 3: 267, 12: 1068 }
+  basic:   { 3: 150, 6: 270, 12: 480 },
+  premium: { 3: 299, 6: 540, 12: 960 }
 };
-const DURATION_TEXT = { 1: 'شهر واحد', 3: '3 شهور', 12: 'سنة كاملة' };
+const DURATION_TEXT = { 3: '3 شهور', 6: '6 شهور', 12: 'سنة كاملة' };
 
 // Fill summary
 document.getElementById('sumPlan').textContent = planNames[plan];
 document.getElementById('sumOriginal').textContent = `$${ORIGINAL_PRICES[plan][duration]}`;
+const sumDurEl = document.getElementById('sumDuration');
+if(sumDurEl) sumDurEl.textContent = DURATION_TEXT[duration];
 
 // السعر الحالي (قابل للتعديل بكود الإحالة)
 let currentAmount = amount;

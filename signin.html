@@ -380,10 +380,13 @@ body.light .auth-form-wrap{background:#fafafa}
 <script type="module">
 import { signIn, signInWithGoogle, resetPassword, translateError, getSession } from './supabase-client.js';
 
-/* لو مسجل دخول، روح للـ Dashboard مباشرة */
+/* لو مسجل دخول، روح للوجهة (next param) أو Dashboard */
 (async()=>{
   const session = await getSession();
-  if(session) location.replace('dashboard.html');
+  if(session){
+    const nextUrl = new URLSearchParams(location.search).get('next') || 'dashboard.html';
+    location.replace(nextUrl);
+  }
 })();
 
 /* Password show/hide */
