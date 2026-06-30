@@ -209,6 +209,29 @@ a{color:inherit;text-decoration:none}
 .action-d{color:var(--txt4);font-size:.78rem}
 
 /* Referral special card */
+.action.action-booking{
+  background:linear-gradient(135deg,rgba(167,139,250,.12),rgba(124,58,237,.06));
+  border-color:rgba(167,139,250,.4);
+  position:relative;overflow:hidden;
+  box-shadow:0 0 24px -6px rgba(167,139,250,.25);
+  transition:all var(--base) var(--ease)
+}
+.action.action-booking:hover{
+  background:linear-gradient(135deg,rgba(167,139,250,.2),rgba(124,58,237,.1));
+  border-color:rgba(167,139,250,.6);
+  transform:translateY(-3px);
+  box-shadow:0 12px 32px rgba(167,139,250,.25)
+}
+.action.action-booking i{color:#a78bfa;font-size:1.3rem;position:relative;z-index:2}
+.action.action-booking .action-t{position:relative;z-index:2;color:#c4b5fd}
+.action.action-booking .action-d{color:rgba(167,139,250,.85);position:relative;z-index:2;font-weight:600}
+.action.action-booking::before{
+  content:'';position:absolute;top:-30px;right:-30px;width:140px;height:140px;
+  background:radial-gradient(circle,rgba(167,139,250,.3),transparent 70%);
+  pointer-events:none;border-radius:50%;animation:pulse-booking 3s ease-in-out infinite
+}
+@keyframes pulse-booking{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.15)}}
+
 .action.action-referral{
   background:linear-gradient(135deg,rgba(34,197,94,.08),rgba(212,160,23,.04));
   border-color:rgba(34,197,94,.28);
@@ -484,10 +507,10 @@ a{color:inherit;text-decoration:none}
         <div class="action-t">المحادثة الجماعية</div>
         <div class="action-d">تواصل مع المتداولين</div>
       </a>
-      <a class="action" href="bookings.html" data-tier="premium" data-feature="حجز جلسة 1:1">
+      <a class="action action-booking" href="bookings.html" data-tier="premium" data-feature="حجز جلسة 1:1">
         <i class="fas fa-video"></i>
-        <div class="action-t">احجز مكالمتك</div>
-        <div class="action-d">جلسة 1:1 معي</div>
+        <div class="action-t">احجز جلستك الشخصية</div>
+        <div class="action-d">⭐ نصف ساعة 1:1 معي</div>
       </a>
       <a class="action action-referral" href="referral.html">
         <span class="referral-glow"></span>

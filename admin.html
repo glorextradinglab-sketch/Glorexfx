@@ -40,7 +40,8 @@ input,textarea{font-family:inherit;color:inherit}
 .brand{display:flex;align-items:center;gap:.6rem}
 .brand-logo{width:40px;height:40px;border-radius:11px;background:#fff;border:1.5px solid rgba(212,160,23,.5);box-shadow:0 0 14px rgba(184,134,11,.45);display:flex;align-items:center;justify-content:center;padding:5px;overflow:hidden}
 .brand-logo img{width:100%;height:100%;object-fit:contain}
-.brand-name{font-family:'Space Grotesk';font-weight:700;font-size:1.25rem;letter-spacing:-.02em}
+.brand-name{font-family:'Space Grotesk';font-weight:700;font-size:1.25rem;letter-spacing:-.02em;line-height:1.1}
+.brand-domain{font-family:'Space Grotesk';font-size:.65rem;color:var(--gold);letter-spacing:1px;opacity:.85;margin-top:.15rem}
 .brand-tag{font-size:.65rem;background:rgba(239,68,68,.15);color:var(--err);padding:.2rem .55rem;border-radius:6px;font-weight:700;letter-spacing:1px;margin-right:.5rem}
 .user-menu{display:flex;align-items:center;gap:.7rem}
 .user-name{font-size:.92rem;color:var(--txt2)}
@@ -213,7 +214,10 @@ input,textarea{font-family:inherit;color:inherit}
 <header class="topbar">
   <a href="dashboard.html" class="brand">
     <div class="brand-logo"><img src="glorex_bull_gold.png" alt="GLOREX"/></div>
-    <div class="brand-name">GLOREX</div>
+    <div>
+      <div class="brand-name">GLOREX</div>
+      <div class="brand-domain">GLOREXFX.COM</div>
+    </div>
     <span class="brand-tag">ADMIN</span>
   </a>
   <div class="user-menu">
@@ -290,6 +294,10 @@ input,textarea{font-family:inherit;color:inherit}
     </button>
     <button class="tab" data-section="events" style="font-size:1rem;font-weight:600">
       <i class="fas fa-calendar-alt" style="color:#ef4444"></i> الأحداث الاقتصادية
+    </button>
+    <button class="tab" data-section="waitlist" style="font-size:1rem;font-weight:600">
+      <i class="fas fa-clipboard-list" style="color:#22c55e"></i> طلبات الانتظار
+      <span class="count" id="cntWaitlistBadge">0</span>
     </button>
   </div>
 
@@ -720,6 +728,17 @@ input,textarea{font-family:inherit;color:inherit}
     </div>
   </div>
 
+  <!-- ═══════ Waitlist Applications Section ═══════ -->
+  <div id="waitlistSection" style="display:none">
+    <div class="tabs" style="margin-bottom:1.4rem">
+      <button class="tab active" data-wltab="pending"><i class="fas fa-clock"></i> قيد المراجعة <span class="count" id="cntWlPending">0</span></button>
+      <button class="tab" data-wltab="approved"><i class="fas fa-check"></i> مقبولة <span class="count" id="cntWlApproved">0</span></button>
+      <button class="tab" data-wltab="rejected"><i class="fas fa-times"></i> مرفوضة <span class="count" id="cntWlRejected">0</span></button>
+      <button class="tab" data-wltab="all"><i class="fas fa-list"></i> الكل <span class="count" id="cntWlAll">0</span></button>
+    </div>
+    <div id="waitlistList"></div>
+  </div>
+
 </main>
 
 <!-- Unauthorized view -->
@@ -803,9 +822,11 @@ document.querySelectorAll('[data-section]').forEach(tab => {
     document.getElementById('subscribersSection').style.display = currentSection === 'subscribers' ? 'block' : 'none';
     document.getElementById('settingsSection').style.display = currentSection === 'settings' ? 'block' : 'none';
     document.getElementById('eventsSection').style.display = currentSection === 'events' ? 'block' : 'none';
+    document.getElementById('waitlistSection').style.display = currentSection === 'waitlist' ? 'block' : 'none';
     if(currentSection === 'analytics') loadAnalytics();
     if(currentSection === 'referrals') loadReferrals(currentRefTab);
     if(currentSection === 'subscribers') loadSubscribers(currentSubTab);
+    if(currentSection === 'waitlist') loadWaitlist(currentWlTab);
     if(currentSection === 'settings') loadBookingSettings();
     if(currentSection === 'events') loadEvents();
   });
@@ -1964,6 +1985,144 @@ function showToast(msg, type='ok'){
   t.className = `toast show ${type}`;
   setTimeout(()=>t.classList.remove('show'), 3500);
 }
+
+// ═══════════════════════════════════════════════
+// 📋 Waitlist Applications Management
+// ═══════════════════════════════════════════════
+let currentWlTab = 'pending';
+
+const LEVEL_AR = { beginner:'مبتدئ', intermediate:'متوسط', advanced:'متقدم' };
+const PAIN_AR = { risk:'إدارة المخاطر', analysis:'التحليل الفني', psychology:'الانضباط النفسي', discipline:'الالتزام بالخطة' };
+const EXP_AR = { none:'لم يبدأ', lt1:'أقل من سنة', '1-3':'1-3 سنوات', gt3:'أكتر من 3 سنوات' };
+const CAP_AR = { lt500:'أقل من $500', '500-2k':'$500-$2000', '2k-10k':'$2000-$10000', gt10k:'أكتر من $10000' };
+
+async function loadWaitlist(filter='pending'){
+  currentWlTab = filter;
+  const list = document.getElementById('waitlistList');
+  list.innerHTML = '<div class="empty"><div class="spinner" style="margin:0 auto 1rem"></div></div>';
+
+  const { data: apps, error } = await supabase
+    .from('waitlist_applications')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if(error){
+    list.innerHTML = `<div class="empty"><i class="fas fa-exclamation-triangle"></i><h3>فشل جلب الطلبات</h3><p>${error.message}</p></div>`;
+    return;
+  }
+
+  const all = apps || [];
+  const pending = all.filter(a => a.status === 'pending');
+  const approved = all.filter(a => a.status === 'approved');
+  const rejected = all.filter(a => a.status === 'rejected');
+
+  document.getElementById('cntWlPending').textContent = pending.length;
+  document.getElementById('cntWlApproved').textContent = approved.length;
+  document.getElementById('cntWlRejected').textContent = rejected.length;
+  document.getElementById('cntWlAll').textContent = all.length;
+  document.getElementById('cntWaitlistBadge').textContent = pending.length;
+
+  let filtered = pending;
+  if(filter === 'approved') filtered = approved;
+  else if(filter === 'rejected') filtered = rejected;
+  else if(filter === 'all') filtered = all;
+
+  if(filtered.length === 0){
+    list.innerHTML = `<div class="empty"><i class="fas fa-clipboard"></i><h3>لا توجد طلبات بهذه الحالة</h3></div>`;
+    return;
+  }
+
+  list.innerHTML = filtered.map(a => {
+    const statusBadge = a.status === 'approved'
+      ? '<span style="background:rgba(34,197,94,.15);color:#22c55e;padding:.3rem .8rem;border-radius:999px;font-size:.8rem;font-weight:700">✅ مقبول</span>'
+      : a.status === 'rejected'
+      ? '<span style="background:rgba(239,68,68,.15);color:#ef4444;padding:.3rem .8rem;border-radius:999px;font-size:.8rem;font-weight:700">❌ مرفوض</span>'
+      : '<span style="background:rgba(245,158,11,.15);color:#f59e0b;padding:.3rem .8rem;border-radius:999px;font-size:.8rem;font-weight:700">⏳ قيد المراجعة</span>';
+
+    const codeBlock = a.discount_code
+      ? `<div style="background:rgba(212,160,23,.08);border:1px dashed rgba(212,160,23,.3);border-radius:8px;padding:.6rem 1rem;margin-top:.7rem;font-family:monospace;color:var(--gold);text-align:center;font-weight:700;letter-spacing:1px">🎁 ${a.discount_code}</div>`
+      : '';
+
+    const actions = a.status === 'pending'
+      ? `<div style="display:flex;gap:.5rem;margin-top:1rem;flex-wrap:wrap">
+           <button class="btn-approve-wl" data-id="${a.id}" style="flex:1;min-width:130px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;padding:.75rem;border-radius:9px;font-weight:700;border:none;cursor:pointer"><i class="fas fa-check"></i> قبول + إرسال كود</button>
+           <button class="btn-reject-wl" data-id="${a.id}" style="flex:1;min-width:130px;background:rgba(239,68,68,.12);color:#ef4444;padding:.75rem;border-radius:9px;font-weight:700;border:1px solid rgba(239,68,68,.3);cursor:pointer"><i class="fas fa-times"></i> رفض</button>
+         </div>`
+      : '';
+
+    return `
+      <div class="request" style="border:1px solid var(--border);border-radius:14px;padding:1.2rem;margin-bottom:.9rem;background:rgba(255,255,255,.02)">
+        <div style="display:flex;align-items:flex-start;gap:1rem;flex-wrap:wrap;margin-bottom:.9rem">
+          <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#D4A017,#A07810);display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-family:'Space Grotesk';flex-shrink:0">${(a.full_name?.[0]||'?').toUpperCase()}</div>
+          <div style="flex:1;min-width:200px">
+            <div style="font-weight:700;font-size:1.05rem;margin-bottom:.2rem">${a.full_name||'—'}</div>
+            <div style="font-size:.85rem;color:var(--txt3)">${a.email||'—'}${a.whatsapp ? ' • '+a.whatsapp : ''}</div>
+            <div style="font-size:.75rem;color:var(--txt4);margin-top:.2rem">${new Date(a.created_at).toLocaleDateString('ar-EG-u-nu-latn',{dateStyle:'medium'})}</div>
+          </div>
+          ${statusBadge}
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.6rem;padding:.9rem;background:var(--surface);border-radius:10px;font-size:.82rem;margin-bottom:.9rem">
+          <div><div style="color:var(--txt4);margin-bottom:.2rem">المستوى</div><div style="color:var(--gold);font-weight:600">${LEVEL_AR[a.level]||a.level}</div></div>
+          <div><div style="color:var(--txt4);margin-bottom:.2rem">الخبرة</div><div style="color:var(--gold);font-weight:600">${EXP_AR[a.experience]||a.experience}</div></div>
+          <div><div style="color:var(--txt4);margin-bottom:.2rem">رأس المال</div><div style="color:var(--gold);font-weight:600">${CAP_AR[a.capital_range]||a.capital_range||'—'}</div></div>
+          <div><div style="color:var(--txt4);margin-bottom:.2rem">المشكلة</div><div style="color:var(--gold);font-weight:600">${PAIN_AR[a.pain_point]||a.pain_point}</div></div>
+        </div>
+
+        <div style="background:linear-gradient(135deg,rgba(212,160,23,.06),rgba(212,160,23,.02));border:1px solid rgba(212,160,23,.2);border-radius:10px;padding:1rem">
+          <div style="color:var(--gold);font-size:.85rem;font-weight:700;margin-bottom:.5rem">⭐ ليش لازم نختاره؟</div>
+          <div style="color:var(--txt2);line-height:1.7;white-space:pre-wrap">${(a.why_join||'').replace(/[<>]/g,c=>({'<':'&lt;','>':'&gt;'}[c]))}</div>
+        </div>
+
+        ${codeBlock}
+        ${actions}
+      </div>
+    `;
+  }).join('');
+
+  // Wire buttons
+  document.querySelectorAll('.btn-approve-wl').forEach(b => {
+    b.addEventListener('click', () => approveWaitlist(b.dataset.id));
+  });
+  document.querySelectorAll('.btn-reject-wl').forEach(b => {
+    b.addEventListener('click', () => rejectWaitlist(b.dataset.id));
+  });
+}
+
+async function approveWaitlist(id){
+  if(!confirm('تأكيد قبول الطلب؟ سيتم إرسال إيميل بكود الخصم تلقائياً.')) return;
+  const { data, error } = await supabase.rpc('approve_waitlist_application', { p_id: id });
+  if(error){ showToast('فشل: '+error.message, 'err'); return; }
+  showToast(`✅ تم القبول — كود: ${data?.code || ''}`, 'ok');
+  loadWaitlist(currentWlTab);
+}
+
+async function rejectWaitlist(id){
+  if(!confirm('تأكيد رفض الطلب؟ سيتم إرسال إيميل اعتذار لطيف.')) return;
+  const { data, error } = await supabase.rpc('reject_waitlist_application', { p_id: id, p_send_email: true });
+  if(error){ showToast('فشل: '+error.message, 'err'); return; }
+  showToast('✅ تم الرفض', 'ok');
+  loadWaitlist(currentWlTab);
+}
+
+// Filter tabs
+document.querySelectorAll('[data-wltab]').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('[data-wltab]').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    loadWaitlist(tab.dataset.wltab);
+  });
+});
+
+// Initial badge count
+(async () => {
+  try {
+    const { count } = await supabase.from('waitlist_applications')
+      .select('*', { count: 'exact', head: true })
+      .eq('status', 'pending');
+    if(count !== null) document.getElementById('cntWaitlistBadge').textContent = count;
+  } catch(e){}
+})();
 </script>
 
 </body>
