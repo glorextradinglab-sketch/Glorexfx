@@ -62,15 +62,8 @@ a{color:inherit;text-decoration:none}
   display:flex;align-items:center;justify-content:space-between;gap:1rem
 }
 .brand{display:flex;align-items:center;gap:.6rem}
-.brand-logo{
-  width:40px;height:40px;border-radius:11px;
-  background:#fff;
-  border:1.5px solid rgba(212,160,23,.5);
-  box-shadow:0 0 14px rgba(184,134,11,.45);
-  display:flex;align-items:center;justify-content:center;
-  padding:0
-}
-.brand-logo img{width:135%;height:135%;object-fit:contain;transform-origin:center}
+.brand-logo{width:40px;height:40px;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 2px 8px rgba(212,160,23,.4))}
+.brand-logo img{width:100%;height:100%;object-fit:contain}
 .brand-name{font-family:'Space Grotesk';font-weight:700;font-size:1.25rem;letter-spacing:-.02em}
 
 /* Nav tabs */
@@ -293,7 +286,7 @@ a{color:inherit;text-decoration:none}
 /* 📱 Mobile (≤ 640px) */
 @media(max-width:640px){
   .topbar{padding:.7rem 1rem !important}
-  .brand-logo{width:34px;height:34px;padding:4px}
+  .brand-logo{width:34px;height:34px;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 2px 8px rgba(212,160,23,.4))}
   .brand-name{font-size:1.1rem}
   .user-avatar{width:34px;height:34px;font-size:.85rem}
 
