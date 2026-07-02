@@ -12,20 +12,20 @@
   "dir": "rtl",
   "icons": [
     {
-      "src": "/glorex_bull_gold.png",
+      "src": "/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/glorex_bull_gold.png",
+      "src": "/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/glorex_bull_gold.png",
-      "sizes": "any",
+      "src": "/glorex_icon_maskable.png",
+      "sizes": "1024x1024",
       "type": "image/png",
       "purpose": "maskable"
     }
