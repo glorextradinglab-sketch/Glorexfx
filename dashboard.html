@@ -530,7 +530,7 @@ a{color:inherit;text-decoration:none}
 
 <script type="module">
 import { requireAuth, signOut, onAuthChange, getSubscriptionTier, showFeaturePaywall, supabase } from './supabase-client.js?v=20260610';
-import { setupBottomNav } from './user-menu.js?v=20260617';
+import { setupBottomNav } from './user-menu.js?v=20260702';
 
 /* Tier hierarchy */
 const TIER_LEVEL = { free: 0, basic: 1, premium: 2 };
@@ -770,5 +770,6 @@ function escapeHtml(s){
 }
 loadEconomicEvents();
 </script>
+<script type="module" src="./splash.js?v=20260702"></script>
 </body>
 </html>

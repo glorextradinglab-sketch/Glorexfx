@@ -164,7 +164,7 @@ button{cursor:pointer;font-family:inherit;border:none;background:none;color:inhe
 
 <script type="module">
 import { supabase, getSubscriptionTier, showFeaturePaywall } from './supabase-client.js?v=20260610';
-import { setupUserMenu } from './user-menu.js?v=20260617';
+import { setupUserMenu } from './user-menu.js?v=20260702';
 
 const TIER_LEVEL = { free: 0, basic: 1, premium: 2 };
 let userTier = 'free';
@@ -398,5 +398,6 @@ async function init(){
 init();
 </script>
 
+<script type="module" src="./splash.js?v=20260702"></script>
 </body>
 </html>

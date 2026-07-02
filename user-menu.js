@@ -137,6 +137,33 @@ const STYLES = `
 }
 `;
 
+/* Auto-inject styles on module load — ensures mobile CSS is applied
+   even before setupUserMenu/setupBottomNav is called (e.g. during auth wait) */
+if (typeof document !== 'undefined' && !document.getElementById('user-menu-styles')) {
+  const _style = document.createElement('style');
+  _style.id = 'user-menu-styles';
+  _style.textContent = STYLES;
+  (document.head || document.documentElement).appendChild(_style);
+}
+
+/* Auto-init bottom nav on mobile if a topbar with nav-tabs exists.
+   Runs with isAdmin=false as safe default; setupUserMenu/setupBottomNav
+   called explicitly later can still upgrade the drawer (no-op if already injected). */
+function _autoInitMobileNav() {
+  if (typeof window === 'undefined') return;
+  if (!window.matchMedia || !window.matchMedia('(max-width:768px)').matches) return;
+  if (!document.querySelector('.nav-tabs') && !document.querySelector('.topbar')) return;
+  const currentPage = location.pathname.split('/').pop() || 'dashboard.html';
+  _setupBottomNav(currentPage, false);
+}
+if (typeof document !== 'undefined') {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', _autoInitMobileNav);
+  } else {
+    _autoInitMobileNav();
+  }
+}
+
 export async function setupUserMenu(user) {
   const menu = document.querySelector('.user-menu');
   if (!menu) return;

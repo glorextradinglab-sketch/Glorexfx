@@ -197,10 +197,6 @@ textarea.text-input{min-height:120px;resize:vertical;line-height:1.6}
       نحن نختار <strong style="color:var(--txt)">يدوياً</strong> — مش الكل يقبل.
       منصة تداول عربية كاملة بالذكاء الاصطناعي، تحليل أخبار يومي، سجل تداول ذكي، وجلسات شخصية معي.
     </p>
-    <a href="#apply" class="hero-cta">
-      <i class="fas fa-paper-plane"></i>
-      قدّم طلبك الآن
-    </a>
     <div class="deadline-badge">
       <div class="deadline-pulse"></div>
       <div class="deadline-content">
@@ -208,22 +204,6 @@ textarea.text-input{min-height:120px;resize:vertical;line-height:1.6}
         <div class="deadline-date">27 / 07 / 2026</div>
         <div class="deadline-countdown" id="deadlineCountdown">جاري الحساب...</div>
       </div>
-    </div>
-  </section>
-
-  <!-- Stats -->
-  <section class="stats-banner">
-    <div class="stat">
-      <div class="stat-val" id="statApplied">—</div>
-      <div class="stat-lbl">قدّم طلبه</div>
-    </div>
-    <div class="stat">
-      <div class="stat-val">100</div>
-      <div class="stat-lbl">مقعد متاح</div>
-    </div>
-    <div class="stat">
-      <div class="stat-val">50%</div>
-      <div class="stat-lbl">خصم للمختارين</div>
     </div>
   </section>
 
@@ -235,6 +215,24 @@ textarea.text-input{min-height:120px;resize:vertical;line-height:1.6}
         <strong>🎬 فيديو تعريفي قريباً</strong>
         <p>شاهد كل التفاصيل عن GLOREX وليش رح يغيّر طريقة تداولك</p>
       </div>
+    </div>
+    <div style="text-align:center;margin-top:2rem">
+      <a href="#apply" class="hero-cta">
+        <i class="fas fa-paper-plane"></i>
+        قدّم طلبك الآن
+      </a>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="stats-banner">
+    <div class="stat">
+      <div class="stat-val">100</div>
+      <div class="stat-lbl">مقعد متاح</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">50%</div>
+      <div class="stat-lbl">خصم للمختارين</div>
     </div>
   </section>
 
@@ -445,6 +443,8 @@ textarea.text-input{min-height:120px;resize:vertical;line-height:1.6}
 
 <div class="toast" id="toast"></div>
 
+<script type="module" src="./splash.js?v=20260702"></script>
+
 <script type="module">
 import { supabase } from './supabase-client.js?v=20260628';
 
@@ -513,18 +513,6 @@ document.querySelectorAll('[data-next]').forEach(btn => {
 document.querySelectorAll('[data-back]').forEach(btn => {
   btn.addEventListener('click', () => goToStep(currentStep - 1));
 });
-
-// Live applicant count
-async function loadCount(){
-  try {
-    const { count } = await supabase.from('waitlist_applications')
-      .select('*', { count: 'exact', head: true });
-    if (count !== null) {
-      document.getElementById('statApplied').textContent = count.toLocaleString('ar-EG-u-nu-latn');
-    }
-  } catch(e) { /* ignore — RLS may block, default to — */ }
-}
-loadCount();
 
 // Countdown to deadline
 (function(){

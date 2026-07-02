@@ -365,7 +365,7 @@ button{cursor:pointer;font-family:inherit;border:none;background:none;color:inhe
 
 <script type="module">
 import { supabase } from './supabase-client.js';
-import { setupUserMenu } from './user-menu.js?v=20260617';
+import { setupUserMenu } from './user-menu.js?v=20260702';
 
 let allTrades = [];
 let currentDate = new Date();
@@ -817,5 +817,6 @@ init();
 setTimeout(()=>document.getElementById('boot')?.classList.add('hide'), 3000);
 </script>
 
+<script type="module" src="./splash.js?v=20260702"></script>
 </body>
 </html>
