@@ -2090,9 +2090,9 @@ async function loadWaitlist(filter='pending'){
 
 async function approveWaitlist(id){
   if(!confirm('تأكيد قبول الطلب؟ سيتم إرسال إيميل بكود الخصم تلقائياً.')) return;
-  const { data, error } = await supabase.rpc('approve_waitlist_application', { p_id: id });
+  const { data, error } = await supabase.rpc('approve_waitlist_application', { p_application_id: id });
   if(error){ showToast('فشل: '+error.message, 'err'); return; }
-  showToast(`✅ تم القبول — كود: ${data?.code || ''}`, 'ok');
+  showToast(`✅ تم القبول — كود: ${data?.discount_code || ''}`, 'ok');
   loadWaitlist(currentWlTab);
 }
 
