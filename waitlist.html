@@ -251,15 +251,25 @@ textarea.text-input{min-height:120px;resize:vertical;line-height:1.6}
 }
 .iab-step-txt{flex:1;line-height:1.5;padding-top:.15rem}
 .iab-step-txt i{color:var(--gold);margin:0 .2rem;font-size:1.05rem;vertical-align:middle}
-.iab-copy-btn{
+.iab-open-btn{
   width:100%;background:linear-gradient(135deg,var(--gold-l),var(--gold));
-  color:#000;padding:.95rem;border-radius:12px;font-weight:700;
-  font-size:1rem;transition:all .2s;display:flex;align-items:center;
+  color:#000;padding:1rem;border-radius:12px;font-weight:700;
+  font-size:1.02rem;transition:all .2s;display:flex;align-items:center;
+  justify-content:center;gap:.6rem;margin-bottom:.6rem;
+  font-family:inherit;border:none;cursor:pointer;text-decoration:none;
+  box-shadow:0 10px 30px -8px rgba(212,160,23,.5);
+}
+.iab-open-btn:active{transform:scale(.98)}
+.iab-copy-btn{
+  width:100%;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);
+  color:var(--txt2);padding:.85rem;border-radius:12px;font-weight:600;
+  font-size:.92rem;transition:all .2s;display:flex;align-items:center;
   justify-content:center;gap:.6rem;margin-bottom:.7rem;
-  font-family:inherit;border:none;cursor:pointer;
+  font-family:inherit;cursor:pointer;
 }
 .iab-copy-btn:active{transform:scale(.98)}
-.iab-copy-btn.copied{background:linear-gradient(135deg,#4ade80,#22c55e)}
+.iab-copy-btn.copied{background:linear-gradient(135deg,#4ade80,#22c55e);color:#000;border-color:#22c55e}
 .iab-dismiss{
   display:block;width:100%;color:var(--txt4);
   font-size:.82rem;text-align:center;padding:.5rem;
@@ -318,9 +328,13 @@ textarea.text-input{min-height:120px;resize:vertical;line-height:1.6}
         <div class="iab-step-txt">كمّل تسجيلك من Chrome ✅</div>
       </div>
     </div>
+    <button class="iab-open-btn" id="iabOpenBtn" type="button">
+      <i class="fas fa-arrow-up-right-from-square"></i>
+      <span>افتح بلمتصفح الآن</span>
+    </button>
     <button class="iab-copy-btn" id="iabCopyBtn" type="button">
       <i class="fas fa-copy"></i>
-      <span>انسخ الرابط للمتصفح</span>
+      <span>أو انسخ الرابط يدوياً</span>
     </button>
     <button class="iab-dismiss" id="iabDismissBtn" type="button">
       تجاهل وأكمل هون على مسؤوليتي
@@ -672,6 +686,38 @@ textarea.text-input{min-height:120px;resize:vertical;line-height:1.6}
     var splash = document.getElementById('glx-splash');
     if (splash) splash.remove();
 
+    // "Open in browser" handler — tries several tricks depending on platform
+    var openBtn = document.getElementById('iabOpenBtn');
+    if (openBtn) {
+      openBtn.addEventListener('click', function(){
+        var url = 'https://glorexfx.com/waitlist.html?nowarn=1';
+        if (isAndroid) {
+          // Android: intent:// URL forces Chrome to open the page
+          var intent = 'intent://glorexfx.com/waitlist.html?nowarn=1' +
+                       '#Intent;scheme=https;package=com.android.chrome;' +
+                       'S.browser_fallback_url=' + encodeURIComponent(url) + ';end';
+          window.location.href = intent;
+          // Fallback after 1.5s in case the intent handler is not available
+          setTimeout(function(){ window.open(url, '_blank'); }, 1500);
+        } else if (isIOS) {
+          // iOS: window.open with target=_blank often escapes the in-app browser
+          // Also try googlechrome:// scheme as a fallback
+          var w = window.open(url, '_blank');
+          if (!w) {
+            // Blocked — try googlechromes:// scheme (works if Chrome installed)
+            window.location.href = 'googlechromes://glorexfx.com/waitlist.html?nowarn=1';
+            setTimeout(function(){
+              // Last resort — try x-safari
+              window.location.href = 'x-web-search://?glorexfx.com/waitlist.html';
+            }, 800);
+          }
+        } else {
+          // Desktop or unknown — just open in new tab
+          window.open(url, '_blank');
+        }
+      });
+    }
+
     // Copy link handler
     var copyBtn = document.getElementById('iabCopyBtn');
     if (copyBtn) {
@@ -715,6 +761,18 @@ textarea.text-input{min-height:120px;resize:vertical;line-height:1.6}
         try { sessionStorage.setItem('iab_dismissed', '1'); } catch(e){}
       });
     }
+
+    // Even if user dismissed the modal, re-show it when they click the CTA
+    // (the form JS is broken in in-app browsers — better to redirect them out)
+    document.querySelectorAll('.hero-cta').forEach(function(cta){
+      cta.addEventListener('click', function(e){
+        e.preventDefault();
+        try { sessionStorage.removeItem('iab_dismissed'); } catch(e){}
+        overlay.classList.add('show');
+        document.documentElement.style.overflow = 'hidden';
+        window.scrollTo(0, 0);
+      }, true);  // capture phase — run before other handlers
+    });
   });
 })();
 </script>
