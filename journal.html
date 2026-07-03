@@ -482,8 +482,8 @@ function render(){
           </div>
 
           <div class="input-label">
-            <small>الربح ($)</small>
-            <input class="input" type="number" placeholder="200" id="pnl-${t.id}" value="${t.pnl||''}" step="0.01" onchange="autoSave('${t.id}')"/>
+            <small>الربح / الخسارة ($)</small>
+            <input class="input" type="number" placeholder="+200 أو -200" id="pnl-${t.id}" value="${t.pnl||''}" step="0.01" onchange="autoSave('${t.id}')"/>
           </div>
 
           <div class="input-label">
