@@ -192,6 +192,82 @@ textarea.text-input{min-height:120px;resize:vertical;line-height:1.6}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.err{border-color:rgba(239,68,68,.4);color:#fca5a5}
 
+/* In-app browser warning modal */
+.iab-overlay{
+  position:fixed;inset:0;z-index:100000;
+  background:rgba(0,0,0,.85);backdrop-filter:blur(12px);
+  display:none;align-items:center;justify-content:center;
+  padding:1.5rem;overflow-y:auto;
+  animation:iabFadeIn .3s var(--ease);
+}
+.iab-overlay.show{display:flex}
+@keyframes iabFadeIn{from{opacity:0}to{opacity:1}}
+.iab-card{
+  background:linear-gradient(160deg,#0e0e0e,#080808);
+  border:1.5px solid rgba(212,160,23,.3);
+  border-radius:20px;padding:2rem 1.8rem 1.8rem;
+  max-width:440px;width:100%;
+  box-shadow:0 30px 80px -20px rgba(0,0,0,.9),0 0 0 1px rgba(212,160,23,.08);
+  position:relative;text-align:center;
+  animation:iabSlideUp .4s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes iabSlideUp{
+  from{opacity:0;transform:translateY(30px) scale(.95)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.iab-icon{
+  width:72px;height:72px;border-radius:20px;margin:0 auto 1.2rem;
+  background:linear-gradient(135deg,var(--gold-l),var(--gold-d));
+  display:flex;align-items:center;justify-content:center;
+  color:#000;font-size:2rem;
+  box-shadow:0 12px 30px -8px rgba(212,160,23,.5);
+}
+.iab-title{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:1.5rem;font-weight:700;
+  color:var(--gold-l);margin-bottom:.6rem;line-height:1.3;
+}
+.iab-msg{
+  color:var(--txt2);font-size:.98rem;line-height:1.6;
+  margin-bottom:1.5rem;
+}
+.iab-msg b{color:var(--gold);font-weight:700}
+.iab-steps{
+  background:rgba(212,160,23,.06);
+  border:1px solid rgba(212,160,23,.2);
+  border-radius:14px;padding:1.1rem 1.2rem;
+  text-align:right;margin-bottom:1.5rem;
+}
+.iab-step{
+  display:flex;align-items:flex-start;gap:.7rem;
+  margin-bottom:.7rem;color:var(--txt);font-size:.92rem;
+}
+.iab-step:last-child{margin-bottom:0}
+.iab-step-num{
+  flex-shrink:0;width:24px;height:24px;border-radius:50%;
+  background:var(--gold);color:#000;font-weight:700;
+  font-family:'Space Grotesk';font-size:.82rem;
+  display:flex;align-items:center;justify-content:center;
+}
+.iab-step-txt{flex:1;line-height:1.5;padding-top:.15rem}
+.iab-step-txt i{color:var(--gold);margin:0 .2rem;font-size:1.05rem;vertical-align:middle}
+.iab-copy-btn{
+  width:100%;background:linear-gradient(135deg,var(--gold-l),var(--gold));
+  color:#000;padding:.95rem;border-radius:12px;font-weight:700;
+  font-size:1rem;transition:all .2s;display:flex;align-items:center;
+  justify-content:center;gap:.6rem;margin-bottom:.7rem;
+  font-family:inherit;border:none;cursor:pointer;
+}
+.iab-copy-btn:active{transform:scale(.98)}
+.iab-copy-btn.copied{background:linear-gradient(135deg,#4ade80,#22c55e)}
+.iab-dismiss{
+  display:block;width:100%;color:var(--txt4);
+  font-size:.82rem;text-align:center;padding:.5rem;
+  background:none;border:none;cursor:pointer;font-family:inherit;
+  transition:color .2s;
+}
+.iab-dismiss:hover{color:var(--txt3)}
+
 @media (max-width:680px){
   .topbar{padding:.9rem 1rem}
   .main{padding:2rem 1.2rem 3rem}
@@ -204,6 +280,53 @@ textarea.text-input{min-height:120px;resize:vertical;line-height:1.6}
 </style>
 </head>
 <body>
+
+<!-- In-app browser warning (Instagram/Facebook/TikTok/etc.) -->
+<div class="iab-overlay" id="iabOverlay" role="dialog" aria-modal="true" aria-labelledby="iabTitle">
+  <div class="iab-card">
+    <div class="iab-icon"><i class="fas fa-compass" aria-hidden="true"></i></div>
+    <div class="iab-title" id="iabTitle">افتح الموقع بالمتصفح الأصلي</div>
+    <div class="iab-msg">
+      أنت داخل من متصفح <b id="iabAppName">التطبيق</b> — بعض الميزات ما بتشتغل هون.
+      افتح الرابط بـ <b id="iabBrowserName">Safari</b> عشان تكمّل التسجيل.
+    </div>
+    <div class="iab-steps" id="iabStepsIOS">
+      <div class="iab-step">
+        <div class="iab-step-num">1</div>
+        <div class="iab-step-txt">اضغط الزر <i class="fas fa-ellipsis"></i> فوق يمين (النقاط الثلاث)</div>
+      </div>
+      <div class="iab-step">
+        <div class="iab-step-num">2</div>
+        <div class="iab-step-txt">اختار <b style="color:var(--gold-l)">"Open in Safari"</b> (فتح في سفاري)</div>
+      </div>
+      <div class="iab-step">
+        <div class="iab-step-num">3</div>
+        <div class="iab-step-txt">كمّل تسجيلك بلـ Safari بدون مشاكل ✅</div>
+      </div>
+    </div>
+    <div class="iab-steps" id="iabStepsAndroid" style="display:none">
+      <div class="iab-step">
+        <div class="iab-step-num">1</div>
+        <div class="iab-step-txt">اضغط <i class="fas fa-ellipsis-vertical"></i> فوق يمين (النقاط الثلاث)</div>
+      </div>
+      <div class="iab-step">
+        <div class="iab-step-num">2</div>
+        <div class="iab-step-txt">اختار <b style="color:var(--gold-l)">"Open in browser"</b> أو <b style="color:var(--gold-l)">"Open in Chrome"</b></div>
+      </div>
+      <div class="iab-step">
+        <div class="iab-step-num">3</div>
+        <div class="iab-step-txt">كمّل تسجيلك من Chrome ✅</div>
+      </div>
+    </div>
+    <button class="iab-copy-btn" id="iabCopyBtn" type="button">
+      <i class="fas fa-copy"></i>
+      <span>انسخ الرابط للمتصفح</span>
+    </button>
+    <button class="iab-dismiss" id="iabDismissBtn" type="button">
+      تجاهل وأكمل هون على مسؤوليتي
+    </button>
+  </div>
+</div>
 
 <div class="bg-mesh"></div>
 
@@ -480,6 +603,121 @@ textarea.text-input{min-height:120px;resize:vertical;line-height:1.6}
 <div class="toast" id="toast"></div>
 
 <script type="module" src="./splash.js?v=20260702"></script>
+
+<!-- In-app browser detection — must run before splash/form logic -->
+<script>
+(function(){
+  var ua = navigator.userAgent || navigator.vendor || '';
+  var isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+  var isAndroid = /Android/i.test(ua);
+
+  // Detect in-app browsers by user agent signature
+  var apps = [
+    { key: 'Instagram',   label: 'Instagram' },
+    { key: 'FBAN',        label: 'Facebook' },
+    { key: 'FBAV',        label: 'Facebook' },
+    { key: 'FB_IAB',      label: 'Facebook' },
+    { key: 'FBIOS',       label: 'Facebook' },
+    { key: 'Messenger',   label: 'Messenger' },
+    { key: 'MessengerLiteForiOS', label: 'Messenger' },
+    { key: 'TikTok',      label: 'TikTok' },
+    { key: 'BytedanceWebview', label: 'TikTok' },
+    { key: 'musical_ly',  label: 'TikTok' },
+    { key: 'Snapchat',    label: 'Snapchat' },
+    { key: 'LinkedInApp', label: 'LinkedIn' },
+    { key: 'Twitter',     label: 'Twitter' },
+    { key: 'Line/',       label: 'Line' },
+    { key: 'WhatsApp',    label: 'WhatsApp' },
+    { key: 'KAKAOTALK',   label: 'KakaoTalk' },
+    { key: 'MicroMessenger', label: 'WeChat' },
+    { key: 'Threads',     label: 'Threads' }
+  ];
+  var detectedApp = null;
+  for (var i = 0; i < apps.length; i++) {
+    if (ua.indexOf(apps[i].key) !== -1) { detectedApp = apps[i].label; break; }
+  }
+
+  // Allow bypass via ?nowarn=1 or previous dismissal
+  var params = new URLSearchParams(location.search);
+  var dismissed = false;
+  try { dismissed = sessionStorage.getItem('iab_dismissed') === '1'; } catch(e){}
+  if (params.get('nowarn') === '1' || dismissed) return;
+
+  if (!detectedApp) return;
+
+  document.addEventListener('DOMContentLoaded', function(){
+    var overlay = document.getElementById('iabOverlay');
+    if (!overlay) return;
+
+    // Fill in dynamic labels
+    var appNameEl = document.getElementById('iabAppName');
+    var browserNameEl = document.getElementById('iabBrowserName');
+    if (appNameEl) appNameEl.textContent = detectedApp;
+    if (browserNameEl) browserNameEl.textContent = isAndroid ? 'Chrome' : 'Safari';
+
+    // Show iOS or Android steps
+    var iosSteps = document.getElementById('iabStepsIOS');
+    var androidSteps = document.getElementById('iabStepsAndroid');
+    if (isAndroid) {
+      if (iosSteps) iosSteps.style.display = 'none';
+      if (androidSteps) androidSteps.style.display = 'block';
+    }
+
+    // Show the modal
+    overlay.classList.add('show');
+    document.documentElement.style.overflow = 'hidden';
+
+    // Kill splash so it doesn't cover the modal
+    try { sessionStorage.setItem('glorex_splash_shown', '1'); } catch(e){}
+    var splash = document.getElementById('glx-splash');
+    if (splash) splash.remove();
+
+    // Copy link handler
+    var copyBtn = document.getElementById('iabCopyBtn');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', function(){
+        var url = 'https://glorexfx.com/waitlist.html';
+        var done = function(){
+          copyBtn.classList.add('copied');
+          copyBtn.querySelector('span').textContent = '✓ تم النسخ! الصقه بـ ' + (isAndroid ? 'Chrome' : 'Safari');
+          setTimeout(function(){
+            copyBtn.classList.remove('copied');
+            copyBtn.querySelector('span').textContent = 'انسخ الرابط للمتصفح';
+          }, 3500);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(done, function(){
+            // Fallback
+            var ta = document.createElement('textarea');
+            ta.value = url;
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); done(); } catch(e){}
+            document.body.removeChild(ta);
+          });
+        } else {
+          var ta = document.createElement('textarea');
+          ta.value = url;
+          document.body.appendChild(ta);
+          ta.select();
+          try { document.execCommand('copy'); done(); } catch(e){}
+          document.body.removeChild(ta);
+        }
+      });
+    }
+
+    // Dismiss handler
+    var dismissBtn = document.getElementById('iabDismissBtn');
+    if (dismissBtn) {
+      dismissBtn.addEventListener('click', function(){
+        overlay.classList.remove('show');
+        document.documentElement.style.overflow = '';
+        try { sessionStorage.setItem('iab_dismissed', '1'); } catch(e){}
+      });
+    }
+  });
+})();
+</script>
 
 <script type="module">
 import { supabase } from './supabase-client.js?v=20260628';
