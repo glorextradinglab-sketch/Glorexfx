@@ -142,7 +142,7 @@ input,textarea,select{font-family:inherit;color:inherit}
 .progress-info{display:flex;justify-content:space-between;color:var(--txt3);font-size:.85rem;margin-bottom:.5rem}
 .progress-info b{color:var(--gold-l);font-family:'Space Grotesk'}
 .progress-bar{height:6px;background:var(--surface);border-radius:999px;overflow:hidden}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold-d),var(--gold-l));border-radius:999px;transition:width .4s var(--ease);width:12.5%}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold-d),var(--gold-l));border-radius:999px;transition:width .4s var(--ease);width:14%}
 .step{display:none;animation:fadeIn .35s var(--ease)}
 .step.active{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
@@ -211,6 +211,16 @@ textarea.text-input{min-height:120px;resize:vertical;line-height:1.6}
   position:relative;text-align:center;
   animation:iabSlideUp .4s cubic-bezier(.34,1.56,.64,1);
 }
+.iab-close{
+  position:absolute;top:.9rem;left:.9rem;
+  width:34px;height:34px;border-radius:50%;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  color:var(--txt2);font-size:1.05rem;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .2s;font-family:inherit;
+}
+.iab-close:hover,.iab-close:active{background:rgba(255,255,255,.12);color:var(--txt)}
 @keyframes iabSlideUp{
   from{opacity:0;transform:translateY(30px) scale(.95)}
   to{opacity:1;transform:translateY(0) scale(1)}
@@ -294,6 +304,9 @@ textarea.text-input{min-height:120px;resize:vertical;line-height:1.6}
 <!-- In-app browser warning (Instagram/Facebook/TikTok/etc.) -->
 <div class="iab-overlay" id="iabOverlay" role="dialog" aria-modal="true" aria-labelledby="iabTitle">
   <div class="iab-card">
+    <button type="button" class="iab-close" id="iabCloseBtn" aria-label="إغلاق">
+      <i class="fas fa-xmark"></i>
+    </button>
     <div class="iab-icon"><i class="fas fa-compass" aria-hidden="true"></i></div>
     <div class="iab-title" id="iabTitle">افتح الموقع بالمتصفح الأصلي</div>
     <div class="iab-msg">
@@ -422,8 +435,8 @@ textarea.text-input{min-height:120px;resize:vertical;line-height:1.6}
       <!-- Progress bar -->
       <div class="progress-wrap">
         <div class="progress-info">
-          <span>سؤال <b id="currentStep">1</b> من <b>8</b></span>
-          <span id="progressPct">12%</span>
+          <span>سؤال <b id="currentStep">1</b> من <b>7</b></span>
+          <span id="progressPct">14%</span>
         </div>
         <div class="progress-bar">
           <div class="progress-fill" id="progressFill"></div>
@@ -529,10 +542,9 @@ textarea.text-input{min-height:120px;resize:vertical;line-height:1.6}
               class="text-input"
               id="why_join"
               placeholder="بيّن شو يميّزك: التزامك، شغفك بالتداول، استعدادك تتعلم، خبرتك السابقة، أو أي شي بيخليك تستحق المكان..."
-              minlength="20"
-              maxlength="500"
+              maxlength="1000"
             ></textarea>
-            <div class="field-error" id="err-why_join">اكتب على الأقل 20 حرف</div>
+            <div class="field-error" id="err-why_join">اكتب جملة على الأقل</div>
           </div>
           <div class="step-actions">
             <button type="button" class="btn-back" data-back>السابق</button>
@@ -556,7 +568,7 @@ textarea.text-input{min-height:120px;resize:vertical;line-height:1.6}
           </div>
         </div>
 
-        <!-- Step 7: Email -->
+        <!-- Step 7: Email + Submit -->
         <div class="step" data-step="7">
           <div class="field">
             <label class="field-label">
@@ -565,22 +577,6 @@ textarea.text-input{min-height:120px;resize:vertical;line-height:1.6}
             </label>
             <input type="email" class="text-input" id="email" placeholder="you@example.com" dir="ltr"/>
             <div class="field-error" id="err-email">إيميل غير صالح</div>
-          </div>
-          <div class="step-actions">
-            <button type="button" class="btn-back" data-back>السابق</button>
-            <button type="button" class="btn-next" data-next>التالي <i class="fas fa-arrow-left"></i></button>
-          </div>
-        </div>
-
-        <!-- Step 8: WhatsApp + Submit -->
-        <div class="step" data-step="8">
-          <div class="field">
-            <label class="field-label">
-              <span class="field-num">8</span>
-              رقم الواتساب
-              <span class="field-hint">(اختياري — للتواصل السريع)</span>
-            </label>
-            <input type="tel" class="text-input" id="whatsapp" placeholder="+966 5XX XXX XXX" dir="ltr"/>
           </div>
           <div class="step-actions">
             <button type="button" class="btn-back" data-back>السابق</button>
@@ -752,26 +748,20 @@ textarea.text-input{min-height:120px;resize:vertical;line-height:1.6}
       });
     }
 
-    // Dismiss handler
+    // Dismiss/close handlers — both the X and the "تجاهل" link close the modal
+    var closeModal = function(){
+      overlay.classList.remove('show');
+      document.documentElement.style.overflow = '';
+      try { sessionStorage.setItem('iab_dismissed', '1'); } catch(e){}
+    };
     var dismissBtn = document.getElementById('iabDismissBtn');
-    if (dismissBtn) {
-      dismissBtn.addEventListener('click', function(){
-        overlay.classList.remove('show');
-        document.documentElement.style.overflow = '';
-        try { sessionStorage.setItem('iab_dismissed', '1'); } catch(e){}
-      });
-    }
+    if (dismissBtn) dismissBtn.addEventListener('click', closeModal);
+    var closeBtn = document.getElementById('iabCloseBtn');
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
 
-    // Even if user dismissed the modal, re-show it when they click the CTA
-    // (the form JS is broken in in-app browsers — better to redirect them out)
-    document.querySelectorAll('.hero-cta').forEach(function(cta){
-      cta.addEventListener('click', function(e){
-        e.preventDefault();
-        try { sessionStorage.removeItem('iab_dismissed'); } catch(e){}
-        overlay.classList.add('show');
-        document.documentElement.style.overflow = 'hidden';
-        window.scrollTo(0, 0);
-      }, true);  // capture phase — run before other handlers
+    // Also allow closing by tapping the backdrop
+    overlay.addEventListener('click', function(e){
+      if (e.target === overlay) closeModal();
     });
   });
 })();
@@ -781,7 +771,7 @@ textarea.text-input{min-height:120px;resize:vertical;line-height:1.6}
 import { supabase } from './supabase-client.js?v=20260628';
 
 const state = { level:null, pain_point:null, experience:null, capital_range:null };
-const TOTAL_STEPS = 8;
+const TOTAL_STEPS = 7;
 let currentStep = 1;
 
 // Option groups
@@ -819,7 +809,7 @@ function validateStep(n) {
     case 4: if(!state.capital_range){ showError('capital_range'); return false; } break;
     case 5: {
       const why = document.getElementById('why_join').value.trim();
-      if(why.length < 20){ showError('why_join'); return false; }
+      if(!why){ showError('why_join'); return false; }
       break;
     }
     case 6: {
@@ -895,11 +885,10 @@ document.getElementById('applyForm').addEventListener('submit', async (e) => {
   const why = document.getElementById('why_join').value.trim();
   const name = document.getElementById('full_name').value.trim();
   const email = document.getElementById('email').value.trim().toLowerCase();
-  const whatsapp = document.getElementById('whatsapp').value.trim() || null;
 
   // Final guard — all steps should have been validated
   if (!state.level || !state.pain_point || !state.experience || !state.capital_range ||
-      why.length < 20 || !name || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      !why || !name || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     toast('فيه حقول ناقصة — رجع للوراء وكمّل', 'err');
     return;
   }
@@ -917,7 +906,7 @@ document.getElementById('applyForm').addEventListener('submit', async (e) => {
       p_capital_range: state.capital_range,
       p_full_name: name,
       p_email: email,
-      p_whatsapp: whatsapp
+      p_whatsapp: null
     });
 
     if (error) throw error;
