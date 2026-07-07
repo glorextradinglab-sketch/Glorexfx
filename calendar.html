@@ -82,6 +82,9 @@ button{cursor:pointer;font-family:inherit;border:none;background:none;color:inhe
 
 .days{display:grid;grid-template-columns:repeat(7,1fr);gap:.5rem}
 .day{aspect-ratio:1;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.01);padding:.5rem;display:flex;flex-direction:column;justify-content:space-between;position:relative;cursor:default;transition:all .2s ease;overflow:hidden}
+.day .day-thumb{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.35;z-index:0;pointer-events:none}
+.day .day-thumb::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(5,5,5,.55),rgba(5,5,5,.85))}
+.day.has-trades:hover .day-thumb{opacity:.55}
 .day.out{opacity:.25}
 .day.today{border-color:var(--gold);box-shadow:0 0 0 1px rgba(212,160,23,.3) inset}
 .day.has-trades{cursor:pointer}
@@ -455,6 +458,14 @@ function renderCalendar(){
 
     if(data){
       cls += ' has-trades ' + dayStatus(data);
+      // Find first screenshot from any trade this day
+      let thumb = '';
+      for(const t of data.trades){
+        const shots = t.screenshots || [];
+        const img = shots.find(u => !/\.(mp4|mov|webm)$/i.test(u));
+        if(img){ thumb = `<div class="day-thumb" style="background-image:url('${img.replace(/'/g,"\\'")}')"></div>`; break; }
+      }
+      inner = thumb + inner;
       inner += `<div>
         <div class="day-pnl">${fmtMoneyShort(data.pnl)}</div>
         <div class="day-trades"><i class="fas fa-circle" style="font-size:5px"></i> ${data.trades.length} ${data.trades.length===1?'صفقة':'صفقات'}</div>
