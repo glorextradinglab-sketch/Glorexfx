@@ -491,6 +491,11 @@ function render(){
             <input class="input" type="number" placeholder="0.5" id="risk-${t.id}" value="${t.risk_pct||''}" step="0.01" style="width:100px" onchange="autoSave('${t.id}')"/>
           </div>
 
+          <div class="input-label" style="flex:1 1 100%;min-width:0">
+            <small>📝 ملاحظة</small>
+            <textarea class="input" id="note-${t.id}" placeholder="شو تعلمت من هالصفقة؟" rows="2" style="width:100%;resize:vertical;min-height:44px;line-height:1.5" onchange="autoSave('${t.id}')">${(t.note||'').replace(/</g,'&lt;')}</textarea>
+          </div>
+
           <button class="btn btn-success" onclick="updateStatus('${t.id}','win')">
             <i class="fas fa-check"></i> رابحة
           </button>
@@ -678,13 +683,14 @@ window.updateStatus = async (id, status)=>{
   const pnl = parseFloat(document.getElementById('pnl-'+id).value || '0') || 0;
   const rr_actual = document.getElementById('rr-'+id).value || null;
   const risk_pct = parseFloat(document.getElementById('risk-'+id).value || '0') || null;
+  const note = (document.getElementById('note-'+id)?.value || '').trim() || null;
 
-  const payload = { status, pnl, rr_actual, risk_pct, updated_at: new Date().toISOString() };
+  const payload = { status, pnl, rr_actual, risk_pct, note, updated_at: new Date().toISOString() };
   const { error } = await supabase.from('trades').update(payload).eq('id', id);
   if(error){ toast('فشل التحديث: '+error.message, 'error'); return; }
 
   const t = allTrades.find(x=>x.id===id);
-  if(t){ t.status = status; t.pnl = pnl; t.rr_actual = rr_actual; t.risk_pct = risk_pct; }
+  if(t){ t.status = status; t.pnl = pnl; t.rr_actual = rr_actual; t.risk_pct = risk_pct; t.note = note; }
   updateStats();
   render();
   // Re-open the same trade card after re-render
@@ -702,15 +708,17 @@ window.autoSave = async (id)=>{
   const rr_actual = rrEl.value || null;
   const pnl  = parseFloat(pnlEl.value  || '0') || 0;
   const risk_pct = parseFloat(riskEl.value || '0') || null;
+  const noteEl = document.getElementById('note-'+id);
+  const note = (noteEl?.value || '').trim() || null;
 
   const t = allTrades.find(x=>x.id===id);
   if(!t) return;
 
-  const payload = { pnl, rr_actual, risk_pct, updated_at: new Date().toISOString() };
+  const payload = { pnl, rr_actual, risk_pct, note, updated_at: new Date().toISOString() };
   const { error } = await supabase.from('trades').update(payload).eq('id', id);
   if(error){ toast('فشل الحفظ: '+error.message, 'error'); return; }
 
-  t.pnl = pnl; t.rr_actual = rr_actual; t.risk_pct = risk_pct;
+  t.pnl = pnl; t.rr_actual = rr_actual; t.risk_pct = risk_pct; t.note = note;
   updateStats();
   // Update inline UI (without full re-render to keep focus)
   const tradeEl = document.querySelector(`.trade[data-id="${id}"]`);
