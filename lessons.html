@@ -19,12 +19,13 @@
   --border:rgba(255,255,255,0.08);
   --txt:#fff;--txt2:#ccc;--txt3:#999;--txt4:#666;
   --ease:cubic-bezier(.4,0,.2,1);--base:.3s;
+  --green:#22c55e;
 }
 body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
 a{color:inherit;text-decoration:none}
-button{cursor:pointer;font-family:inherit;border:none;background:none}
+button{cursor:pointer;font-family:inherit;border:none;background:none;color:inherit}
 
-.bg-mesh{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 900px 700px at 80% 0%,rgba(212,160,23,.12),transparent 60%),radial-gradient(ellipse 600px 800px at 0% 100%,rgba(160,120,16,.1),transparent 60%)}
+.bg-mesh{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 900px 700px at 80% 0%,rgba(212,160,23,.10),transparent 60%),radial-gradient(ellipse 600px 800px at 0% 100%,rgba(160,120,16,.08),transparent 60%)}
 
 .topbar{position:sticky;top:0;z-index:100;background:rgba(8,8,8,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:.95rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
 .brand{display:flex;align-items:center;gap:.6rem}
@@ -39,48 +40,166 @@ button{cursor:pointer;font-family:inherit;border:none;background:none}
 .user-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:.92rem;font-family:'Space Grotesk'}
 .user-menu{display:flex;align-items:center;gap:.7rem}
 
-.main{max-width:900px;margin:0 auto;padding:4rem 2rem;position:relative;z-index:1;text-align:center}
+/* ============ MAIN LAYOUT ============ */
+.wrap{
+  max-width:1400px;margin:0 auto;padding:1.5rem 1.25rem 3rem;
+  position:relative;z-index:1;
+  display:grid;grid-template-columns:1fr 380px;gap:1.5rem;
+  align-items:start;
+}
 
-.coming-icon{
-  width:120px;height:120px;border-radius:50%;
-  background:linear-gradient(135deg,rgba(212,160,23,.18),rgba(160,120,16,.08));
-  border:2px solid rgba(212,160,23,.3);
+/* ============ VIDEO SECTION ============ */
+.video-section{ min-width:0 }
+.video-wrap{
+  position:relative;padding-top:56.25%;
+  border-radius:16px;overflow:hidden;
+  background:#000;
+  border:1px solid var(--border);
+  box-shadow:0 20px 60px -20px rgba(0,0,0,.6);
+}
+.video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+
+/* Lesson info */
+.lesson-info{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:1.6rem 1.8rem;
+  margin-top:1.25rem;
+}
+.li-crumb{
+  color:var(--gold);font-size:.78rem;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;
+  margin-bottom:.6rem;
+}
+.li-title{
+  font-family:'Space Grotesk';
+  font-size:1.7rem;font-weight:700;
+  margin-bottom:.6rem;line-height:1.3;
+}
+.li-meta{
+  display:flex;gap:1.2rem;flex-wrap:wrap;
+  color:var(--txt3);font-size:.85rem;margin-bottom:1rem;
+}
+.li-meta span{display:inline-flex;align-items:center;gap:.35rem}
+.li-meta i{color:var(--gold)}
+.li-desc{color:var(--txt2);font-size:.95rem;line-height:1.75}
+
+.lesson-actions{
+  display:flex;gap:.7rem;flex-wrap:wrap;margin-top:1.2rem;
+  padding-top:1.2rem;border-top:1px solid var(--border);
+}
+.btn{
+  padding:.7rem 1.3rem;border-radius:10px;font-weight:600;
+  font-family:inherit;font-size:.9rem;cursor:pointer;
+  display:inline-flex;align-items:center;gap:.5rem;
+  transition:all .2s;
+}
+.btn-primary{
+  background:linear-gradient(135deg,var(--gold-l),var(--gold-d));color:#000;
+}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 22px -6px rgba(212,160,23,.5)}
+.btn-primary.done{background:linear-gradient(135deg,#4ade80,#16a34a)}
+.btn-ghost{
+  background:transparent;border:1px solid var(--border);color:var(--txt2);
+}
+.btn-ghost:hover{border-color:rgba(212,160,23,.4);color:var(--gold-l)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* ============ SIDEBAR (LESSONS LIST) ============ */
+.sidebar{
+  position:sticky;top:5rem;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:1.2rem;
+  max-height:calc(100vh - 6rem);
+  overflow-y:auto;
+}
+.sidebar::-webkit-scrollbar{width:6px}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(212,160,23,.25);border-radius:3px}
+
+.side-head{
+  display:flex;justify-content:space-between;align-items:center;
+  padding-bottom:.9rem;margin-bottom:.9rem;
+  border-bottom:1px solid var(--border);
+}
+.side-title{
+  font-family:'Space Grotesk';
+  font-size:1rem;font-weight:700;color:var(--gold-l);
+}
+.side-progress{
+  background:rgba(212,160,23,.1);color:var(--gold);
+  padding:.25rem .7rem;border-radius:20px;
+  font-size:.75rem;font-weight:700;font-family:'Space Grotesk';
+}
+
+.progress-bar{
+  height:5px;background:rgba(255,255,255,.05);border-radius:3px;
+  overflow:hidden;margin-bottom:1rem;
+}
+.progress-fill{
+  height:100%;background:linear-gradient(90deg,var(--gold-d),var(--gold-l));
+  border-radius:3px;transition:width .5s ease;
+}
+
+.lesson-list{display:flex;flex-direction:column;gap:.4rem}
+.lesson-item{
+  display:flex;align-items:center;gap:.75rem;
+  padding:.75rem .85rem;border-radius:10px;
+  border:1px solid transparent;
+  transition:all .2s;cursor:pointer;
+  background:rgba(255,255,255,.02);
+  text-align:right;
+  width:100%;
+}
+.lesson-item:hover:not(.locked){background:rgba(212,160,23,.06);border-color:rgba(212,160,23,.2)}
+.lesson-item.active{
+  background:rgba(212,160,23,.12);border-color:var(--gold);
+}
+.lesson-item.locked{opacity:.5;cursor:not-allowed}
+.lesson-item.done .li-num{background:var(--green);color:#000}
+.li-num{
+  flex-shrink:0;
+  width:32px;height:32px;border-radius:8px;
+  background:rgba(212,160,23,.15);color:var(--gold-l);
   display:flex;align-items:center;justify-content:center;
-  margin:0 auto 2rem;color:var(--gold);font-size:3rem;
-  animation:pulse 2.5s ease-in-out infinite;
-  box-shadow:0 0 60px rgba(212,160,23,.2)
+  font-family:'Space Grotesk';font-weight:700;font-size:.85rem;
 }
-@keyframes pulse{50%{transform:scale(1.06);box-shadow:0 0 80px rgba(212,160,23,.4)}}
+.lesson-item.active .li-num{background:var(--gold);color:#000}
+.li-info{flex:1;min-width:0}
+.li-name{
+  font-size:.9rem;font-weight:600;color:var(--txt);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.lesson-item.active .li-name{color:var(--gold-l)}
+.li-dur{
+  color:var(--txt4);font-size:.72rem;
+  font-family:'Space Grotesk';margin-top:.15rem;
+}
+.li-lock{color:var(--txt4);font-size:.85rem;flex-shrink:0}
 
-.h1{font-family:'Space Grotesk';font-size:2.6rem;font-weight:700;margin-bottom:.8rem;line-height:1.2}
-.h1 em{font-style:normal;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.sub{color:var(--txt2);font-size:1.1rem;margin-bottom:.5rem;line-height:1.7}
-.sub2{color:var(--txt3);font-size:.95rem;margin-bottom:3rem;max-width:550px;margin-left:auto;margin-right:auto;line-height:1.8}
-
-.preview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem;margin:0 auto;max-width:800px;text-align:right}
-.preview{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.4rem;transition:all .3s ease;position:relative;overflow:hidden}
-.preview:hover{border-color:rgba(212,160,23,.3);transform:translateY(-2px)}
-.preview-icon{width:42px;height:42px;border-radius:10px;background:rgba(212,160,23,.12);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:.9rem}
-.preview h3{font-family:'Space Grotesk';font-size:1.05rem;font-weight:700;margin-bottom:.3rem;filter:blur(7px);user-select:none;transition:filter .3s ease}
-.preview p{font-size:.85rem;color:var(--txt3);line-height:1.6;filter:blur(5px);user-select:none;transition:filter .3s ease}
-.preview:hover h3,.preview:hover p{filter:blur(4px)}
-.preview .lock-tag{position:absolute;top:1rem;left:1rem;padding:.2rem .55rem;background:rgba(212,160,23,.12);color:var(--gold);font-size:.65rem;font-weight:700;border-radius:6px;text-transform:uppercase;letter-spacing:1px}
-
-.notify{margin-top:3rem;background:var(--card);border:1px dashed rgba(212,160,23,.3);border-radius:14px;padding:1.5rem;display:inline-flex;align-items:center;gap:1rem}
-.notify i{color:var(--gold);font-size:1.5rem}
-.notify-text{text-align:right}
-.notify-text strong{display:block;font-family:'Space Grotesk';font-size:1rem;margin-bottom:.2rem}
-.notify-text span{color:var(--txt3);font-size:.85rem}
-
+/* ============ MOBILE ============ */
+@media (max-width:960px){
+  .wrap{grid-template-columns:1fr;padding:1rem}
+  .sidebar{position:static;max-height:none;order:-1}
+  .lesson-list{max-height:280px;overflow-y:auto}
+}
 @media (max-width:768px){
-  .topbar{padding:.8rem 1rem}
+  .topbar{padding:.7rem 1rem}
   .nav-tabs{display:none}
-  .main{padding:2.5rem 1rem}
-  .h1{font-size:2rem}
-  .coming-icon{width:90px;height:90px;font-size:2.2rem}
-  .notify{flex-direction:column;text-align:center;gap:.6rem}
-  .notify-text{text-align:center}
+  .lesson-info{padding:1.2rem 1.3rem}
+  .li-title{font-size:1.3rem}
 }
+
+/* Toast */
+.toast{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--card);border:1px solid var(--border);
+  padding:.85rem 1.4rem;border-radius:10px;font-size:.88rem;
+  opacity:0;transition:all .3s;z-index:1000;pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
@@ -97,7 +216,9 @@ button{cursor:pointer;font-family:inherit;border:none;background:none}
     <a href="checklist.html" class="nav-tab">القائمة</a>
     <a href="journal.html" class="nav-tab">السجل</a>
     <a href="calendar.html" class="nav-tab">التقويم</a>
-    <a href="news.html" class="nav-tab">الأخبار</a> <a href="lessons.html" class="nav-tab active">الدروس</a> <a href="chat.html" class="nav-tab">المحادثة</a>
+    <a href="news.html" class="nav-tab">الأخبار</a>
+    <a href="lessons.html" class="nav-tab active">الدروس</a>
+    <a href="chat.html" class="nav-tab">المحادثة</a>
   </nav>
   <div class="user-menu">
     <span class="user-name" id="userName">...</span>
@@ -105,71 +226,190 @@ button{cursor:pointer;font-family:inherit;border:none;background:none}
   </div>
 </header>
 
-<main class="main">
+<div class="wrap">
 
-  <div class="coming-icon"><i class="fas fa-graduation-cap"></i></div>
+  <!-- VIDEO + INFO -->
+  <div class="video-section">
+    <div class="video-wrap">
+      <iframe id="videoFrame" src="" loading="lazy"
+        allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
+        allowfullscreen></iframe>
+    </div>
 
-  <h1 class="h1">الدروس <em>قريباً</em> 🎬</h1>
-  <p class="sub">عم نجهز منهج كامل بالعربي خطوة بخطوة</p>
-  <p class="sub2">
-    منهج احترافي يشرح <strong>Supply & Demand</strong> و <strong>Fair Value Gap</strong>
-    و <strong>Smart Money Concepts</strong> على مؤشر Nasdaq —
-    مع أمثلة حية وتمارين تطبيقية
-  </p>
+    <div class="lesson-info">
+      <div class="li-crumb" id="crumb">الدرس 1 من 15</div>
+      <h1 class="li-title" id="title">جاري التحميل...</h1>
+      <div class="li-meta">
+        <span><i class="far fa-clock"></i> <span id="dur">—</span></span>
+        <span><i class="fas fa-video"></i> <span id="level">مقدمة</span></span>
+      </div>
+      <p class="li-desc" id="desc"></p>
 
-  <div class="preview-grid">
-    <div class="preview">
-      <span class="lock-tag"><i class="fas fa-lock"></i> قريباً</span>
-      <div class="preview-icon"><i class="fas fa-play"></i></div>
-      <h3>مقدمة في التداول</h3>
-      <p>أساسيات السوق، الفريمات، وكيف تقرأ الشارت</p>
-    </div>
-    <div class="preview">
-      <span class="lock-tag"><i class="fas fa-lock"></i> قريباً</span>
-      <div class="preview-icon"><i class="fas fa-chart-area"></i></div>
-      <h3>Supply & Demand</h3>
-      <p>كيف ترسم مناطق العرض والطلب الحقيقية</p>
-    </div>
-    <div class="preview">
-      <span class="lock-tag"><i class="fas fa-lock"></i> قريباً</span>
-      <div class="preview-icon"><i class="fas fa-bolt"></i></div>
-      <h3>Fair Value Gap</h3>
-      <p>الـ FVG والـ IFVG وكيف تستخدمهم للدخول</p>
-    </div>
-    <div class="preview">
-      <span class="lock-tag"><i class="fas fa-lock"></i> قريباً</span>
-      <div class="preview-icon"><i class="fas fa-crosshairs"></i></div>
-      <h3>Smart Money</h3>
-      <p>كيف تتعامل مع سحب السيولة و BOS و CHOCH</p>
-    </div>
-    <div class="preview">
-      <span class="lock-tag"><i class="fas fa-lock"></i> قريباً</span>
-      <div class="preview-icon"><i class="fas fa-shield-halved"></i></div>
-      <h3>إدارة المخاطرة</h3>
-      <p>قواعد ذهبية لحماية رأس مالك مدى الحياة</p>
-    </div>
-    <div class="preview">
-      <span class="lock-tag"><i class="fas fa-lock"></i> قريباً</span>
-      <div class="preview-icon"><i class="fas fa-trophy"></i></div>
-      <h3>صفقات حقيقية</h3>
-      <p>تحليل لايف لصفقات ربحت وصفقات خسرت — تعلم من الاثنين</p>
+      <div class="lesson-actions">
+        <button class="btn btn-primary" id="doneBtn">
+          <i class="fas fa-check"></i> <span>وضع علامة "تم"</span>
+        </button>
+        <button class="btn btn-ghost" id="prevBtn">
+          <i class="fas fa-arrow-right"></i> السابق
+        </button>
+        <button class="btn btn-ghost" id="nextBtn">
+          التالي <i class="fas fa-arrow-left"></i>
+        </button>
+      </div>
     </div>
   </div>
 
-  <div class="notify">
-    <i class="fas fa-bell"></i>
-    <div class="notify-text">
-      <strong>أنت من أوائل المسجلين 🎉</strong>
-      <span>رح يوصلك إيميل أول ما الدروس تصير جاهزة</span>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="side-head">
+      <div class="side-title">📚 المنهج الكامل</div>
+      <div class="side-progress"><span id="progNum">0</span>/<span id="progTotal">15</span></div>
     </div>
-  </div>
+    <div class="progress-bar"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+    <div class="lesson-list" id="lessonList"></div>
+  </aside>
 
-</main>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script type="module">
 import { supabase } from './supabase-client.js';
 import { setupUserMenu } from './user-menu.js?v=20260702';
 
+// ============================================================
+// LESSONS DATA — add new ones here as they get uploaded
+// ============================================================
+const LIBRARY_ID = 695904;
+const LESSONS = [
+  { id:1, title:'المقدمة — أهلاً في GLOREX', videoId:'fe81ee2a-a51d-4842-a410-3d028ffdb543', dur:'6:16', level:'مقدمة', desc:'تعرف على منهج GLOREX الكامل، الأدوات، والالتزام اللي بيوصلك للاحتراف.' },
+  { id:2, title:'شرح TradingView', videoId:'26b05a2a-a1b5-4c7c-931a-05512a0de8af', dur:'9:14', level:'أساسي', desc:'كل شي عن منصة TradingView — الإعدادات، الأدوات، وكيف تجهزها لأسلوبك بالتداول.' },
+  { id:3, title:'الدعوم والمقاومات', videoId:'2fbe8a67-767d-44d0-b920-56b5972fc734', dur:'12:35', level:'أساسي', desc:'كيف تحدد مستويات الدعوم والمقاومات الحقيقية على أي شارت — القواعد والأمثلة.' },
+  // Coming soon
+  { id:4, title:'الدعوم تصبح مقاومات والعكس', status:'coming', level:'أساسي' },
+  { id:5, title:'الاتجاه — صاعد / هابط / عرضي', status:'coming', level:'أساسي' },
+  { id:6, title:'Supply & Demand', status:'coming', level:'متوسط' },
+  { id:7, title:'الفريم الكبير (HTF)', status:'coming', level:'متوسط' },
+  { id:8, title:'الفريم الصغير (LTF)', status:'coming', level:'متوسط' },
+  { id:9, title:'شمعة الانغلاف + IFVG', status:'coming', level:'متقدم' },
+  { id:10, title:'تأكيد الدخول — IFVG على M1', status:'coming', level:'متقدم' },
+  { id:11, title:'الإدارة المالية + جلسات التداول', status:'coming', level:'متقدم' },
+  { id:12, title:'تحليل الأخبار بالذكاء الاصطناعي', status:'coming', level:'متقدم' },
+  { id:13, title:'Stop & Target (1:2 R:R)', status:'coming', level:'متقدم' },
+  { id:14, title:'خطة التداول (Trading Plan)', status:'coming', level:'متقدم' },
+  { id:15, title:'شرح MT5 — الدخول والخروج', status:'coming', level:'عملي' },
+];
+
+let currentIdx = 0;
+let completed = new Set();
+
+// Load progress from localStorage
+try {
+  const saved = JSON.parse(localStorage.getItem('glorex_lessons_done') || '[]');
+  completed = new Set(saved);
+} catch(e){}
+
+function saveProgress(){
+  try { localStorage.setItem('glorex_lessons_done', JSON.stringify([...completed])); } catch(e){}
+}
+
+function renderList(){
+  const list = document.getElementById('lessonList');
+  list.innerHTML = LESSONS.map((l, i) => {
+    const locked = l.status === 'coming';
+    const done = completed.has(l.id);
+    const active = i === currentIdx;
+    return `<button class="lesson-item ${active?'active':''} ${locked?'locked':''} ${done?'done':''}" data-idx="${i}" ${locked?'disabled':''}>
+      <div class="li-num">${done && !active ? '<i class="fas fa-check"></i>' : l.id}</div>
+      <div class="li-info">
+        <div class="li-name">${l.title}</div>
+        <div class="li-dur">${l.dur || 'قريباً'} · ${l.level || ''}</div>
+      </div>
+      ${locked ? '<i class="fas fa-lock li-lock"></i>' : ''}
+    </button>`;
+  }).join('');
+  list.querySelectorAll('.lesson-item:not(.locked)').forEach(el => {
+    el.addEventListener('click', () => loadLesson(parseInt(el.dataset.idx)));
+  });
+
+  // Progress bar
+  const total = LESSONS.filter(l => l.status !== 'coming').length;
+  const done = [...completed].filter(id => LESSONS.some(l => l.id === id && l.status !== 'coming')).length;
+  document.getElementById('progNum').textContent = done;
+  document.getElementById('progTotal').textContent = total;
+  document.getElementById('progFill').style.width = (total ? (done/total)*100 : 0) + '%';
+}
+
+function loadLesson(idx){
+  const l = LESSONS[idx];
+  if(!l || l.status === 'coming') return;
+  currentIdx = idx;
+
+  document.getElementById('videoFrame').src =
+    `https://iframe.mediadelivery.net/embed/${LIBRARY_ID}/${l.videoId}?autoplay=false&loop=false&muted=false&preload=true&responsive=true`;
+  document.getElementById('title').textContent = l.title;
+  document.getElementById('crumb').textContent = `الدرس ${l.id} من ${LESSONS.length}`;
+  document.getElementById('dur').textContent = l.dur || '—';
+  document.getElementById('level').textContent = l.level || '';
+  document.getElementById('desc').textContent = l.desc || '';
+
+  // Update done button
+  const doneBtn = document.getElementById('doneBtn');
+  if(completed.has(l.id)){
+    doneBtn.classList.add('done');
+    doneBtn.querySelector('span').textContent = '✓ تم إكماله';
+  } else {
+    doneBtn.classList.remove('done');
+    doneBtn.querySelector('span').textContent = 'وضع علامة "تم"';
+  }
+
+  // Nav buttons
+  const prev = LESSONS.slice(0, idx).reverse().find(x => x.status !== 'coming');
+  const next = LESSONS.slice(idx + 1).find(x => x.status !== 'coming');
+  document.getElementById('prevBtn').disabled = !prev;
+  document.getElementById('nextBtn').disabled = !next;
+  document.getElementById('prevBtn').dataset.idx = prev ? LESSONS.indexOf(prev) : -1;
+  document.getElementById('nextBtn').dataset.idx = next ? LESSONS.indexOf(next) : -1;
+
+  renderList();
+  // Scroll to top on mobile
+  if(window.innerWidth < 960) document.getElementById('videoFrame').scrollIntoView({behavior:'smooth', block:'start'});
+
+  // Save last watched
+  try { localStorage.setItem('glorex_last_lesson', l.id); } catch(e){}
+}
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+document.getElementById('doneBtn').addEventListener('click', () => {
+  const l = LESSONS[currentIdx];
+  if(!l) return;
+  if(completed.has(l.id)){
+    completed.delete(l.id);
+    toast('أُلغيت علامة الإكمال');
+  } else {
+    completed.add(l.id);
+    toast('✓ ممتاز! تم إكمال الدرس');
+  }
+  saveProgress();
+  loadLesson(currentIdx);
+});
+
+document.getElementById('prevBtn').addEventListener('click', (e) => {
+  const idx = parseInt(e.currentTarget.dataset.idx);
+  if(idx >= 0) loadLesson(idx);
+});
+document.getElementById('nextBtn').addEventListener('click', (e) => {
+  const idx = parseInt(e.currentTarget.dataset.idx);
+  if(idx >= 0) loadLesson(idx);
+});
+
+// Auth setup
 async function init(){
   try{
     const { data:{session} } = await supabase.auth.getSession();
@@ -182,6 +422,16 @@ async function init(){
       document.getElementById('userName').textContent = 'زائر';
     }
   }catch(e){ document.getElementById('userName').textContent = 'زائر'; }
+
+  // Load last watched lesson or first available
+  let startIdx = 0;
+  try {
+    const lastId = parseInt(localStorage.getItem('glorex_last_lesson') || '1');
+    const found = LESSONS.findIndex(l => l.id === lastId && l.status !== 'coming');
+    if(found >= 0) startIdx = found;
+  } catch(e){}
+
+  loadLesson(startIdx);
 }
 init();
 </script>
