@@ -282,22 +282,18 @@ import { setupUserMenu } from './user-menu.js?v=20260702';
 // ============================================================
 const LIBRARY_ID = 695904;
 const LESSONS = [
-  { id:1, title:'المقدمة — أهلاً في GLOREX', videoId:'23979d5c-4bfe-4b4e-a910-e7987cdae107', dur:'6:16', level:'مقدمة', desc:'تعرف على منهج GLOREX الكامل، الأدوات، والالتزام اللي بيوصلك للاحتراف.' },
-  { id:2, title:'شرح TradingView', videoId:'fb66377f-05fe-4836-b4bf-14459dd26002', dur:'9:14', level:'أساسي', desc:'كل شي عن منصة TradingView — الإعدادات، الأدوات، وكيف تجهزها لأسلوبك بالتداول.' },
-  { id:3, title:'الدعوم والمقاومات', videoId:'2fbe8a67-767d-44d0-b920-56b5972fc734', dur:'12:35', level:'أساسي', desc:'كيف تحدد مستويات الدعوم والمقاومات الحقيقية على أي شارت — القواعد والأمثلة.' },
+  { id:1, title:'البداية — أهلاً في GLOREX', videoId:'23979d5c-4bfe-4b4e-a910-e7987cdae107', dur:'6:16', level:'مقدمة', desc:'تعرف على منهج GLOREX الكامل، ما ستتعلمه، وكيف تحقق أقصى استفادة من الدروس.' },
+  { id:2, title:'إتقان منصة TradingView', videoId:'fb66377f-05fe-4836-b4bf-14459dd26002', dur:'9:14', level:'أساسي', desc:'كل شي عن TradingView — الإعدادات، الأدوات، والاختصارات اللي بتوفرلك وقت.' },
+  { id:3, title:'الدعوم والمقاومات — أساس التحليل', videoId:'2fbe8a67-767d-44d0-b920-56b5972fc734', dur:'12:35', level:'أساسي', desc:'كيف تحدد مستويات الدعوم والمقاومات الحقيقية — القواعد الذهبية والأمثلة العملية.' },
+  { id:4, title:'الدعوم تصبح مقاومات والعكس (SBR/RBS)', videoId:'a9a19b1c-6f8f-4b80-919f-9f05da4f9a27', dur:'', level:'أساسي', desc:'أقوى مفهوم بالتحليل الفني — كيف تستغل انقلاب المستويات لصفقات ذهبية.' },
+  { id:5, title:'قراءة الاتجاه — صاعد / هابط / عرضي', videoId:'017d0d9d-7908-4e70-904b-e9f072881be3', dur:'', level:'أساسي', desc:'كيف تعرف اتجاه السوق بلحظتها — HH/HL للصاعد، LH/LL للهابط، وكيف تتعامل مع كل حالة.' },
+  { id:6, title:'مناطق العرض والطلب (Supply & Demand)', videoId:'7ee51d09-8280-4a6d-9df2-3dc48ce2a1d8', dur:'', level:'متوسط', desc:'الفرق بين خطوط الدعم/المقاومة ومناطق العرض/الطلب — كيف تحدد المناطق الأصلية.' },
+  { id:7, title:'الفريم الكبير (HTF) — الرؤية الشاملة', videoId:'1f3a4c2e-faac-49c4-910b-86336ae23955', dur:'', level:'متوسط', desc:'ليش الفريم الكبير هو المرجع — Weekly / Daily / 4H، وكيف تحدد المناطق الأقوى.' },
+  { id:8, title:'الفريم الصغير (LTF) — نقاط الدخول', videoId:'8294f985-de46-47f1-8a26-98754df8290e', dur:'', level:'متوسط', desc:'كيف تستخدم الفريم الصغير للدخول بدقة — 15M / 5M / 1M.' },
   // Coming soon
-  { id:4, title:'الدعوم تصبح مقاومات والعكس', status:'coming', level:'أساسي' },
-  { id:5, title:'الاتجاه — صاعد / هابط / عرضي', status:'coming', level:'أساسي' },
-  { id:6, title:'Supply & Demand', status:'coming', level:'متوسط' },
-  { id:7, title:'الفريم الكبير (HTF)', status:'coming', level:'متوسط' },
-  { id:8, title:'الفريم الصغير (LTF)', status:'coming', level:'متوسط' },
-  { id:9, title:'شمعة الانغلاف + IFVG', status:'coming', level:'متقدم' },
-  { id:10, title:'تأكيد الدخول — IFVG على M1', status:'coming', level:'متقدم' },
-  { id:11, title:'الإدارة المالية + جلسات التداول', status:'coming', level:'متقدم' },
-  { id:12, title:'تحليل الأخبار بالذكاء الاصطناعي', status:'coming', level:'متقدم' },
-  { id:13, title:'Stop & Target (1:2 R:R)', status:'coming', level:'متقدم' },
-  { id:14, title:'خطة التداول (Trading Plan)', status:'coming', level:'متقدم' },
-  { id:15, title:'شرح MT5 — الدخول والخروج', status:'coming', level:'عملي' },
+  { id:9, title:'سحب السيولة + تأكيد الدخول', status:'coming', level:'متقدم' },
+  { id:10, title:'الستوب لوس والهدف — R:R 1:2', status:'coming', level:'متقدم' },
+  { id:11, title:'خطة التداول + النفسية + شرح الموقع', status:'coming', level:'خاتمة' },
 ];
 
 let currentIdx = 0;
