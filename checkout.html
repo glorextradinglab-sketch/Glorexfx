@@ -68,7 +68,12 @@ input{font-family:inherit;color:inherit}
 .sum-badge{display:inline-flex;align-items:center;gap:.4rem;background:rgba(34,197,94,.1);color:#22c55e;padding:.4rem .7rem;border-radius:8px;font-size:.78rem;font-weight:600;margin-top:1rem}
 
 /* Method tabs */
-.methods{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1.6rem}
+.methods{display:grid;grid-template-columns:1fr;gap:.6rem;margin-bottom:1.6rem}
+.usdt-help{background:linear-gradient(135deg,rgba(38,161,123,.08),rgba(38,161,123,.02));border:1px solid rgba(38,161,123,.3);border-radius:12px;padding:1rem 1.2rem;margin-bottom:1.4rem}
+.uh-head{display:flex;align-items:center;gap:.6rem;color:#26a17b;margin-bottom:.5rem;font-size:.95rem}
+.uh-head i{font-size:1.1rem}
+.uh-body{color:var(--txt2);font-size:.88rem;line-height:1.75}
+.uh-body b{color:#4ade80;font-weight:700}
 .method{padding:1rem;border-radius:11px;border:1.5px solid var(--border);background:var(--surface);text-align:right;display:flex;align-items:center;gap:.75rem;transition:all var(--base) var(--ease);cursor:pointer}
 .method:hover{border-color:rgba(255,255,255,.18)}
 .method.active{border-color:var(--gold);background:rgba(212,160,23,.06)}
@@ -281,13 +286,18 @@ input{font-family:inherit;color:inherit}
               <div class="method-fee">رسوم منخفضة جداً</div>
             </div>
           </button>
-          <button class="method disabled" title="قريباً">
-            <div class="method-ico paypal"><i class="fab fa-paypal"></i></div>
-            <div>
-              <div class="method-name">PayPal</div>
-              <div class="method-fee">قريباً</div>
-            </div>
-          </button>
+        </div>
+
+        <!-- USDT Help for beginners -->
+        <div class="usdt-help">
+          <div class="uh-head">
+            <i class="fas fa-circle-info"></i>
+            <strong>ما عندك USDT؟ ما بتعرف كيف؟</strong>
+          </div>
+          <p class="uh-body">
+            روح لأقرب <b>مكتب حوالات / صرافة</b> في بلدك، اطلب شراء <b>USDT شبكة TRC20</b> بالمبلغ المطلوب،
+            وأعطهم عنوان المحفظة الظاهر تحت. المكاتب بتعمل التحويل مباشرة بأقل من 5 دقايق.
+          </p>
         </div>
 
         <!-- USDT amount -->

@@ -149,6 +149,7 @@ button{cursor:pointer;font-family:inherit;border:none;background:none;color:inhe
     <a href="calendar.html" class="nav-tab">التقويم</a>
     <a href="news.html" class="nav-tab">الأخبار</a>
     <a href="lessons.html" class="nav-tab">الدروس</a>
+    <a href="updates.html" class="nav-tab">التحديثات</a>
     <a href="chat.html" class="nav-tab active">المحادثة</a>
   </nav>
   <div class="user-menu">
@@ -172,6 +173,7 @@ let canWrite = false;
 
 let currentUser = null;
 let currentUserName = '';
+let isAdmin = false;
 let messages = [];
 let channel = null;
 
@@ -189,6 +191,9 @@ function renderChat(){
         <span class="live-badge"><span class="live-dot"></span> مباشر</span>
       </div>
       <div class="online-count"><i class="fas fa-users"></i> <span id="onlineCount">0</span> متداول متصل</div>
+      <button id="clearChatBtn" onclick="clearAllChat()" style="display:none;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#fca5a5;padding:.4rem .8rem;border-radius:8px;font-family:inherit;font-size:.8rem;cursor:pointer;gap:.4rem;align-items:center">
+        <i class="far fa-trash-alt"></i> مسح المحادثة كاملة
+      </button>
     </div>
 
     <div class="messages" id="messages"></div>
@@ -285,7 +290,7 @@ function renderMessages(){
             <span class="msg-time">${fmtTime(m.created_at)}</span>
           </div>
           <div class="msg-text">${escapeHtml(m.content)}</div>
-          ${isMine ? `<div class="msg-actions"><button onclick="deleteMsg('${m.id}')"><i class="far fa-trash-alt"></i> حذف</button></div>` : ''}
+          ${(isMine || isAdmin) ? `<div class="msg-actions"><button onclick="deleteMsg('${m.id}')"><i class="far fa-trash-alt"></i> حذف${isAdmin && !isMine ? ' (أدمن)' : ''}</button></div>` : ''}
         </div>
       </div>`;
   }
@@ -326,6 +331,15 @@ async function sendMessage(){
 window.deleteMsg = async (id) => {
   if(!confirm('حذف هذه الرسالة؟')) return;
   await supabase.from('chat_messages').delete().eq('id', id);
+};
+
+window.clearAllChat = async () => {
+  if(!isAdmin) return;
+  if(!confirm('⚠️ سيتم مسح جميع الرسائل نهائياً — هل أنت متأكد؟')) return;
+  if(!confirm('تأكيد نهائي — لا يمكن التراجع!')) return;
+  const { error } = await supabase.from('chat_messages').delete().not('id', 'is', null);
+  if(error) alert('فشل: ' + error.message);
+  else { messages = []; renderMessages(); }
 };
 
 async function loadMessages(){
@@ -381,9 +395,21 @@ async function init(){
   currentUser = session.user;
   currentUserName = currentUser.user_metadata?.first_name || currentUser.email.split('@')[0];
 
+  // Check admin status
+  try {
+    const { data: prof } = await supabase.from('profiles').select('is_admin').eq('id', currentUser.id).single();
+    isAdmin = !!prof?.is_admin;
+  } catch(e) { isAdmin = false; }
+
   document.getElementById('userName').textContent = currentUserName;
   document.getElementById('userAvatar').textContent = (currentUserName[0]||'G').toUpperCase();
   await setupUserMenu(currentUser);
+
+  // Show admin controls
+  if(isAdmin){
+    const clearBtn = document.getElementById('clearChatBtn');
+    if(clearBtn) clearBtn.style.display = 'inline-flex';
+  }
 
   /* تحقق من الباقة — Free يقرأ بس */
   try {

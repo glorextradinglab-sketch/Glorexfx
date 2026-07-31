@@ -218,6 +218,7 @@ button{cursor:pointer;font-family:inherit;border:none;background:none;color:inhe
     <a href="calendar.html" class="nav-tab">التقويم</a>
     <a href="news.html" class="nav-tab">الأخبار</a>
     <a href="lessons.html" class="nav-tab active">الدروس</a>
+    <a href="updates.html" class="nav-tab">التحديثات</a>
     <a href="chat.html" class="nav-tab">المحادثة</a>
   </nav>
   <div class="user-menu">
@@ -433,5 +434,20 @@ init();
 </script>
 
 <script type="module" src="./splash.js?v=20260702"></script>
+
+<!-- Content protection (basic anti-copy) -->
+<script>
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('keydown', e => {
+  const k = e.key.toLowerCase();
+  if((e.metaKey||e.ctrlKey) && ['s','p','u','a','c'].includes(k)) e.preventDefault();
+  if(e.key === 'F12') e.preventDefault();
+});
+document.addEventListener('dragstart', e => e.preventDefault());
+document.addEventListener('selectstart', e => {
+  if(e.target.closest('input,textarea')) return;
+  e.preventDefault();
+});
+</script>
 </body>
 </html>

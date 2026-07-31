@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link rel="icon" type="image/png" href="glorex_bull_gold.png"/>
+<title>التحديثات — GLOREX</title>
+<meta name="theme-color" content="#0a0a0a"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold:#D4A017;--gold-l:#F0C030;--gold-d:#A07810;
+  --bg:#080808;--surface:#0d0d0d;--card:#111111;
+  --border:rgba(255,255,255,0.08);
+  --txt:#fff;--txt2:#ccc;--txt3:#999;--txt4:#666;
+  --ease:cubic-bezier(.4,0,.2,1);--base:.3s;
+  --green:#22c55e;--red:#ef4444;--purple:#a78bfa;
+}
+body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;font-family:inherit;border:none;background:none;color:inherit}
+
+.bg-mesh{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 900px 700px at 80% 0%,rgba(212,160,23,.10),transparent 60%),radial-gradient(ellipse 600px 800px at 0% 100%,rgba(160,120,16,.08),transparent 60%)}
+
+.topbar{position:sticky;top:0;z-index:100;background:rgba(8,8,8,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:.95rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{display:flex;align-items:center;gap:.6rem}
+.brand-logo{width:40px;height:40px;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 2px 8px rgba(212,160,23,.4))}
+.brand-logo img{width:100%;height:100%;object-fit:contain}
+.brand-name{font-family:'Space Grotesk';font-weight:700;font-size:1.1rem;letter-spacing:2px;color:#fff}
+.nav-tabs{display:flex;gap:.4rem;flex-wrap:wrap}
+.nav-tab{padding:.55rem 1.1rem;border-radius:10px;color:var(--txt3);font-size:.88rem;font-weight:500;transition:all var(--base) var(--ease)}
+.nav-tab:hover{color:var(--txt);background:rgba(255,255,255,.04)}
+.nav-tab.active{color:var(--gold);background:rgba(212,160,23,.1)}
+.user-name{font-size:.88rem;color:var(--txt3)}
+.user-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:.92rem;font-family:'Space Grotesk'}
+.user-menu{display:flex;align-items:center;gap:.7rem}
+
+/* Layout */
+.main{max-width:1100px;margin:0 auto;padding:2rem 1.25rem 4rem;position:relative;z-index:1}
+.head{margin-bottom:2rem;display:flex;justify-content:space-between;align-items:flex-end;gap:1rem;flex-wrap:wrap}
+.title{font-family:'Space Grotesk';font-size:2rem;font-weight:700;line-height:1.2}
+.title em{font-style:normal;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.sub{color:var(--txt3);font-size:.95rem;margin-top:.4rem}
+
+/* Filter tabs */
+.filters{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.filter{padding:.55rem 1.1rem;border-radius:100px;border:1px solid var(--border);background:var(--card);color:var(--txt2);font-size:.85rem;font-weight:600;transition:all .2s;font-family:inherit;cursor:pointer}
+.filter:hover{border-color:rgba(212,160,23,.35);color:var(--gold-l)}
+.filter.active{background:linear-gradient(135deg,var(--gold-l),var(--gold-d));color:#000;border-color:var(--gold)}
+.filter .count{background:rgba(0,0,0,.15);padding:.1rem .5rem;border-radius:10px;margin-right:.35rem;font-size:.72rem}
+.filter.active .count{background:rgba(0,0,0,.25)}
+
+/* Admin button */
+.add-btn{background:linear-gradient(135deg,var(--gold-l),var(--gold));color:#000;padding:.65rem 1.2rem;border-radius:10px;font-weight:700;font-size:.9rem;font-family:inherit;display:inline-flex;align-items:center;gap:.5rem;cursor:pointer;transition:all .2s}
+.add-btn:hover{transform:translateY(-1px);box-shadow:0 8px 20px -6px rgba(212,160,23,.5)}
+
+/* Feed */
+.feed{display:flex;flex-direction:column;gap:1.1rem}
+.item{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.4rem 1.6rem;position:relative;transition:all .25s ease;border-right:4px solid transparent}
+.item:hover{border-color:rgba(212,160,23,.25)}
+.item.win{border-right-color:var(--green)}
+.item.loss{border-right-color:var(--red)}
+.item.lesson{border-right-color:var(--purple)}
+.item.analysis{border-right-color:var(--gold)}
+
+.item-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:.9rem;flex-wrap:wrap}
+.item-badge{display:inline-flex;align-items:center;gap:.4rem;padding:.3rem .7rem;border-radius:100px;font-size:.72rem;font-weight:700;letter-spacing:.5px}
+.item.win .item-badge{background:rgba(34,197,94,.15);color:#4ade80}
+.item.loss .item-badge{background:rgba(239,68,68,.15);color:#fca5a5}
+.item.lesson .item-badge{background:rgba(167,139,250,.15);color:#c4b5fd}
+.item.analysis .item-badge{background:rgba(212,160,23,.15);color:var(--gold-l)}
+.item-date{color:var(--txt4);font-size:.78rem;font-family:'Space Grotesk';letter-spacing:1px}
+
+.item-title{font-family:'Space Grotesk';font-size:1.25rem;font-weight:700;color:var(--txt);margin-bottom:.6rem;line-height:1.4}
+.item-body{color:var(--txt2);font-size:.95rem;line-height:1.85;margin-bottom:1rem;white-space:pre-line}
+.item-body b{color:var(--gold-l);font-weight:700}
+
+/* Trade card details */
+.trade-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.7rem;padding:.9rem 1rem;background:rgba(0,0,0,.3);border-radius:10px;margin-bottom:1rem}
+.tstat{display:flex;flex-direction:column;gap:.15rem}
+.tstat-lbl{color:var(--txt4);font-size:.72rem}
+.tstat-val{font-family:'Space Grotesk';font-size:1.1rem;font-weight:700;color:var(--txt)}
+.tstat-val.pos{color:#4ade80}
+.tstat-val.neg{color:#fca5a5}
+
+/* Video embed */
+.item-video{position:relative;padding-top:56.25%;background:#000;border-radius:12px;overflow:hidden;margin-bottom:1rem;border:1px solid var(--border)}
+.item-video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+
+/* Image */
+.item-img{width:100%;border-radius:12px;overflow:hidden;margin-bottom:1rem;max-height:500px;object-fit:cover}
+
+/* Actions */
+.item-actions{display:flex;gap:.5rem;padding-top:.9rem;border-top:1px solid var(--border)}
+.act-btn{padding:.45rem .9rem;border-radius:8px;font-size:.82rem;font-family:inherit;background:transparent;border:1px solid var(--border);color:var(--txt3);cursor:pointer;transition:all .15s}
+.act-btn:hover{border-color:rgba(212,160,23,.4);color:var(--gold-l)}
+.act-btn.danger{color:#fca5a5}
+.act-btn.danger:hover{border-color:rgba(239,68,68,.4)}
+
+/* Empty state */
+.empty{text-align:center;padding:5rem 2rem;color:var(--txt3)}
+.empty i{font-size:3rem;color:var(--gold);opacity:.4;margin-bottom:1rem;display:block}
+.empty h3{color:var(--txt);font-family:'Space Grotesk';font-size:1.3rem;margin-bottom:.5rem}
+
+/* Add modal */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(10px);z-index:1000;display:none;align-items:center;justify-content:center;padding:1rem;overflow-y:auto}
+.overlay.show{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;max-width:600px;width:100%;max-height:90vh;overflow-y:auto}
+.modal h2{font-family:'Space Grotesk';margin-bottom:1.5rem;color:var(--gold-l)}
+.field{margin-bottom:1.2rem}
+.field label{display:block;color:var(--txt2);font-size:.85rem;font-weight:600;margin-bottom:.4rem}
+.field input,.field select,.field textarea{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--txt);padding:.7rem .95rem;border-radius:10px;font-family:inherit;font-size:.9rem}
+.field textarea{min-height:100px;resize:vertical;line-height:1.7}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--gold)}
+.modal-actions{display:flex;gap:.7rem;justify-content:flex-end;padding-top:1rem;border-top:1px solid var(--border)}
+.btn{padding:.7rem 1.4rem;border-radius:10px;font-weight:600;font-family:inherit;font-size:.9rem;cursor:pointer;transition:all .2s;border:none;color:#fff}
+.btn-primary{background:linear-gradient(135deg,var(--gold-l),var(--gold-d));color:#000}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--txt2)}
+
+/* Toast */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--card);border:1px solid var(--border);padding:.85rem 1.4rem;border-radius:10px;font-size:.88rem;opacity:0;transition:all .3s;z-index:2000;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media (max-width:768px){
+  .topbar{padding:.7rem 1rem}
+  .nav-tabs{display:none}
+  .main{padding:1.5rem 1rem}
+  .title{font-size:1.5rem}
+  .item{padding:1.1rem 1.2rem}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-mesh"></div>
+
+<header class="topbar">
+  <a href="glorex_landing.html" class="brand">
+    <div class="brand-logo"><img src="glorex_bull_gold.png" alt="GLOREX"/></div>
+    <div class="brand-name">GLOREXFX.COM</div>
+  </a>
+  <nav class="nav-tabs">
+    <a href="dashboard.html" class="nav-tab">الرئيسية</a>
+    <a href="lessons.html" class="nav-tab">الدروس</a>
+    <a href="updates.html" class="nav-tab active">التحديثات</a>
+    <a href="journal.html" class="nav-tab">السجل</a>
+    <a href="calendar.html" class="nav-tab">التقويم</a>
+    <a href="chat.html" class="nav-tab">المحادثة</a>
+  </nav>
+  <div class="user-menu">
+    <span class="user-name" id="userName">...</span>
+    <div class="user-avatar" id="userAvatar">G</div>
+  </div>
+</header>
+
+<main class="main">
+
+  <div class="head">
+    <div>
+      <h1 class="title">التحديثات <em>المباشرة</em></h1>
+      <div class="sub">صفقاتي اليومية + دروس جديدة + تحليلات السوق</div>
+    </div>
+    <button id="addBtn" class="add-btn" style="display:none" onclick="openAdd()">
+      <i class="fas fa-plus"></i> إضافة تحديث
+    </button>
+  </div>
+
+  <div class="filters" id="filters">
+    <button class="filter active" data-type="all">الكل <span class="count" id="c-all">0</span></button>
+    <button class="filter" data-type="win"><i class="fas fa-arrow-trend-up"></i> صفقات رابحة <span class="count" id="c-win">0</span></button>
+    <button class="filter" data-type="loss"><i class="fas fa-arrow-trend-down"></i> صفقات خاسرة <span class="count" id="c-loss">0</span></button>
+    <button class="filter" data-type="lesson"><i class="fas fa-video"></i> دروس جديدة <span class="count" id="c-lesson">0</span></button>
+    <button class="filter" data-type="analysis"><i class="fas fa-chart-line"></i> تحليلات <span class="count" id="c-analysis">0</span></button>
+  </div>
+
+  <div class="feed" id="feed">
+    <div class="empty">
+      <i class="far fa-clock"></i>
+      <h3>جاري التحميل...</h3>
+    </div>
+  </div>
+
+</main>
+
+<!-- Add Modal (admin only) -->
+<div class="overlay" id="addOverlay">
+  <div class="modal">
+    <h2><i class="fas fa-plus-circle"></i> إضافة تحديث جديد</h2>
+    <div class="field">
+      <label>النوع</label>
+      <select id="fType">
+        <option value="win">📈 صفقة رابحة</option>
+        <option value="loss">📉 صفقة خاسرة</option>
+        <option value="lesson">🎥 درس جديد</option>
+        <option value="analysis">📊 تحليل السوق</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>العنوان</label>
+      <input type="text" id="fTitle" placeholder="مثال: صفقة XAUUSD رابحة +$500"/>
+    </div>
+    <div class="field">
+      <label>النص / الشرح</label>
+      <textarea id="fBody" placeholder="اشرح الصفقة، الأسباب، ما تعلمته..."></textarea>
+    </div>
+    <div id="tradeFields">
+      <div class="field">
+        <label>الزوج / الأداة</label>
+        <input type="text" id="fPair" placeholder="XAUUSD"/>
+      </div>
+      <div class="field" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div>
+          <label>الربح / الخسارة ($)</label>
+          <input type="number" id="fPnl" placeholder="+500 أو -200" step="0.01"/>
+        </div>
+        <div>
+          <label>R:R</label>
+          <input type="text" id="fRR" placeholder="1:3"/>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label>Bunny Video ID (اختياري — للدروس)</label>
+      <input type="text" id="fVideoId" placeholder="abc-123-def"/>
+    </div>
+    <div class="field">
+      <label>رابط صورة (اختياري — للصفقات)</label>
+      <input type="text" id="fImage" placeholder="https://..."/>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeAdd()">إلغاء</button>
+      <button class="btn btn-primary" onclick="saveUpdate()">نشر التحديث</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { supabase } from './supabase-client.js';
+import { setupUserMenu } from './user-menu.js?v=20260702';
+
+const LIBRARY_ID = 695904;
+let currentUser = null;
+let isAdmin = false;
+let allItems = [];
+let currentFilter = 'all';
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2500);
+}
+
+function fmtDate(iso){
+  const d = new Date(iso);
+  return d.toLocaleDateString('ar-EG', {day:'numeric', month:'short', year:'numeric'});
+}
+
+function typeName(t){
+  return {win:'رابحة', loss:'خاسرة', lesson:'درس جديد', analysis:'تحليل'}[t] || t;
+}
+function typeIcon(t){
+  return {win:'fa-arrow-trend-up', loss:'fa-arrow-trend-down', lesson:'fa-video', analysis:'fa-chart-line'}[t];
+}
+
+function render(){
+  const feed = document.getElementById('feed');
+  const items = currentFilter==='all' ? allItems : allItems.filter(x => x.type === currentFilter);
+
+  // Update counts
+  document.getElementById('c-all').textContent = allItems.length;
+  ['win','loss','lesson','analysis'].forEach(t => {
+    document.getElementById('c-'+t).textContent = allItems.filter(x=>x.type===t).length;
+  });
+
+  if(items.length === 0){
+    feed.innerHTML = `<div class="empty"><i class="far fa-newspaper"></i><h3>لا توجد تحديثات بعد</h3><p>رح نشر أول تحديث قريباً</p></div>`;
+    return;
+  }
+
+  feed.innerHTML = items.map(it => {
+    const isTrade = it.type==='win' || it.type==='loss';
+    return `<div class="item ${it.type}" data-id="${it.id}">
+      <div class="item-head">
+        <div>
+          <span class="item-badge"><i class="fas ${typeIcon(it.type)}"></i> ${typeName(it.type)}</span>
+        </div>
+        <div class="item-date">${fmtDate(it.created_at)}</div>
+      </div>
+      <div class="item-title">${escape(it.title)}</div>
+      ${isTrade && (it.pair || it.pnl != null || it.rr) ? `
+        <div class="trade-stats">
+          ${it.pair ? `<div class="tstat"><span class="tstat-lbl">الأداة</span><span class="tstat-val">${escape(it.pair)}</span></div>` : ''}
+          ${it.pnl != null ? `<div class="tstat"><span class="tstat-lbl">النتيجة</span><span class="tstat-val ${it.pnl>=0?'pos':'neg'}">${it.pnl>=0?'+':''}$${Math.abs(it.pnl)}</span></div>` : ''}
+          ${it.rr ? `<div class="tstat"><span class="tstat-lbl">R:R</span><span class="tstat-val">${escape(it.rr)}</span></div>` : ''}
+        </div>` : ''}
+      ${it.video_id ? `<div class="item-video"><iframe src="https://iframe.mediadelivery.net/embed/${LIBRARY_ID}/${it.video_id}?autoplay=false&preload=true&responsive=true" allowfullscreen></iframe></div>` : ''}
+      ${it.image_url && !it.video_id ? `<img class="item-img" src="${escape(it.image_url)}" alt=""/>` : ''}
+      ${it.body ? `<div class="item-body">${escape(it.body)}</div>` : ''}
+      ${isAdmin ? `<div class="item-actions"><button class="act-btn danger" onclick="delItem('${it.id}')"><i class="far fa-trash-alt"></i> حذف</button></div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function escape(s){
+  return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+document.querySelectorAll('.filter').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.filter').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    currentFilter = b.dataset.type;
+    render();
+  });
+});
+
+window.openAdd = () => document.getElementById('addOverlay').classList.add('show');
+window.closeAdd = () => document.getElementById('addOverlay').classList.remove('show');
+
+window.saveUpdate = async () => {
+  const type = document.getElementById('fType').value;
+  const title = document.getElementById('fTitle').value.trim();
+  if(!title){ toast('العنوان مطلوب'); return; }
+  const payload = {
+    type,
+    title,
+    body: document.getElementById('fBody').value.trim() || null,
+    pair: document.getElementById('fPair').value.trim() || null,
+    pnl: parseFloat(document.getElementById('fPnl').value) || null,
+    rr: document.getElementById('fRR').value.trim() || null,
+    video_id: document.getElementById('fVideoId').value.trim() || null,
+    image_url: document.getElementById('fImage').value.trim() || null,
+    user_id: currentUser.id,
+  };
+  const { error } = await supabase.from('updates').insert(payload);
+  if(error){ toast('فشل: ' + error.message); return; }
+  toast('✓ تم النشر');
+  closeAdd();
+  ['fTitle','fBody','fPair','fPnl','fRR','fVideoId','fImage'].forEach(id => document.getElementById(id).value = '');
+  load();
+};
+
+window.delItem = async (id) => {
+  if(!confirm('حذف هذا التحديث؟')) return;
+  await supabase.from('updates').delete().eq('id', id);
+  toast('✓ حُذف');
+  load();
+};
+
+async function load(){
+  const { data, error } = await supabase.from('updates').select('*').order('created_at', {ascending: false}).limit(50);
+  if(!error) { allItems = data || []; render(); }
+}
+
+async function init(){
+  const { data:{session} } = await supabase.auth.getSession();
+  if(!session){ location.href = 'signin.html'; return; }
+  currentUser = session.user;
+  const fn = session.user.user_metadata?.first_name || session.user.email.split('@')[0];
+  document.getElementById('userName').textContent = fn;
+  document.getElementById('userAvatar').textContent = (fn[0]||'G').toUpperCase();
+  await setupUserMenu(session.user);
+
+  try {
+    const { data: prof } = await supabase.from('profiles').select('is_admin').eq('id', currentUser.id).single();
+    isAdmin = !!prof?.is_admin;
+    if(isAdmin) document.getElementById('addBtn').style.display = 'inline-flex';
+  } catch(e){}
+
+  await load();
+}
+init();
+</script>
+
+<script type="module" src="./splash.js?v=20260702"></script>
+</body>
+</html>
