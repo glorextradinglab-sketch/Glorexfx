@@ -1,13 +1,11 @@
 {
   "rewrites": [
-    { "source": "/", "destination": "/waitlist.html" },
+    { "source": "/", "destination": "/glorex_landing.html" },
     { "source": "/admin-glorex-2026", "destination": "/admin-glorex-2026.html" }
   ],
   "redirects": [
-    { "source": "/glorex_landing.html", "destination": "/waitlist.html", "permanent": false },
-    { "source": "/glorex_landing", "destination": "/waitlist.html", "permanent": false },
-    { "source": "/signin.html", "destination": "/waitlist.html", "permanent": false },
-    { "source": "/signup.html", "destination": "/waitlist.html", "permanent": false }
+    { "source": "/waitlist.html", "destination": "/signup.html", "permanent": false },
+    { "source": "/waitlist", "destination": "/signup.html", "permanent": false }
   ],
   "headers": [
     {
