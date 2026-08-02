@@ -613,8 +613,8 @@ footer{background:#050505;border-top:1px solid rgba(184,134,11,.12);padding:var(
   .nav-links,.nav-cta-d{display:none}
   .ham{display:flex}
   .footer-main{flex-direction:column}
-  .testi-col--md,.testi-col--lg{display:none}
-  .testi-col{flex:0 0 90vw;max-width:340px}
+  .testi-col{flex:0 0 88vw;max-width:340px}
+  .testi-col--md,.testi-col--lg{display:block}
   .lamp-beam{width:22rem}.lamp-line{width:22rem}.lamp-glow{width:16rem}
 }
 @media(min-width:768px){
@@ -865,6 +865,32 @@ body,body *{
   <a href="signup.html" class="btn btn-p dl">ابدأ الآن</a>
 </div>
 
+<!-- ═══ PROMO VIDEO (top of page — first fold) ═══ -->
+<section class="promo-video-section promo-video-top" data-aos="fade-up">
+  <div class="wrap">
+    <div class="promo-head">
+      <div class="promo-eyebrow">🎬 شوف الجولة قبل ما تبدأ</div>
+      <h2 class="promo-title">شاهد كيف <em>GLOREX</em> رح يغيّر تداولك</h2>
+      <p class="promo-sub">6 دقايق — كل شي عن المنصة، الأدوات، الدروس، والنظام الكامل</p>
+    </div>
+    <div class="promo-video-wrap">
+      <iframe
+        src="https://iframe.mediadelivery.net/embed/695904/3c13a5d4-0f18-4b99-ac63-5e291761226f?autoplay=false&loop=false&muted=false&preload=true&responsive=true"
+        loading="lazy"
+        allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+    <div class="promo-cta-wrap">
+      <a href="signup.html" class="btn btn-p btn-lg promo-cta">
+        <i class="fas fa-arrow-left"></i>
+        ابدأ الآن
+      </a>
+      <p class="promo-cta-hint">اختار الباقة اللي تناسبك · ألغِ في أي وقت · دفع آمن</p>
+    </div>
+  </div>
+</section>
+
 <!-- HERO -->
 <section class="hero" id="hero">
   <div class="hero-bg">
@@ -946,69 +972,6 @@ body,body *{
   </div>
 </section>
 
-<!-- ═══ PROMO VIDEO ═══ -->
-<section class="promo-video-section" data-aos="fade-up">
-  <div class="wrap">
-    <div class="promo-head">
-      <div class="promo-eyebrow">🎬 جولة سريعة</div>
-      <h2 class="promo-title">شاهد كيف <em>GLOREX</em> رح يغيّر تداولك</h2>
-      <p class="promo-sub">جولة داخل المنصة — الأدوات، الدروس، والنظام الكامل بأقل من دقيقتين</p>
-    </div>
-    <div class="promo-video-wrap">
-      <iframe
-        src="https://iframe.mediadelivery.net/embed/695904/3c13a5d4-0f18-4b99-ac63-5e291761226f?autoplay=false&loop=false&muted=false&preload=true&responsive=true"
-        loading="lazy"
-        allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
-        allowfullscreen>
-      </iframe>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ CONNECT / PARTNERS ═══ -->
-<section class="connect-section" data-aos="fade-up">
-  <div class="wrap">
-    <div class="connect-head">
-      <div class="connect-eyebrow">🤝 ابدأ رحلتك</div>
-      <h2 class="connect-title">افتح حسابك الحقيقي<br/><em>وابدأ التداول بثقة</em></h2>
-      <p class="connect-sub">افتح حسابك مع وسيطنا المعتمد — <b>Vantage Markets</b> — بضغطة زر. رسوم منخفضة، تنفيذ سريع، وأمان كامل.</p>
-    </div>
-
-    <!-- Main CTA — Broker -->
-    <a href="https://www.vantagemarkets.com/forex-trading/forex-trading-account/?affid=74155" target="_blank" rel="noopener" class="broker-card">
-      <div class="broker-icon"><i class="fas fa-chart-line"></i></div>
-      <div class="broker-body">
-        <div class="broker-label">وسيطنا المعتمد</div>
-        <div class="broker-name">Vantage Markets</div>
-        <div class="broker-desc">افتح حسابك الآن — تنفيذ فوري، سبريد منخفض، ودعم 24/7</div>
-      </div>
-      <div class="broker-cta">
-        <span>افتح الحساب</span>
-        <i class="fas fa-arrow-left"></i>
-      </div>
-    </a>
-
-    <!-- Social links -->
-    <div class="social-divider"><span>تابعنا على</span></div>
-    <div class="social-grid">
-      <a href="https://www.youtube.com/@GlorexFX" target="_blank" rel="noopener" class="social-card yt">
-        <i class="fab fa-youtube"></i>
-        <div>
-          <div class="social-name">YouTube</div>
-          <div class="social-handle">@GlorexFX</div>
-        </div>
-      </a>
-      <a href="https://www.instagram.com/glorex.fx/" target="_blank" rel="noopener" class="social-card ig">
-        <i class="fab fa-instagram"></i>
-        <div>
-          <div class="social-name">Instagram</div>
-          <div class="social-handle">@glorex.fx</div>
-        </div>
-      </a>
-    </div>
-  </div>
-</section>
-
 <style>
 .connect-section{padding:4rem 0 5rem;position:relative;z-index:2}
 .connect-head{text-align:center;max-width:800px;margin:0 auto 3rem}
@@ -1061,6 +1024,8 @@ body,body *{
 
 <style>
 .promo-video-section{padding:5rem 0 3rem;position:relative;z-index:2}
+.promo-video-top{padding:2.5rem 0 3rem;background:radial-gradient(ellipse at top,rgba(212,160,23,.10),transparent 60%)}
+.promo-video-top .promo-head{margin:0 auto 2rem}
 .promo-head{text-align:center;max-width:800px;margin:0 auto 3rem}
 .promo-eyebrow{display:inline-block;color:var(--gold);font-size:.9rem;font-weight:600;letter-spacing:3px;margin-bottom:1rem;padding:.5rem 1.2rem;background:rgba(212,160,23,.08);border:1px solid rgba(212,160,23,.25);border-radius:100px}
 .promo-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,4vw,3rem);font-weight:800;line-height:1.25;margin-bottom:1rem;color:#fff}
@@ -1068,34 +1033,13 @@ body,body *{
 .promo-sub{color:#999;font-size:1.05rem;line-height:1.7}
 .promo-video-wrap{position:relative;padding-top:56.25%;max-width:900px;margin:0 auto;border-radius:20px;overflow:hidden;background:#000;border:1.5px solid rgba(212,160,23,.35);box-shadow:0 30px 80px -20px rgba(212,160,23,.35),0 0 0 1px rgba(212,160,23,.1)}
 .promo-video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.promo-cta-wrap{text-align:center;margin-top:2.5rem;display:flex;flex-direction:column;align-items:center;gap:.85rem}
+.promo-cta{display:inline-flex;align-items:center;gap:.7rem;padding:1.15rem 3rem;font-size:1.15rem;font-weight:800;font-family:'Space Grotesk',sans-serif;letter-spacing:.5px;background:linear-gradient(135deg,#F0C030,#D4A017);color:#0a0a0a;border-radius:100px;text-decoration:none;box-shadow:0 20px 50px -10px rgba(212,160,23,.55),0 0 0 1px rgba(212,160,23,.3);transition:transform .25s ease, box-shadow .25s ease;position:relative;overflow:hidden;animation:promoCtaPulse 2.4s ease-in-out infinite}
+.promo-cta:hover{transform:translateY(-3px);box-shadow:0 30px 70px -10px rgba(212,160,23,.7),0 0 0 2px rgba(212,160,23,.5)}
+.promo-cta i{font-size:.95rem}
+.promo-cta-hint{color:#888;font-size:.85rem;letter-spacing:.3px;margin:0}
+@keyframes promoCtaPulse{0%,100%{box-shadow:0 20px 50px -10px rgba(212,160,23,.55),0 0 0 1px rgba(212,160,23,.3)}50%{box-shadow:0 25px 60px -10px rgba(212,160,23,.75),0 0 0 6px rgba(212,160,23,.15)}}
 </style>
-
-<!-- Ticker -->
-<div class="ticker">
-  <div class="ticker-track">
-    <span class="ticker-item">NQ Futures <span class="up">▲ +1.42%</span></span>
-    <span class="ticker-item">Supply & Demand ✦</span>
-    <span class="ticker-item">ES S&P500 <span class="up">▲ +0.81%</span></span>
-    <span class="ticker-item">Fair Value Gap ✦</span>
-    <span class="ticker-item">NASDAQ 100 <span class="up">▲ +1.22%</span></span>
-    <span class="ticker-item">Higher Highs & Lows ✦</span>
-    <span class="ticker-item">GC Gold <span class="up">▲ +0.35%</span></span>
-    <span class="ticker-item">Risk Reward 1:2 ✦</span>
-    <span class="ticker-item">BTC/USD <span class="dn">▼ −0.54%</span></span>
-    <span class="ticker-item">GLOREX Strategy ✦</span>
-    <!-- duplicate -->
-    <span class="ticker-item">NQ Futures <span class="up">▲ +1.42%</span></span>
-    <span class="ticker-item">Supply & Demand ✦</span>
-    <span class="ticker-item">ES S&P500 <span class="up">▲ +0.81%</span></span>
-    <span class="ticker-item">Fair Value Gap ✦</span>
-    <span class="ticker-item">NASDAQ 100 <span class="up">▲ +1.22%</span></span>
-    <span class="ticker-item">Higher Highs & Lows ✦</span>
-    <span class="ticker-item">GC Gold <span class="up">▲ +0.35%</span></span>
-    <span class="ticker-item">Risk Reward 1:2 ✦</span>
-    <span class="ticker-item">BTC/USD <span class="dn">▼ −0.54%</span></span>
-    <span class="ticker-item">GLOREX Strategy ✦</span>
-  </div>
-</div>
 
 <div class="glow-line"></div>
 
@@ -1616,6 +1560,53 @@ body,body *{
         ابدأ الآن <i class="fas fa-arrow-left"></i>
       </a>
       <p class="cta-note">اختار الباقة اللي تناسبك · ألغ في أي وقت · دفع آمن</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CONNECT / PARTNERS (broker + social) — placed after main CTA ═══ -->
+<section class="connect-section" data-aos="fade-up">
+  <div class="wrap">
+    <div class="connect-head">
+      <div class="connect-eyebrow">🤝 خطوتك الثانية</div>
+      <h2 class="connect-title">افتح حسابك الحقيقي<br/><em>مع وسيطنا المعتمد</em></h2>
+      <p class="connect-sub">
+        <b>ملاحظة:</b> بعد ما تشترك في GLOREX، بتقدر تفتح حساب تداول حقيقي مع وسيطنا المعتمد <b>Vantage Markets</b>.
+        <br/><span style="color:#888;font-size:.95rem">تسجيلك عند البروكر شي منفصل تماماً عن اشتراكك في المنصة.</span>
+      </p>
+    </div>
+
+    <!-- Broker card -->
+    <a href="https://www.vantagemarkets.com/forex-trading/forex-trading-account/?affid=74155" target="_blank" rel="noopener" class="broker-card">
+      <div class="broker-icon"><i class="fas fa-chart-line"></i></div>
+      <div class="broker-body">
+        <div class="broker-label">وسيطنا المعتمد</div>
+        <div class="broker-name">Vantage Markets</div>
+        <div class="broker-desc">تنفيذ فوري · سبريد منخفض · دعم 24/7</div>
+      </div>
+      <div class="broker-cta">
+        <span>افتح الحساب</span>
+        <i class="fas fa-arrow-left"></i>
+      </div>
+    </a>
+
+    <!-- Social links -->
+    <div class="social-divider"><span>تابعنا على</span></div>
+    <div class="social-grid">
+      <a href="https://www.youtube.com/@GlorexFX" target="_blank" rel="noopener" class="social-card yt">
+        <i class="fab fa-youtube"></i>
+        <div>
+          <div class="social-name">YouTube</div>
+          <div class="social-handle">@GlorexFX</div>
+        </div>
+      </a>
+      <a href="https://www.instagram.com/glorex.fx/" target="_blank" rel="noopener" class="social-card ig">
+        <i class="fab fa-instagram"></i>
+        <div>
+          <div class="social-name">Instagram</div>
+          <div class="social-handle">@glorex.fx</div>
+        </div>
+      </a>
     </div>
   </div>
 </section>
