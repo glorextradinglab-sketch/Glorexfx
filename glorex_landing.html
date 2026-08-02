@@ -843,13 +843,13 @@ body,body *{
     </a>
     <ul class="nav-links">
       <li><a href="#hero" class="active">الرئيسية</a></li>
-      <li><a href="#solution">المميزات</a></li>
-      <li><a href="#pricing">الأسعار</a></li>
+      <li><a href="#testimonials">آراء المتداولين</a></li>
+      <li><a href="#faq">الأسئلة الشائعة</a></li>
       <li><a href="#cta">انضم الآن</a></li>
     </ul>
     <div class="nav-cta-d">
       <a href="signin.html" class="nav-signin">تسجيل الدخول</a>
-      <a href="signup.html" class="btn btn-p" style="padding:.65rem 1.5rem;font-size:var(--tsm)">ابدأ الآن</a>
+      <a href="signup.html" class="btn btn-p" style="padding:.65rem 1.5rem;font-size:var(--tsm)">سجّل مجاناً</a>
     </div>
     <button class="ham" id="ham" aria-label="القائمة"><span></span><span></span><span></span></button>
   </div>
@@ -857,39 +857,13 @@ body,body *{
 
 <div class="overlay" id="ov"></div>
 <div class="drawer" id="drawer">
-  <a href="#hero"     class="dl">الرئيسية</a>
-  <a href="#solution" class="dl">المميزات</a>
-  <a href="#pricing"  class="dl">الأسعار</a>
-  <a href="#cta"      class="dl">انضم الآن</a>
-  <a href="signin.html" class="dl">تسجيل الدخول</a>
-  <a href="signup.html" class="btn btn-p dl">ابدأ الآن</a>
+  <a href="#hero"          class="dl">الرئيسية</a>
+  <a href="#testimonials"  class="dl">آراء المتداولين</a>
+  <a href="#faq"           class="dl">الأسئلة الشائعة</a>
+  <a href="#cta"           class="dl">انضم الآن</a>
+  <a href="signin.html"    class="dl">تسجيل الدخول</a>
+  <a href="signup.html"    class="btn btn-p dl">سجّل مجاناً</a>
 </div>
-
-<!-- ═══ PROMO VIDEO (top of page — first fold) ═══ -->
-<section class="promo-video-section promo-video-top" data-aos="fade-up">
-  <div class="wrap">
-    <div class="promo-head">
-      <div class="promo-eyebrow">🎬 شوف الجولة قبل ما تبدأ</div>
-      <h2 class="promo-title">شاهد كيف <em>GLOREX</em> رح يغيّر تداولك</h2>
-      <p class="promo-sub">6 دقايق — كل شي عن المنصة، الأدوات، الدروس، والنظام الكامل</p>
-    </div>
-    <div class="promo-video-wrap">
-      <iframe
-        src="https://iframe.mediadelivery.net/embed/695904/3c13a5d4-0f18-4b99-ac63-5e291761226f?autoplay=false&loop=false&muted=false&preload=true&responsive=true"
-        loading="lazy"
-        allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
-        allowfullscreen>
-      </iframe>
-    </div>
-    <div class="promo-cta-wrap">
-      <a href="signup.html" class="btn btn-p btn-lg promo-cta">
-        <i class="fas fa-arrow-left"></i>
-        ابدأ الآن
-      </a>
-      <p class="promo-cta-hint">اختار الباقة اللي تناسبك · ألغِ في أي وقت · دفع آمن</p>
-    </div>
-  </div>
-</section>
 
 <!-- HERO -->
 <section class="hero" id="hero">
@@ -924,10 +898,25 @@ body,body *{
   </div>
 
   <div class="wrap" style="width:100%">
-    <div class="hero-layout hero-layout--bg">
+    <div class="hero-split">
 
-      <!-- Content — centered over the 3D background -->
-      <div class="hero-content hero-content--bg">
+      <!-- LEFT: Video card (placed over the robot's arm area) -->
+      <div class="hero-video" data-aos="fade-right" data-aos-delay="120">
+        <div class="hero-video-frame">
+          <iframe
+            src="https://iframe.mediadelivery.net/embed/695904/3c13a5d4-0f18-4b99-ac63-5e291761226f?autoplay=false&loop=false&muted=false&preload=true&responsive=true"
+            loading="lazy"
+            allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+        <div class="hero-video-caption">
+          <i class="fas fa-clock"></i> 6 دقايق — جولة كاملة داخل GLOREX
+        </div>
+      </div>
+
+      <!-- RIGHT: Content -->
+      <div class="hero-content hero-content--side">
         <div class="hero-eyebrow" data-aos="fade-down" data-aos-duration="700">
           <span class="blink"></span>
           منصة تعليم التداول الاحترافية — 100% عربي
@@ -939,8 +928,14 @@ body,body *{
           تعبت من اللخبطة؟ حان وقت نظام واحد واضح
         </p>
         <div class="hero-ctas" data-aos="fade-up" data-aos-delay="220">
-          <a href="#pricing" class="btn btn-p btn-lg">ابدأ الآن <i class="fas fa-arrow-left"></i></a>
-          <a href="#how"     class="btn btn-g btn-lg"><i class="fas fa-play-circle"></i> شاهد كيف يعمل</a>
+          <a href="signup.html" class="btn btn-p btn-lg">
+            <i class="fas fa-user-plus"></i>
+            سجّل مجاناً
+          </a>
+          <button type="button" class="btn btn-g btn-lg" onclick="openPlansModal()">
+            <i class="fas fa-crown"></i>
+            اختر الباقة
+          </button>
         </div>
         <div class="hero-trust" data-aos="fade-up" data-aos-delay="280">
           <div class="trust-i"><i class="fas fa-rotate-left"></i> إلغاء في أي وقت</div>
@@ -948,26 +943,6 @@ body,body *{
         </div>
       </div>
 
-    </div>
-
-    <!-- Stats -->
-    <div class="hero-stats" data-aos="fade-up" data-aos-delay="400">
-      <div class="stat">
-        <span class="stat-v" data-count="500">500+</span>
-        <span class="stat-l">متداول نشط</span>
-      </div>
-      <div class="stat">
-        <span class="stat-v">9</span>
-        <span class="stat-l">دروس احترافية</span>
-      </div>
-      <div class="stat">
-        <span class="stat-v">AI</span>
-        <span class="stat-l">تداول بالذكاء الاصطناعي</span>
-      </div>
-      <div class="stat">
-        <span class="stat-v">Plan</span>
-        <span class="stat-l">نظام يخليك تلتزم</span>
-      </div>
     </div>
   </div>
 </section>
@@ -1039,230 +1014,59 @@ body,body *{
 .promo-cta i{font-size:.95rem}
 .promo-cta-hint{color:#888;font-size:.85rem;letter-spacing:.3px;margin:0}
 @keyframes promoCtaPulse{0%,100%{box-shadow:0 20px 50px -10px rgba(212,160,23,.55),0 0 0 1px rgba(212,160,23,.3)}50%{box-shadow:0 25px 60px -10px rgba(212,160,23,.75),0 0 0 6px rgba(212,160,23,.15)}}
+
+/* ═══ HERO SPLIT — video LEFT + content RIGHT ═══ */
+.hero-split{display:grid;grid-template-columns:1.05fr 1fr;gap:3rem;align-items:center;width:100%;position:relative;z-index:3}
+.hero-video{position:relative}
+.hero-video-frame{position:relative;padding-top:56.25%;border-radius:20px;overflow:hidden;background:#000;border:1.5px solid rgba(212,160,23,.4);box-shadow:0 30px 80px -20px rgba(212,160,23,.4),0 0 0 1px rgba(212,160,23,.12), inset 0 0 0 1px rgba(255,255,255,.03);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.hero-video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.hero-video-caption{margin-top:.9rem;text-align:center;color:#bbb;font-size:.88rem;letter-spacing:.3px}
+.hero-video-caption i{color:var(--gold);margin-left:.4rem}
+.hero-content--side{text-align:right}
+.hero-content--side .hero-h1{font-size:clamp(2.4rem,4.5vw,4rem)}
+.hero-content--side .hero-ctas{justify-content:flex-start}
+.hero-content--side .hero-trust{justify-content:flex-start}
+@media(max-width:960px){
+  .hero-split{grid-template-columns:1fr;gap:2rem}
+  .hero-content--side{text-align:center;order:2}
+  .hero-video{order:1}
+  .hero-content--side .hero-ctas{justify-content:center}
+  .hero-content--side .hero-trust{justify-content:center}
+}
+
+/* ═══ PLANS MODAL ═══ */
+.plans-modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:9998;opacity:0;visibility:hidden;transition:opacity .3s ease,visibility .3s ease}
+.plans-modal-backdrop.open{opacity:1;visibility:visible}
+.plans-modal{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:1rem;overflow-y:auto;visibility:hidden;pointer-events:none}
+.plans-modal.open{visibility:visible;pointer-events:auto}
+.plans-modal-inner{background:linear-gradient(180deg,#0e0e12,#050505);border:1px solid rgba(212,160,23,.3);border-radius:24px;max-width:1000px;width:100%;padding:2.5rem 2rem;position:relative;box-shadow:0 40px 100px -20px rgba(0,0,0,.9),0 0 0 1px rgba(212,160,23,.15);max-height:95vh;overflow-y:auto;transform:scale(.94);opacity:0;transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .3s ease}
+.plans-modal.open .plans-modal-inner{transform:scale(1);opacity:1}
+.plans-modal-close{position:absolute;top:1rem;left:1rem;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s ease}
+.plans-modal-close:hover{background:rgba(255,255,255,.12)}
+.plans-modal-head{text-align:center;margin-bottom:2rem}
+.plans-modal-eyebrow{display:inline-block;color:var(--gold);font-size:.78rem;font-weight:700;letter-spacing:3px;margin-bottom:.9rem;padding:.4rem 1rem;background:rgba(212,160,23,.1);border:1px solid rgba(212,160,23,.3);border-radius:100px}
+.plans-modal-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.6rem,3vw,2.3rem);font-weight:800;color:#fff;margin-bottom:.5rem}
+.plans-modal-sub{color:#999;font-size:.95rem}
+.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+@media(max-width:820px){.plans-grid{grid-template-columns:1fr}}
+.plan-card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:1.75rem 1.4rem;position:relative;transition:border-color .25s ease,transform .25s ease}
+.plan-card:hover{border-color:rgba(212,160,23,.3);transform:translateY(-3px)}
+.plan-card.feat{background:linear-gradient(180deg,rgba(212,160,23,.10),rgba(212,160,23,.02));border-color:rgba(212,160,23,.5);box-shadow:0 20px 60px -20px rgba(212,160,23,.35)}
+.plan-badge{position:absolute;top:-11px;right:1.4rem;background:linear-gradient(135deg,#F0C030,#D4A017);color:#000;font-size:.7rem;font-weight:800;padding:.3rem .7rem;border-radius:100px;letter-spacing:1px}
+.plan-name{font-family:'Space Grotesk',sans-serif;font-size:.8rem;font-weight:700;color:#999;letter-spacing:3px;margin-bottom:.6rem}
+.plan-price{display:flex;align-items:baseline;gap:.4rem;margin-bottom:.2rem}
+.plan-price .cur{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;color:#bbb;font-weight:700}
+.plan-price .num{font-family:'Space Grotesk',sans-serif;font-size:2.6rem;font-weight:800;color:#fff;line-height:1}
+.plan-price .per{color:#888;font-size:.85rem;margin-right:.2rem}
+.plan-desc{color:#888;font-size:.85rem;margin-bottom:1rem;min-height:2.2em}
+.plan-features{list-style:none;padding:0;margin:0 0 1.4rem;display:flex;flex-direction:column;gap:.55rem}
+.plan-features li{display:flex;align-items:center;gap:.55rem;color:#ccc;font-size:.88rem}
+.plan-features li i{color:#22c55e;font-size:.75rem;flex-shrink:0}
+.plan-cta{display:block;text-align:center;padding:.85rem;border-radius:12px;font-weight:700;font-size:.95rem;text-decoration:none;transition:transform .2s ease}
+.plan-cta.primary{background:linear-gradient(135deg,#F0C030,#D4A017);color:#000}
+.plan-cta.ghost{background:rgba(255,255,255,.05);color:#fff;border:1px solid rgba(255,255,255,.12)}
+.plan-cta:hover{transform:translateY(-2px)}
 </style>
-
-<div class="glow-line"></div>
-
-<!-- PROBLEM -->
-<section class="sec sec--surface" id="problem">
-  <div class="wrap">
-    <div class="sec-head" data-aos="fade-up">
-      <div class="sec-label">المشكلة</div>
-      <h2 class="sec-title">هل تعاني من هذه المشاكل؟</h2>
-      <div class="rule"></div>
-    </div>
-    <div class="prob-grid">
-      <div class="prob-card" data-aos="fade-up" data-aos-delay="80">
-        <div class="prob-ico"><i class="fas fa-stop-circle"></i></div>
-        <h3>"أدخل صفقة وتلاقي السوق أخذ الـ SL ورجع لفوق"</h3>
-        <p>السوق يصطاد الـ Stop Loss تبعك ثم يكمل باتجاهك — تخسر مرتين: المال والثقة. هذا مو خطأك، هذا liquidity sweep وفي له حل</p>
-      </div>
-      <div class="prob-card" data-aos="fade-up" data-aos-delay="160">
-        <div class="prob-ico"><i class="fas fa-sync-alt"></i></div>
-        <h3>"كل ما يجيني يوم أحمر أغير الاستراتيجية"</h3>
-        <p>تتداول بطريقة مختلفة كل أسبوع — تيوتيوب، توصيات، تقليد — بدون نظام ثابت تقدر تقيمه وتحسّنه</p>
-      </div>
-      <div class="prob-card" data-aos="fade-up" data-aos-delay="240">
-        <div class="prob-ico"><i class="fas fa-question-circle"></i></div>
-        <h3>"كل يوم أخسر وما بعرف ليش"</h3>
-        <p>ما تسجل صفقاتك، ما تتتبع أداءك، ما تعرف هل المشكلة في الاستراتيجية أو الدخول أو الـ Stop أو ردة فعلك العاطفية</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="glow-line"></div>
-
-<!-- SOLUTION -->
-<section class="sec" id="solution">
-  <div class="wrap">
-    <div class="sec-head" data-aos="fade-up">
-      <div class="sec-label">الحل</div>
-      <h2 class="sec-title">الحل الكامل في مكان واحد</h2>
-      <p class="sec-sub">GLOREX يعطيك كل الأدوات لتتحول من متداول عشوائي إلى متداول يعمل بنظام</p>
-    </div>
-    <div class="sol-grid">
-      <div class="sol-card" data-aos="fade-up" data-aos-delay="60">
-        <div class="sol-badge">قائمة التحقق الذكية</div>
-        <span class="sol-icon"><i class="fas fa-tasks"></i></span>
-        <h3>قبل كل صفقة — قرار مبني على نظام</h3>
-        <p>عوضاً عن الدخول بإحساس، نظام Confluence ذكي يحسب نسبة قوة الصفقة من 0-100% بناءً على الاتجاه، المناطق، وتأكيد الدخول.</p>
-        <ul class="feat-list">
-          <li><span class="ck"><i class="fas fa-check"></i></span>تأكيد الاتجاه على عدة فريمات</li>
-          <li><span class="ck"><i class="fas fa-check"></i></span>تقييم آلي لجودة الصفقة</li>
-          <li><span class="ck"><i class="fas fa-check"></i></span>تحديد المخاطرة قبل الدخول</li>
-          <li><span class="ck"><i class="fas fa-check"></i></span>توصية ذكية: ادخل أو تجنب</li>
-        </ul>
-      </div>
-
-      <div class="sol-card" data-aos="fade-up" data-aos-delay="120">
-        <div class="sol-badge">سجل الصفقات</div>
-        <span class="sol-icon"><i class="fas fa-book-open"></i></span>
-        <h3>كل صفقة موثّقة — ما يضيع منك شيء</h3>
-        <p>سجّل كل تفاصيل صفقاتك مع الصور والفيديوهات. راجع، حلّل، وحدّد الأنماط في أدائك لتطوّر استراتيجيتك مع الوقت.</p>
-        <ul class="feat-list">
-          <li><span class="ck"><i class="fas fa-check"></i></span>رفع صور وفيديوهات لكل صفقة</li>
-          <li><span class="ck"><i class="fas fa-check"></i></span>تتبع الـ R:R والمخاطرة الفعلية</li>
-          <li><span class="ck"><i class="fas fa-check"></i></span>فلترة: رابحة / خاسرة / متعادلة</li>
-          <li><span class="ck"><i class="fas fa-check"></i></span>إحصائيات أداء شاملة</li>
-        </ul>
-      </div>
-
-      <div class="sol-card" data-aos="fade-up" data-aos-delay="180">
-        <div class="sol-badge">تقويم الصفقات</div>
-        <span class="sol-icon"><i class="fas fa-calendar-day"></i></span>
-        <h3>أداؤك بنظرة واحدة شاملة</h3>
-        <p>تقويم شهري ملوّن يعرض ربح وخسارة كل يوم. شوف أسابيعك القوية والضعيفة، واكتشف توجهك بصرياً.</p>
-        <ul class="feat-list">
-          <li><span class="ck"><i class="fas fa-check"></i></span>عرض شهري بالألوان</li>
-          <li><span class="ck"><i class="fas fa-check"></i></span>ملخص أسبوعي + شهري</li>
-          <li><span class="ck"><i class="fas fa-check"></i></span>تفاصيل صفقات كل يوم</li>
-          <li><span class="ck"><i class="fas fa-check"></i></span>نسبة نجاح حقيقية</li>
-        </ul>
-      </div>
-
-      <div class="sol-card" data-aos="fade-up" data-aos-delay="60">
-        <div class="sol-badge">حاسبة المخاطر</div>
-        <span class="sol-icon"><i class="fas fa-calculator"></i></span>
-        <h3>احسب حجم العقد بدقة</h3>
-        <p>أدخل رأس مالك ونسبة المخاطرة ومسافة الستوب — تحصل على حجم العقد المظبوط فوراً. تدعم كل الأدوات: المؤشرات، الفوركس، الذهب، الكريبتو.</p>
-        <ul class="feat-list">
-          <li><span class="ck"><i class="fas fa-check"></i></span>أكثر من 20 أداة مالية</li>
-          <li><span class="ck"><i class="fas fa-check"></i></span>حساب فوري وآمن</li>
-          <li><span class="ck"><i class="fas fa-check"></i></span>توصيات إدارة مخاطر</li>
-          <li><span class="ck"><i class="fas fa-check"></i></span>دعم كل البروكرز (CFD، Futures)</li>
-        </ul>
-      </div>
-
-      <div class="sol-card" data-aos="fade-up" data-aos-delay="120">
-        <div class="sol-badge">تقارير الـ AI</div>
-        <span class="sol-icon"><i class="fas fa-newspaper"></i></span>
-        <h3>تقارير ذكية مخصصة لك</h3>
-        <p>اطلب من الذكاء الاصطناعي تقارير يومية أو لحظية عن أي زوج عملة — يبحث في الإنترنت ويعطيك التحليل بالعربي مع توقع الجلسة.</p>
-        <ul class="feat-list">
-          <li><span class="ck"><i class="fas fa-check"></i></span>تحديث تلقائي بمواعيدك</li>
-          <li><span class="ck"><i class="fas fa-check"></i></span>تحليل بالعربي + المصادر</li>
-          <li><span class="ck"><i class="fas fa-check"></i></span>توقع للجلسة المناسبة</li>
-          <li><span class="ck"><i class="fas fa-check"></i></span>اختيار الفترة (1-5 أيام)</li>
-        </ul>
-      </div>
-
-      <div class="sol-card" data-aos="fade-up" data-aos-delay="180">
-        <div class="sol-badge">المجتمع</div>
-        <span class="sol-icon"><i class="fas fa-comments"></i></span>
-        <h3>محادثة حية مع المتداولين</h3>
-        <p>تواصل مع مئات المتداولين العرب لحظياً، شارك صفقاتك، اطلب رأي، وكوّن شبكتك في عالم التداول.</p>
-        <ul class="feat-list">
-          <li><span class="ck"><i class="fas fa-check"></i></span>محادثة فورية (Real-time)</li>
-          <li><span class="ck"><i class="fas fa-check"></i></span>مشاركة صور التحليلات</li>
-          <li><span class="ck"><i class="fas fa-check"></i></span>غرفة VIP للمشتركين</li>
-          <li><span class="ck"><i class="fas fa-check"></i></span>دعم من المدرب مباشرة</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="glow-line"></div>
-
-<!-- HOW IT WORKS -->
-<section class="sec sec--surface" id="how">
-  <div class="wrap">
-    <div class="sec-head" data-aos="fade-up">
-      <div class="sec-label">الطريقة</div>
-      <h2 class="sec-title">كيف يعمل GLOREX؟</h2>
-      <div class="rule"></div>
-    </div>
-    <div class="steps" data-aos="fade-up" data-aos-delay="100">
-      <div class="step">
-        <div class="step-n">١</div>
-        <h3>سجّل واختر باقتك</h3>
-        <p>التسجيل مجاني، ادفع لاحقاً عند الترقية</p>
-      </div>
-      <div class="step-con"></div>
-      <div class="step">
-        <div class="step-n">٢</div>
-        <h3>تعلّم الاستراتيجية</h3>
-        <p>منهج كامل بالعربي خطوة بخطوة</p>
-      </div>
-      <div class="step-con"></div>
-      <div class="step">
-        <div class="step-n">٣</div>
-        <h3>طبّق بأدواتنا</h3>
-        <p>قائمة التحقق، السجل، التقويم، والذكاء الاصطناعي</p>
-      </div>
-      <div class="step-con"></div>
-      <div class="step">
-        <div class="step-n">٤</div>
-        <h3>طوّر باستمرار</h3>
-        <p>راجع أداءك وحسّن استراتيجيتك يومياً</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- PRICING -->
-<section class="sec" id="pricing">
-  <div class="wrap">
-    <div class="sec-head" data-aos="fade-up">
-      <div class="sec-label">الأسعار</div>
-      <h2 class="sec-title">اختر باقتك</h2>
-      <p class="sec-sub">ابدأ اليوم وألغ في أي وقت — بدون أي التزامات</p>
-    </div>
-    <div class="price-grid">
-      <div class="price-card" data-aos="fade-up" data-aos-delay="80">
-        <p class="price-tier">Free</p>
-        <div class="price-num">
-          <span class="cur">$</span><span class="amt">0</span>
-          <span class="per">للأبد</span>
-        </div>
-        <ul class="price-feats">
-          <li><i class="fas fa-check"></i>حاسبة المخاطر</li>
-          <li><i class="fas fa-check"></i>التقويم الاقتصادي العام</li>
-          <li><i class="fas fa-check"></i>قراءة المحادثة الجماعية</li>
-        </ul>
-        <a href="signup.html" class="btn btn-g btn-w">ابدأ مجاناً</a>
-      </div>
-
-      <div class="price-card feat" data-aos="fade-up" data-aos-delay="160">
-        <div class="pop-tag">⭐ الأكثر شعبية</div>
-        <div class="discount-tag">خصم 30% — لفترة محدودة</div>
-        <p class="price-tier">Basic</p>
-        <div class="price-num">
-          <span class="old-price">$39</span>
-          <span class="cur">$</span><span class="amt">27</span>
-          <span class="per">/ شهرياً</span>
-        </div>
-        <ul class="price-feats">
-          <li><i class="fas fa-check"></i>كل ميزات Free</li>
-          <li><i class="fas fa-check"></i>قائمة الفحص + سجل صفقات لا محدود</li>
-          <li><i class="fas fa-check"></i>تنبيهات الأخبار القوية (FOMC، NFP)</li>
-          <li><i class="fas fa-check"></i>50 تقرير AI شهرياً</li>
-          <li><i class="fas fa-check"></i>الدروس + فيديوهات صفقاتي اليومية</li>
-        </ul>
-        <a href="subscribe.html" class="btn btn-p btn-w">اشترك الآن</a>
-      </div>
-
-      <div class="price-card" data-aos="fade-up" data-aos-delay="240">
-        <div class="discount-tag">خصم 30% — لفترة محدودة</div>
-        <p class="price-tier">Premium</p>
-        <div class="price-num">
-          <span class="old-price">$129</span>
-          <span class="cur">$</span><span class="amt">89</span>
-          <span class="per">/ شهرياً</span>
-        </div>
-        <ul class="price-feats">
-          <li><i class="fas fa-check"></i>كل ميزات Basic</li>
-          <li><i class="fas fa-check"></i>200 تقرير AI شهرياً</li>
-          <li><i class="fas fa-check"></i><strong style="color:var(--gold)">جلسة 1:1 شهرياً معي</strong></li>
-          <li><i class="fas fa-check"></i>تحليل خبير لصفقاتك</li>
-          <li><i class="fas fa-check"></i>أولوية الدعم الفني</li>
-        </ul>
-        <a href="subscribe.html" class="btn btn-g btn-w">اشترك الآن</a>
-      </div>
-    </div>
-  </div>
-</section>
 
 <div class="glow-line"></div>
 
@@ -1556,10 +1360,15 @@ body,body *{
     <div class="cta-inner" data-aos="fade-up">
       <h2>جاهز <em>تبدأ</em>؟</h2>
       <p>انضم لمئات المتداولين العرب اللي قرروا يتداولون بنظام واضح — أدوات احترافية، محتوى عربي، ونتائج قابلة للقياس</p>
-      <a href="subscribe.html" class="btn btn-p btn-lg">
-        ابدأ الآن <i class="fas fa-arrow-left"></i>
-      </a>
-      <p class="cta-note">اختار الباقة اللي تناسبك · ألغ في أي وقت · دفع آمن</p>
+      <div style="display:flex;gap:.8rem;flex-wrap:wrap;justify-content:center;align-items:center">
+        <a href="signup.html" class="btn btn-p btn-lg">
+          <i class="fas fa-user-plus"></i> سجّل مجاناً
+        </a>
+        <button type="button" class="btn btn-g btn-lg" onclick="openPlansModal()">
+          <i class="fas fa-crown"></i> اختر الباقة
+        </button>
+      </div>
+      <p class="cta-note">اختار الباقة اللي تناسبك · ألغِ في أي وقت · دفع آمن</p>
     </div>
   </div>
 </section>
@@ -1626,9 +1435,9 @@ body,body *{
         <h4>الروابط</h4>
         <ul>
           <li><a href="#hero">الرئيسية</a></li>
-          <li><a href="#solution">المميزات</a></li>
-          <li><a href="#pricing">الأسعار</a></li>
+          <li><a href="#testimonials">آراء المتداولين</a></li>
           <li><a href="#faq">الأسئلة الشائعة</a></li>
+          <li><a href="javascript:openPlansModal()">اختر الباقة</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -1647,6 +1456,88 @@ body,body *{
     </div>
   </div>
 </footer>
+
+<!-- ═══ PLANS MODAL ═══ -->
+<div class="plans-modal-backdrop" id="plansBackdrop" onclick="closePlansModal()"></div>
+<div class="plans-modal" id="plansModal" role="dialog" aria-modal="true" aria-labelledby="plansModalTitle">
+  <div class="plans-modal-inner">
+    <button class="plans-modal-close" onclick="closePlansModal()" aria-label="إغلاق">
+      <i class="fas fa-times"></i>
+    </button>
+    <div class="plans-modal-head">
+      <div class="plans-modal-eyebrow">⚡ خصم 30% لفترة محدودة</div>
+      <h3 class="plans-modal-title" id="plansModalTitle">اختر الباقة المناسبة لك</h3>
+      <p class="plans-modal-sub">ألغِ في أي وقت — بدون قيود · ادفع عبر USDT (TRC20) لتخفض الرسوم لأقل حد</p>
+    </div>
+    <div class="plans-grid">
+
+      <!-- FREE -->
+      <div class="plan-card">
+        <div class="plan-name">المجانية</div>
+        <div class="plan-price">
+          <span class="cur">$</span><span class="num">0</span><span class="per">/شهر</span>
+        </div>
+        <p class="plan-desc">جرّبها واشتغل بأدوات أساسية مجاناً للأبد</p>
+        <ul class="plan-features">
+          <li><i class="fas fa-check"></i> حاسبة المخاطر</li>
+          <li><i class="fas fa-check"></i> التقويم الاقتصادي العام</li>
+          <li><i class="fas fa-check"></i> قراءة المحادثة الجماعية</li>
+        </ul>
+        <a href="signup.html" class="plan-cta ghost">سجّل مجاناً</a>
+      </div>
+
+      <!-- BASIC -->
+      <div class="plan-card feat">
+        <div class="plan-badge">الأكثر شيوعاً</div>
+        <div class="plan-name">الأساسية</div>
+        <div class="plan-price">
+          <span class="cur">$</span><span class="num">150</span><span class="per">/3 شهور</span>
+        </div>
+        <p class="plan-desc">كل اللي تحتاجه للتداول بنظام واضح</p>
+        <ul class="plan-features">
+          <li><i class="fas fa-check"></i> قائمة الفحص قبل كل صفقة</li>
+          <li><i class="fas fa-check"></i> سجل تداول ذكي غير محدود</li>
+          <li><i class="fas fa-check"></i> تحليل الأخبار اليومي بالذكاء الاصطناعي</li>
+          <li><i class="fas fa-check"></i> التقويم الاقتصادي الشهري</li>
+          <li><i class="fas fa-check"></i> المحادثة الجماعية مع المتداولين</li>
+          <li><i class="fas fa-check"></i> دروس استراتيجية GLOREX</li>
+        </ul>
+        <a href="subscribe.html?plan=basic" class="plan-cta primary">اشترك الآن <i class="fas fa-arrow-left"></i></a>
+      </div>
+
+      <!-- PREMIUM -->
+      <div class="plan-card">
+        <div class="plan-name">المميزة</div>
+        <div class="plan-price">
+          <span class="cur">$</span><span class="num">299</span><span class="per">/3 شهور</span>
+        </div>
+        <p class="plan-desc">للمتداول الجاد اللي بدو قفزة حقيقية</p>
+        <ul class="plan-features">
+          <li><i class="fas fa-check"></i> كل ميزات الباقة الأساسية</li>
+          <li><i class="fas fa-check"></i> مساعد الذكاء الاصطناعي غير محدود</li>
+          <li><i class="fas fa-check"></i> جلسة شخصية معي شهرياً</li>
+          <li><i class="fas fa-check"></i> مراجعة صفقاتك أسبوعياً</li>
+        </ul>
+        <a href="subscribe.html?plan=premium" class="plan-cta ghost">اشترك الآن <i class="fas fa-arrow-left"></i></a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+function openPlansModal(){
+  document.getElementById('plansBackdrop').classList.add('open');
+  document.getElementById('plansModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closePlansModal(){
+  document.getElementById('plansBackdrop').classList.remove('open');
+  document.getElementById('plansModal').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closePlansModal();});
+</script>
 
 <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 <script>
