@@ -79,10 +79,16 @@ export async function getSession() {
 }
 
 /* Reset password (send email) */
-export async function resetPassword(email) {
-  const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${location.origin}/reset-password.html`,
-  });
+export async function resetPassword(email, captchaToken) {
+  const opts = { redirectTo: `${location.origin}/reset-password.html` };
+  if (captchaToken) opts.captchaToken = captchaToken;
+  const { data, error } = await supabase.auth.resetPasswordForEmail(email, opts);
+  return { data, error };
+}
+
+/* Update password (used after clicking reset link) */
+export async function updatePassword(newPassword) {
+  const { data, error } = await supabase.auth.updateUser({ password: newPassword });
   return { data, error };
 }
 
