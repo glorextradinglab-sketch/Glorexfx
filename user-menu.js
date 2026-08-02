@@ -269,7 +269,16 @@ export function setupBottomNav(currentPage, isAdmin) {
 }
 
 function _setupBottomNav(currentPage, isAdmin) {
-  if (document.querySelector('.bottom-nav')) return; // already injected
+  const existing = document.querySelector('.bottom-nav');
+  if (existing) {
+    // Already built. Only rebuild if admin status changed (auto-init runs with
+    // isAdmin=false before the profile lookup finishes — we need to re-inject
+    // once the real value comes in so the "لوحة الإدارة" link appears).
+    if (existing.dataset.isAdmin === String(!!isAdmin)) return;
+    existing.remove();
+    document.querySelector('.more-drawer')?.remove();
+    document.querySelector('.more-backdrop')?.remove();
+  }
 
   // 5 main items (last is "More" drawer toggle)
   const mainItems = [
@@ -291,6 +300,7 @@ function _setupBottomNav(currentPage, isAdmin) {
   // Bottom nav HTML
   const nav = document.createElement('nav');
   nav.className = 'bottom-nav';
+  nav.dataset.isAdmin = String(!!isAdmin);
   const isActive = (p) => currentPage === p ? ' active' : '';
   nav.innerHTML = mainItems.map(it =>
     `<a href="${it.page}" class="bn-item${isActive(it.page)}">
