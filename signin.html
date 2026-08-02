@@ -11,6 +11,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<!-- Turnstile callbacks — MUST be defined before the Turnstile script loads -->
+<script>
+  window.__gxCaptchaToken = null;
+  window.onCaptchaSuccess = function(token){ window.__gxCaptchaToken = token; };
+  window.onCaptchaExpire  = function(){ window.__gxCaptchaToken = null; };
+</script>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <style>
 /* ============================================================
@@ -385,10 +391,14 @@ body.light .auth-form-wrap{background:#fafafa}
 <script type="module">
 import { signIn, signInWithGoogle, resetPassword, translateError, getSession } from './supabase-client.js';
 
-/* ── Turnstile token (captured via callback — more reliable than getResponse) ── */
-let captchaToken = null;
-window.onCaptchaSuccess = (token) => { captchaToken = token; };
-window.onCaptchaExpire  = ()      => { captchaToken = null; };
+/* ── Read Turnstile token — try the callback-stored value, then getResponse() as fallback ── */
+function getCaptchaToken(){
+  return window.__gxCaptchaToken || window.turnstile?.getResponse() || null;
+}
+function resetCaptcha(){
+  window.__gxCaptchaToken = null;
+  window.turnstile?.reset();
+}
 
 /* تحديد الوجهة: لو الرابط /admin-glorex-2026 → admin، غير هيك dashboard */
 function getNextUrl(){
@@ -443,10 +453,10 @@ document.querySelector('.forgot-link').addEventListener('click', async e=>{
   e.preventDefault();
   const email = document.getElementById('email').value.trim();
   if (!email) { toast('اكتب بريدك الإلكتروني أولاً في الخانة فوق', 'error'); return; }
-  if (!captchaToken) { toast('أكمل التحقق من الـ CAPTCHA أولاً', 'error'); return; }
-  const { error } = await resetPassword(email, captchaToken);
-  window.turnstile?.reset();
-  captchaToken = null;
+  const token = getCaptchaToken();
+  if (!token) { toast('أكمل التحقق من الـ CAPTCHA أولاً', 'error'); return; }
+  const { error } = await resetPassword(email, token);
+  resetCaptcha();
   if (error) toast(translateError(error), 'error');
   else toast('تم إرسال رابط استعادة كلمة المرور إلى بريدك ✓', 'success');
 });
@@ -458,8 +468,8 @@ document.getElementById('signinForm').addEventListener('submit', async e=>{
   const email    = document.getElementById('email').value.trim();
   const password = document.getElementById('password').value;
 
-  // التحقق من Turnstile CAPTCHA (fallback: getResponse لو الـ callback ما اشتغل)
-  const token = captchaToken || window.turnstile?.getResponse();
+  // التحقق من Turnstile CAPTCHA
+  const token = getCaptchaToken();
   if (!token) {
     toast('يرجى إكمال التحقق من الـ CAPTCHA أولاً', 'error');
     return;
@@ -473,8 +483,7 @@ document.getElementById('signinForm').addEventListener('submit', async e=>{
   if (error) {
     btn.innerHTML = 'تسجيل الدخول <i class="fas fa-arrow-left"></i>';
     btn.disabled = false;
-    window.turnstile?.reset();
-    captchaToken = null;
+    resetCaptcha();
     toast(translateError(error), 'error');
     return;
   }
